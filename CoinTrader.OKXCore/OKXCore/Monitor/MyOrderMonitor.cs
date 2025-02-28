@@ -69,7 +69,7 @@ namespace CoinTrader.OKXCore.Monitor
         }
 
         public MyOrderMonitor()
-            : base(new OrderList(), 300)
+            : base(new OrderList(), 1000)
         {
 
         }

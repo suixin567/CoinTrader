@@ -21,7 +21,7 @@ namespace CoinTrader.OKXCore.Monitor
         private Dictionary<long, Position> posDict = new Dictionary<long, Position>();
  
         public SWPPositionMonitor()
-        : base(new SWPPositions(),300)
+        : base(new SWPPositions(),1000)
         {
 
         }
