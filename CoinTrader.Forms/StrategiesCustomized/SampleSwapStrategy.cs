@@ -24,7 +24,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         Reverse = 1
     }
 
-    [Strategy(Name = "合约交易策略(脚本)")]
+    [Strategy(Name = "合约交易策略(c#)")]
     internal class SampleSwapStrategy : SwapStrategyBase
     {
         [StrategyParameter(Name = "仓位大小(USD)", Min = 1, Max = 100000000, Intro = "按稳定币计价的仓位大小")]
