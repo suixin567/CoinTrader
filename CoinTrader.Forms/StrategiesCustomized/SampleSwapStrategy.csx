@@ -57,7 +57,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         [StrategyParameter(Name = "波动幅度(%)", Min = .1, Max = 1000, Intro = "触发涨跌幅")]
         public float Range{ get;set;}
 
-        [StrategyParameter(Name = "数量", Min = 1, Max = 200,Intro = "满足多少个符合涨跌幅的K线")]
+        [StrategyParameter(Name = "K线满足数", Min = 1, Max = 200,Intro = "满足多少个符合涨跌幅的K线")]
         public int KLineCount{ get;set; }
 
         CandleGranularity _candle;
@@ -134,8 +134,8 @@ namespace CoinTrader.Forms.Strategies.Customer
 
         public SampleSwapStrategy()
         {
-            this.KLinSample = 1;
-            this.KLineCount = 1;
+            this.KLinSample = 10;
+            this.KLineCount = 5;
             this.StopLoss = 10;
             this.StopSurplus = 10;
             this.Range = 1;
