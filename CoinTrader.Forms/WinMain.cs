@@ -13,6 +13,8 @@ using CoinTrader.OKXCore.Manager;
 using CoinTrader.Strategies;
 using CoinTrader.Forms.StrategiesRuntime;
 using CommonTools.Coroutines;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace CoinTrader.Forms
 {
@@ -485,6 +487,18 @@ namespace CoinTrader.Forms
         }
 
         private delegate void ShowLogDelegate(Log log);
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        private const int WM_VSCROLL = 0x115;
+        private const int SB_VERT = 0x1;
+        private const int SB_THUMBPOSITION = 4;
+        private const int SB_BOTTOM = 7;
+        private const int WM_SETREDRAW = 11;
+        [DllImport("user32.dll")]
+        private static extern int GetScrollPos(IntPtr hWnd, int nBar);
+
         private void ShowLog(Log log)
         {
             if (InvokeRequired)
@@ -492,20 +506,51 @@ namespace CoinTrader.Forms
                 BeginInvoke(new ShowLogDelegate(ShowLog), log);
                 return;
             }
-            var t = this.textBoxConsole.Text;
-            t += "\r\n" + log.ToString();
-            if (t.Length > 32767)
+            // 禁用重绘，防止控件在修改时跳动
+            SendMessage(textBoxConsole.Handle, WM_SETREDRAW, 0, 0);
+            // 记录当前选区
+            int selectionStart = textBoxConsole.SelectionStart;
+            int selectionLength = textBoxConsole.SelectionLength;
+            bool isSelecting = selectionLength > 0; // 是否有选中的文本
+            // 获取当前滚动条位置
+            int scrollPos = GetScrollPos(textBoxConsole.Handle, SB_VERT);
+            // 追加新日志
+            string newLog = "\r\n" + log.ToString();
+            // 处理文本超长情况，防止崩溃
+            if (textBoxConsole.TextLength + newLog.Length > 32767)
             {
-                t = t.Substring(t.Length - 32767);
+                string[] lines = textBoxConsole.Lines;
+                int removeLines = lines.Length / 4; // 每次移除 1/4 的内容，减少性能开销
+                textBoxConsole.Lines = lines.Skip(removeLines).ToArray();
             }
-            this.textBoxConsole.Text = t;
-            this.textBoxConsole.SelectionStart = this.textBoxConsole.Text.Length;
-            this.textBoxConsole.SelectionLength = 0;
-            if (!this.textBoxConsole.Focused)
+            // 记录鼠标点击位置
+            int mouseClickPosition = textBoxConsole.SelectionStart;
+            // 追加新文本
+            textBoxConsole.AppendText(newLog);
+            // 恢复鼠标点击时的光标位置
+            textBoxConsole.SelectionStart = mouseClickPosition;
+
+            // 如果有选中内容，恢复选区
+            if (isSelecting)
             {
-                this.textBoxConsole.ScrollToCaret();
+                textBoxConsole.SelectionStart = selectionStart;
+                textBoxConsole.SelectionLength = selectionLength;
             }
+            // 恢复滚动条位置
+            if (!textBoxConsole.Focused)
+            {
+                SendMessage(textBoxConsole.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+            }
+            else
+            {
+                SendMessage(textBoxConsole.Handle, WM_VSCROLL, SB_THUMBPOSITION + 0x10000 * scrollPos, 0);
+            }
+            // 重新启用控件重绘
+            SendMessage(textBoxConsole.Handle, WM_SETREDRAW, 1, 0);
+            // 强制控件重绘，刷新界面
+            textBoxConsole.Invalidate();
         }
+
 
         private void buttonClearLog_Click(object sender, EventArgs e)
         {
