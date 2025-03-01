@@ -174,16 +174,16 @@ namespace CoinTrader.Forms.Strategies.Customer
                 return;
  
             IList<Position> postions = GetPositions(); //获取当前币种的所有的持仓
-            var amount = GetPostionSize(Ask, Bid);//获取每次下单的数量
+            var coinAmount = GetPostionSize(Ask, Bid);//获取每次下单的数量
 
             Position pos = postions.Count > 0 ? postions[0] : null;
 
-            Message = string.Format("仓位大小 {0}{1}",amount.ToString(instrument.AmountFormat), instrument.CtValCcy);
+            Message = string.Format("仓位大小 {0}{1}", coinAmount.ToString(instrument.AmountFormat), instrument.CtValCcy);
 
             if (pos == null) //没有持仓
             {
                 PositionType side;
-                if (CanOpen(Ask, Bid, out side) &&  amount > 0) //判断是否可以开仓
+                if (CanOpen(Ask, Bid, out side) && coinAmount > 0) //判断是否可以开仓
                 {
                     this.Executing = true;
                     lastTrigerPrice = 0;//清零移动止盈标记价格
@@ -193,7 +193,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         resetLever = false;
                     }
                     
-                    if (CreatePosition(side, amount, Mode) > 0)//判断是否下单成功
+                    if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
                     {
                         Wait(delay);
                     }
@@ -210,7 +210,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 else if (CanAppend(pos, Ask, Bid))//是否可以追加仓位
                 {
                     this.Executing = true;
-                    if (CreatePosition(pos.SideType, amount,Mode) > 0)//判断是否下单成功
+                    if (CreatePosition(pos.SideType, coinAmount, Mode) > 0)//判断是否下单成功
                     {
                         PlusAppendTimes(pos.PosId);
                         Wait(delay);
@@ -257,7 +257,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         }
 
         /// <summary>
-        /// 计算仓位大小， 仓位是以主币种数量来定。 不是按张数
+        /// 计算可以购买多少个币， 仓位是以主币种数量来定。 不是按张数
         /// </summary>
         /// <param name="ask"></param>
         /// <param name="bid"></param>
