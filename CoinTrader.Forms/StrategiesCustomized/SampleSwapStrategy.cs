@@ -183,7 +183,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             if (pos == null) //没有持仓
             {
                 PositionType side;
-                if (CanOpen(Ask, Bid, out side) && coinAmount > 0) //判断是否可以开仓
+                if (coinAmount > 0 && CanOpen(Ask, Bid, out side)) //判断是否可以开仓
                 {
                     this.Executing = true;
                     lastTrigerPrice = 0;//清零移动止盈标记价格
