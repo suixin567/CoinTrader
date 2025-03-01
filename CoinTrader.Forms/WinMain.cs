@@ -492,25 +492,24 @@ namespace CoinTrader.Forms
                 BeginInvoke(new ShowLogDelegate(ShowLog), log);
                 return;
             }
-
-            if (this.tabControl1.SelectedTab != this.tabLog || this.txtConsole.Focused)
-                return;
-
-            if (log.Type == LogType.Error || log.Type == LogType.Exception)
+            var t = this.textBoxConsole.Text;
+            t += "\r\n" + log.ToString();
+            if (t.Length > 32767)
             {
-                var t = this.txtConsole.Text;
-                t += "\r\n" + log.ToString();
-
-                if(t.Length > 32767)
-                {
-                    t = t.Substring(t.Length-32767);
-                }
-
-                this.txtConsole.Text = t;
-                this.txtConsole.SelectionStart = this.txtConsole.Text.Length;
-                this.txtConsole.SelectionLength = 0;
-                this.txtConsole.ScrollToCaret();
+                t = t.Substring(t.Length - 32767);
             }
+            this.textBoxConsole.Text = t;
+            this.textBoxConsole.SelectionStart = this.textBoxConsole.Text.Length;
+            this.textBoxConsole.SelectionLength = 0;
+            if (!this.textBoxConsole.Focused)
+            {
+                this.textBoxConsole.ScrollToCaret();
+            }
+        }
+
+        private void buttonClearLog_Click(object sender, EventArgs e)
+        {
+            this.textBoxConsole.Text = string.Empty;
         }
 
         private void timer_state_scan_Tick(object sender, EventArgs e)

@@ -40,8 +40,6 @@
             this.pnlBehavior = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPageMonitor = new System.Windows.Forms.TabPage();
             this.pnlMonitor = new System.Windows.Forms.FlowLayoutPanel();
-            this.tabLog = new System.Windows.Forms.TabPage();
-            this.txtConsole = new System.Windows.Forms.TextBox();
             this.lblTotalMoney = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -75,12 +73,13 @@
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlMarketViews = new System.Windows.Forms.FlowLayoutPanel();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
+            this.textBoxConsole = new System.Windows.Forms.TextBox();
+            this.buttonClearLog = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageOrders.SuspendLayout();
             this.tabPageFunds.SuspendLayout();
             this.tabPageMonitor.SuspendLayout();
-            this.tabLog.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -109,7 +108,7 @@
             this.panel2.Controls.Add(this.groupBox1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(1007, 24);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(295, 788);
             this.panel2.TabIndex = 18;
@@ -119,10 +118,9 @@
             this.tabControl1.Controls.Add(this.tabPageOrders);
             this.tabControl1.Controls.Add(this.tabPageFunds);
             this.tabControl1.Controls.Add(this.tabPageMonitor);
-            this.tabControl1.Controls.Add(this.tabLog);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Location = new System.Drawing.Point(0, 390);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(295, 398);
@@ -133,9 +131,9 @@
             // 
             this.tabPageOrders.Controls.Add(this.pnlMyOrders);
             this.tabPageOrders.Location = new System.Drawing.Point(4, 22);
-            this.tabPageOrders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageOrders.Margin = new System.Windows.Forms.Padding(2);
             this.tabPageOrders.Name = "tabPageOrders";
-            this.tabPageOrders.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageOrders.Padding = new System.Windows.Forms.Padding(2);
             this.tabPageOrders.Size = new System.Drawing.Size(287, 372);
             this.tabPageOrders.TabIndex = 0;
             this.tabPageOrders.Text = "挂单";
@@ -147,7 +145,7 @@
             this.pnlMyOrders.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlMyOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMyOrders.Location = new System.Drawing.Point(2, 2);
-            this.pnlMyOrders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMyOrders.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMyOrders.Name = "pnlMyOrders";
             this.pnlMyOrders.Size = new System.Drawing.Size(283, 368);
             this.pnlMyOrders.TabIndex = 16;
@@ -157,9 +155,9 @@
             // 
             this.tabPageFunds.Controls.Add(this.pnlBehavior);
             this.tabPageFunds.Location = new System.Drawing.Point(4, 22);
-            this.tabPageFunds.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageFunds.Margin = new System.Windows.Forms.Padding(2);
             this.tabPageFunds.Name = "tabPageFunds";
-            this.tabPageFunds.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageFunds.Padding = new System.Windows.Forms.Padding(2);
             this.tabPageFunds.Size = new System.Drawing.Size(287, 372);
             this.tabPageFunds.TabIndex = 1;
             this.tabPageFunds.Text = "资金管理";
@@ -170,7 +168,7 @@
             this.pnlBehavior.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlBehavior.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBehavior.Location = new System.Drawing.Point(2, 2);
-            this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2);
             this.pnlBehavior.Name = "pnlBehavior";
             this.pnlBehavior.Size = new System.Drawing.Size(283, 368);
             this.pnlBehavior.TabIndex = 18;
@@ -180,7 +178,7 @@
             // 
             this.tabPageMonitor.Controls.Add(this.pnlMonitor);
             this.tabPageMonitor.Location = new System.Drawing.Point(4, 22);
-            this.tabPageMonitor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageMonitor.Margin = new System.Windows.Forms.Padding(2);
             this.tabPageMonitor.Name = "tabPageMonitor";
             this.tabPageMonitor.Size = new System.Drawing.Size(287, 372);
             this.tabPageMonitor.TabIndex = 2;
@@ -193,35 +191,11 @@
             this.pnlMonitor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMonitor.Location = new System.Drawing.Point(0, 0);
-            this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMonitor.Name = "pnlMonitor";
             this.pnlMonitor.Size = new System.Drawing.Size(287, 372);
             this.pnlMonitor.TabIndex = 17;
             this.pnlMonitor.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DataView_DBClick);
-            // 
-            // tabLog
-            // 
-            this.tabLog.Controls.Add(this.txtConsole);
-            this.tabLog.Location = new System.Drawing.Point(4, 22);
-            this.tabLog.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabLog.Name = "tabLog";
-            this.tabLog.Size = new System.Drawing.Size(287, 372);
-            this.tabLog.TabIndex = 3;
-            this.tabLog.Text = "日志";
-            this.tabLog.UseVisualStyleBackColor = true;
-            // 
-            // txtConsole
-            // 
-            this.txtConsole.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtConsole.Location = new System.Drawing.Point(0, 0);
-            this.txtConsole.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtConsole.Multiline = true;
-            this.txtConsole.Name = "txtConsole";
-            this.txtConsole.ReadOnly = true;
-            this.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtConsole.Size = new System.Drawing.Size(287, 372);
-            this.txtConsole.TabIndex = 6;
-            this.txtConsole.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.DataView_DBClick);
             // 
             // lblTotalMoney
             // 
@@ -270,9 +244,9 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Location = new System.Drawing.Point(4, 89);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(283, 125);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
@@ -288,7 +262,7 @@
             this.panel1.Controls.Add(this.lblOTCUsdt);
             this.panel1.Controls.Add(this.lblUsdtCny);
             this.panel1.Location = new System.Drawing.Point(6, 17);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(227, 95);
             this.panel1.TabIndex = 52;
@@ -501,9 +475,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlMain.Controls.Add(this.pnlMarketViews);
             this.pnlMain.Location = new System.Drawing.Point(0, 22);
-            this.pnlMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMain.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(1003, 985);
+            this.pnlMain.Size = new System.Drawing.Size(1003, 553);
             this.pnlMain.TabIndex = 2;
             // 
             // pnlMarketViews
@@ -513,9 +487,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlMarketViews.AutoScroll = true;
             this.pnlMarketViews.Location = new System.Drawing.Point(0, 0);
-            this.pnlMarketViews.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMarketViews.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMarketViews.Name = "pnlMarketViews";
-            this.pnlMarketViews.Size = new System.Drawing.Size(1001, 843);
+            this.pnlMarketViews.Size = new System.Drawing.Size(1001, 360);
             this.pnlMarketViews.TabIndex = 3;
             this.pnlMarketViews.Visible = false;
             // 
@@ -525,17 +499,41 @@
             this.imageList2.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // textBoxConsole
+            // 
+            this.textBoxConsole.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxConsole.Location = new System.Drawing.Point(0, 599);
+            this.textBoxConsole.Multiline = true;
+            this.textBoxConsole.Name = "textBoxConsole";
+            this.textBoxConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxConsole.Size = new System.Drawing.Size(1001, 213);
+            this.textBoxConsole.TabIndex = 19;
+            // 
+            // buttonClearLog
+            // 
+            this.buttonClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClearLog.Location = new System.Drawing.Point(889, 782);
+            this.buttonClearLog.Name = "buttonClearLog";
+            this.buttonClearLog.Size = new System.Drawing.Size(88, 23);
+            this.buttonClearLog.TabIndex = 20;
+            this.buttonClearLog.Text = "清空日志";
+            this.buttonClearLog.UseVisualStyleBackColor = true;
+            this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            // 
             // WinMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1302, 812);
+            this.Controls.Add(this.buttonClearLog);
+            this.Controls.Add(this.textBoxConsole);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "WinMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "数字资管";
@@ -548,8 +546,6 @@
             this.tabPageOrders.ResumeLayout(false);
             this.tabPageFunds.ResumeLayout(false);
             this.tabPageMonitor.ResumeLayout(false);
-            this.tabLog.ResumeLayout(false);
-            this.tabLog.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -572,8 +568,6 @@
         private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
         private System.Windows.Forms.TabPage tabPageMonitor;
         private System.Windows.Forms.FlowLayoutPanel pnlMonitor;
-        private System.Windows.Forms.TabPage tabLog;
-        private System.Windows.Forms.TextBox txtConsole;
         private System.Windows.Forms.Label lblLoginName;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label19;
@@ -607,6 +601,8 @@
         private System.Windows.Forms.ToolStripMenuItem 关闭所有ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        private System.Windows.Forms.TextBox textBoxConsole;
+        private System.Windows.Forms.Button buttonClearLog;
     }
 }
 
