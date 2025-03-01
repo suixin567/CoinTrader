@@ -13,7 +13,7 @@ namespace CoinTrader.OKXCore.Monitor
         Dictionary<string, BalanceVO> currentBalance = new Dictionary<string, BalanceVO>();
         Dictionary<string, BalanceVO> freeBalance = new Dictionary<string, BalanceVO>();
 
-        public AssetsBalanceMonitor() : base(new AssetsBalance(),1000)
+        public AssetsBalanceMonitor() : base(new AssetsBalance(),1200)
         {
 
         }
