@@ -53,7 +53,11 @@ namespace CoinTrader.Forms.Control
                 this.lblPx.Text = position.MarkPx.ToString(_instrument.PriceFormat);
                 this.lblAmount.Text = (position.Pos * _instrument.CtVal).ToString(_instrument.AmountFormat) + _instrument.CtValCcy;
                 // 设置窗体标题
-                this.FindForm().Text = $"合约持仓管理 - {position.InstName} {position.PosSideName}{position.Lever}x    " + String.Format("{0:0.00} ({1:P})", position.Upl, position.UplRatio);
+                var form = this.FindForm();
+                if (form != null && form is WinPosition)
+                {
+                    form.Text = $"合约持仓管理 - {position.InstName} {position.PosSideName}{position.Lever}x    " + String.Format("{0:0.00} ({1:P})", position.Upl, position.UplRatio);
+                }
             }
             else
             {
