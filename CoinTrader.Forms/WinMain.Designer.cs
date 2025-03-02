@@ -203,9 +203,9 @@
             this.lblTotalMoney.Location = new System.Drawing.Point(85, 51);
             this.lblTotalMoney.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTotalMoney.Name = "lblTotalMoney";
-            this.lblTotalMoney.Size = new System.Drawing.Size(65, 12);
+            this.lblTotalMoney.Size = new System.Drawing.Size(11, 12);
             this.lblTotalMoney.TabIndex = 28;
-            this.lblTotalMoney.Text = "当前总估值";
+            this.lblTotalMoney.Text = "0";
             // 
             // label2
             // 
@@ -215,27 +215,27 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 27;
-            this.label2.Text = "当前总估值";
+            this.label2.Text = "总资产估值";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(5, 11);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 20);
+            this.label1.Size = new System.Drawing.Size(39, 16);
             this.label1.TabIndex = 26;
             this.label1.Text = "账号";
             // 
             // lblLoginName
             // 
             this.lblLoginName.AutoSize = true;
-            this.lblLoginName.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblLoginName.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblLoginName.Location = new System.Drawing.Point(52, 11);
             this.lblLoginName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblLoginName.Name = "lblLoginName";
-            this.lblLoginName.Size = new System.Drawing.Size(39, 20);
+            this.lblLoginName.Size = new System.Drawing.Size(31, 16);
             this.lblLoginName.TabIndex = 22;
             this.lblLoginName.Text = "---";
             // 

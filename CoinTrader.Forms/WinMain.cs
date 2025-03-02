@@ -47,9 +47,6 @@ namespace CoinTrader.Forms
 
             if (Config.Instance.ApiInfo.IsSimulated)
                 text += "   模拟盘";
-
-            text += $"  账号：{Config.Instance.Account.LoginName}";
-
             this.Text = text;
         }
 
