@@ -35,9 +35,8 @@ namespace CoinTrader.Forms
 
             string[] columns = { "posSide", "pos", "avgPx", "upl", "lever", "liqPx", "margin", "mgnRatio", "mmr", "cTime", "mode", "interest" };
 
-
-            mgr.EachPosition((Position pos) => 
-            { 
+            mgr.EachPosition((Position pos) =>
+            {
                 var color = pos.PosSide == PositionSide.Short ? colorSell : colorBuy;
 
                 ListViewItem listItem;
@@ -53,7 +52,7 @@ namespace CoinTrader.Forms
                     foreach (string s in columns)
                     {
                         var sitem = new ListViewItem.ListViewSubItem();
-                        sitem.Name = s;// columns[i];
+                        sitem.Name = s;
                         listItem.SubItems.Add(sitem);
                     }
 
@@ -64,27 +63,25 @@ namespace CoinTrader.Forms
                 listItem.Tag = pos.PosId;
                 var liqPxItem = listItem.SubItems["liqPx"];
 
-                //liqPxItem.BackColor = Math.Abs(pos.LiqPx - pos.MarkPx) / pos.LiqPx > 0.005m ? Color.Green : Color.Yellow;
-
                 var inst = instTable.GetInstrument(pos.InstId);
 
                 totalProfit += pos.Upl;
                 totalMargin += pos.Margin;
 
                 string[] values = new string[] {
-                 pos.PosSideName,
-                 (inst.CtVal * pos.Pos).ToString(),
-                 pos.AvgPx.ToString(inst.PriceFormat),
-                 pos.Upl.ToString("0.00"),
-                 pos.Lever.ToString(),
-                 pos.LiqPx.ToString(inst.PriceFormat),
-                 pos.Margin.ToString("0.00"),
-                 pos.MgnMode == "isolated"?  pos.MgnRatio.ToString("P"):"-",
-                 pos.MMR.ToString("0.00"),
-                 DateUtil.UtcToLocalTime(pos.CTime).ToString("yyyy-MM-dd HH:mm:ss"),
-                 pos.MarginModeName,
-                 pos.Interest.ToString()
-                };
+                    pos.PosSideName,
+                    (inst.CtVal * pos.Pos).ToString(),
+                    pos.AvgPx.ToString(inst.PriceFormat),
+                    pos.Upl.ToString("0.00"),
+                    pos.Lever.ToString(),
+                    pos.LiqPx.ToString(inst.PriceFormat),
+                    pos.Margin.ToString("0.00"),
+                    pos.MgnMode == "isolated"?  pos.MgnRatio.ToString("P"):"-",
+                    pos.MMR.ToString("0.00"),
+                    DateUtil.UtcToLocalTime(pos.CTime).ToString("yyyy-MM-dd HH:mm:ss"),
+                    pos.MarginModeName,
+                    pos.Interest.ToString()
+        };
 
                 for (int i = 0; i < columns.Length; i++)
                 {
@@ -92,8 +89,6 @@ namespace CoinTrader.Forms
                     sitem.Text = values[i];
                     sitem.BackColor = color;
                 }
-
-                //listItem.SubItems[0].ForeColor = pos.PosSide == Okex.Const.PositionSide.Short ? Color.Red : Color.Green;
 
                 index++;
             });
@@ -105,6 +100,14 @@ namespace CoinTrader.Forms
 
             this.lblTotalProfit.Text = totalProfit.ToString("0.00");
             this.lblMargin.Text = totalMargin.ToString("0.00");
+
+            // **默认选中第一项**
+            if (listView1.Items.Count > 0)
+            {
+                listView1.SelectedIndices.Clear();
+                listView1.Items[0].Selected = true;
+                listView1.Items[0].Focused = true;
+            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
