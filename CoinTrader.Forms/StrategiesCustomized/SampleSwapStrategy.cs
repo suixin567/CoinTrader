@@ -303,9 +303,10 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <returns></returns>
         private decimal GetProfitPercent(Position pos, decimal ask, decimal bid)
         {
-            var openPrice = pos.AvgPx;
-            var price = GetClosePrice(pos.SideType,ask,bid);
-            return (pos.SideType == PositionType.Short ? openPrice / price : price / openPrice)-1.0m;
+            //var openPrice = pos.AvgPx;
+            //var price = GetClosePrice(pos.SideType,ask,bid);
+            //return (pos.SideType == PositionType.Short ? openPrice / price : price / openPrice)-1.0m;
+            return (decimal)pos.UplRatio * 100;
         }
 
         private decimal ToPercent(float val)
@@ -324,28 +325,27 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <param name="ask">卖价</param>
         /// <param name="bid">买价</param>
         /// <returns></returns>
-        private bool CanClose(Position pos,decimal ask, decimal bid)
+        private bool CanClose(Position pos, decimal ask, decimal bid)
         {
-            var profit = GetProfitPercent(pos, ask, bid);
-
-            if(profit > 0) //持仓已盈利情况
+            var profit = GetProfitPercent(pos, ask, bid);// 盈利百分比
+            //Logger.Instance.LogDebug($"利润:{profit}% 止盈:{this.StopSurplus}% 止损:{-this.StopLoss}%");
+            if (profit > 0) //持仓已盈利情况
             {
-                if(MoveProfit) //移动盈利
+                if (MoveProfit) //移动盈利
                 {
                     var closePrice = GetClosePrice(pos.SideType, ask, bid);
-                    if(lastTrigerPrice > 0) //已经被触发过，判断是否触发移动止盈
+                    if (lastTrigerPrice > 0) //已经被触发过，判断是否触发移动止盈
                     {
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
                             case PositionType.Long: //多头持仓的情况
                                 return lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
-                                
+
                             case PositionType.Short: //空头持仓的情况
                                 return closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤
                         }
                     }
-
-                    if (profit >= ToPercent(StopSurplus)) //达到盈利目标，开始记录移动止盈的最高（最低）价格
+                    if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
                     {
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
@@ -353,14 +353,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 lastTrigerPrice = Math.Max(lastTrigerPrice, closePrice);// 取最高价
                                 break;
                             case PositionType.Short: //空头持仓的情况
-                                lastTrigerPrice = lastTrigerPrice == 0 ?  closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
+                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
                                 break;
                         }
                     }
                 }
                 else
                 {
-                    if(profit >=  ToPercent( StopSurplus)) //达到盈利目标
+                    if (profit >= (decimal)StopSurplus) //达到盈利目标
                     {
                         return true;
                     }
@@ -368,12 +368,11 @@ namespace CoinTrader.Forms.Strategies.Customer
             }
             else //持仓非盈利情况
             {
-                if(profit <= -ToPercent( this.StopLoss) )//到达止损亏损幅度
+                if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -421,7 +420,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     num++;
                     return num >= KLinSample;
                 });
-
+                // Logger.Instance.LogDebug($"upCount:{upCount} downCount:{downCount}");
                 if (upCount >= KLineCount)//上涨数量达到设定数量
                 {
                     switch(this.DirectionType)
