@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using CoinTrader.Common.Database;
 using CoinTrader.Forms.Command;
 using System;
 using System.Net;
@@ -52,6 +53,7 @@ namespace CoinTrader.Forms
             ServicePointManager.DefaultConnectionLimit = 1024;//设置最大并发连接数
             Coroutine.Init(); //协助程序初始化
             CommandRegister.RegisterAllCommand();
+            MysqlHelper.Instance.init();
         }
     }
 }
