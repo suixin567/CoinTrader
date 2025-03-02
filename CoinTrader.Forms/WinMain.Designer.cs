@@ -489,7 +489,7 @@
             this.pnlMarketViews.Location = new System.Drawing.Point(0, 0);
             this.pnlMarketViews.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMarketViews.Name = "pnlMarketViews";
-            this.pnlMarketViews.Size = new System.Drawing.Size(1001, 360);
+            this.pnlMarketViews.Size = new System.Drawing.Size(1001, 551);
             this.pnlMarketViews.TabIndex = 3;
             this.pnlMarketViews.Visible = false;
             // 
