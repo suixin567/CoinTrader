@@ -123,6 +123,7 @@ namespace CoinTrader.OKXCore.Manager
 
                 if(result.success)
                 {
+                    Logger.Instance.LogInfo($"资金划转: {ccy} {from}{to}{amount}");
                     EventCenter.Instance.Send(CoreEvent.BalanceTransfer, ccy.ToUpper());
                 }
             }
