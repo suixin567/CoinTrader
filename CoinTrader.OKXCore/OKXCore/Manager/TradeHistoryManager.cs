@@ -21,7 +21,6 @@ namespace CoinTrader.OKXCore.Manager
     public class TradeHistoryManager
     {
         private SqlDao dao = null;
-        const int PageSize = 50;
 
         HashSet<string> LoadingTable = new HashSet<string>();
         Dictionary<string, long> maxIdTable = new Dictionary<string, long>();
@@ -63,12 +62,7 @@ update_time         DATETIME
 );
 ";
 
-        private TradeHistoryManager()
-        {
-          
-        }
-
-  
+        private TradeHistoryManager() { }
 
         public string DatabasePath
         {
@@ -138,10 +132,8 @@ update_time         DATETIME
         public Task<HistoryLoadResult> ResyncHistory(string instId, string instType, int days)
         {
             string key = instId;
-
             if (LoadingTable.Contains(key))
                 return null;
-
             long lastID = 0;
             if (days > 0)
             {
@@ -149,7 +141,6 @@ update_time         DATETIME
                 date = date.AddDays(-days).ToUniversalTime();
                 lastID = GetLastIdByDate(date);
             }
-
             return LoadFromLastID(instId, instType, lastID);
         }
 
@@ -162,7 +153,6 @@ update_time         DATETIME
             if(instType == InstrumentType.Swap)
             {
                 InstrumentSwap instrument = InstrumentManager.SwapInstrument.GetInstrument(instId);
-                
                 if(instrument != null)
                     sizeFactor = instrument.CtVal;
             }
@@ -178,39 +168,29 @@ update_time         DATETIME
                     HistoryRecord api = new HistoryRecord(instId, CTCHistoryOrderState.FullDeal, lastID, 100);
                     api.instType = instType;
                     var result = api.ExecSync();
-
                     if (result.code == 0)
                     {
                         JArray items = result.data as JArray;
-
                         bool hasRecord = false;
-
                         foreach (JObject jo in items)
                         {
                             long orderID = 0;
                             string sql = "";
-
                             if (this.CheckAndJsonToSql(jo, sizeFactor,out sql, out orderID))
                             {
                                 if (!ItemIsExist(orderID))
                                 {
                                     sb.Append(sql);
                                 }
-
                                 hasRecord = true;
                             }
-                            
                             lastID = Math.Max(lastID, orderID);
                         }
-
                         if (!hasRecord)
                         {
                             break;
                         }
-
-
                         int loadThreadCount = this.LoadingTable.Count;
-
                         Thread.Sleep(RandomUtil.Range(loadThreadCount * 300, loadThreadCount * 400));
                     }
                     else
@@ -226,9 +206,7 @@ update_time         DATETIME
                     ret.RowCount = dao.ExecuteNonQuery(sb.ToString(), true);
                     this.UpdateMaxHistoryOrderID();
                 }
-
                 this.LoadingTable.Remove(instId);
-
                 return ret;
             });
         }
@@ -256,11 +234,8 @@ update_time         DATETIME
             orderTime = DateUtil.TimestampMSToDateTime(obj["cTime"].Value<long>()).ToString("yyyy-MM-dd HH:mm:ss");
             updateTime = DateUtil.TimestampMSToDateTime(obj["uTime"].Value<long>()).ToString("yyyy-MM-dd HH:mm:ss");
 
-
             string val = obj["state"].Value<string>();
-
             state = "" + (int)CTCOrderState.Uncomplete;
-
             if (val == "canceled")
             {
                 state = "" + (int)CTCOrderState.Canceled;
@@ -269,12 +244,8 @@ update_time         DATETIME
             {
                 state = "" + (int)CTCOrderState.AllCompleted;
             }
-
             long orderID = obj[key_OrderID].Value<long>();
-
             id = orderID;
-       
-
             decimal fillSize = obj.Value<decimal>(key_FillSize) * sizeFactor;
             decimal size = obj.Value<decimal>(key_Size) * sizeFactor;
 
@@ -305,7 +276,6 @@ update_time         DATETIME
             , obj[key_FeeCurrency].Value<string>()
             , updateTime
             );
-
             return true;
         }
             
@@ -313,11 +283,8 @@ update_time         DATETIME
         public Task<HistoryLoadResult> LoadHistory(string instId,string instType)
         {
             string key = instId;
-
             if (LoadingTable.Contains(key))
                 return null;
-
-            
             long lastID = GetMaxHistoryID(key);
             return LoadFromLastID(instId,instType, lastID);
         }
@@ -326,7 +293,6 @@ update_time         DATETIME
         {
             return this.LoadHistory(instId, InstrumentType.Spot);
         }
-
 
         /// <summary>
         /// 获取所有有交易记录的数字货币类型
@@ -343,7 +309,6 @@ update_time         DATETIME
                 sql += "and type = '" + side + "'";
             }
 
-
             DataTable dt = dao.ExecuteDatatable(sql);
             List<string> currencies = new List<string>();
             foreach (DataRow r in dt.Rows)
@@ -357,49 +322,38 @@ update_time         DATETIME
         public DataTable GetStatByMonth(string side, decimal totalDivide)
         {
             string sql = GenerateSql(false, side, totalDivide);
-
             DataTable dt = dao.ExecuteDatatable(sql);
-
             return dt;
-
         }
 
         public DataTable GetStatByMonthWithCurrency(string side, string currency, decimal totalDivide)
         {
             string sql = this.GenerateSqlWithSymbol(currency, false, side, totalDivide);
             DataTable dt = dao.ExecuteDatatable(sql);
-
             return dt;
         }
 
         public DataTable QueryOrders(string side, DateTime startDate, DateTime endData, IList<string> currencies, string status, int pageIndex, int pageSize, out long count)
         {
             StringBuilder conditions = new StringBuilder(" where 1 = 1 ");
-
-
             if (!string.IsNullOrEmpty(side))
             {
                 conditions.AppendFormat(" and type = '{0}'", side.Trim());
             }
-
             if (!string.IsNullOrEmpty(status))
             {
                 conditions.AppendFormat(" and orderStatus = '{0}'", status.Trim());
             }
-
             if (currencies != null && currencies.Count > 0)
             {
                 conditions.AppendFormat(" and symbol in('{0}')", string.Join("','", currencies));
             }
-
             conditions.AppendFormat(" and createdDate >='{0:yyyy-MM-dd HH:mm:ss}' and createdDate <'{1:yyyy-MM-dd HH:mm:ss}'", startDate, endData);
             string sqlForCount = string.Format("select count(*) from {0} {1}", tableName, conditions);
             count = dao.ExecuteScalar<long>(sqlForCount);
             pageIndex = Math.Min(pageIndex, (int)(count / pageSize) + ((count > 0 && count % pageSize > 0) ? 1 : 0));
             pageIndex = Math.Max(pageIndex, 0);
             string sql = string.Format("select * from {0} {1} order by createdDate desc limit {2},{3} ", tableName, conditions, pageIndex * pageSize, pageSize);
-
-
             return dao.ExecuteDatatable(sql);
         }
 
@@ -407,7 +361,6 @@ update_time         DATETIME
         {
             string sql = GenerateSql(true, side, totalDivide);
             DataTable dt = dao.ExecuteDatatable(sql);
-
             return dt;
         }
 
@@ -415,7 +368,6 @@ update_time         DATETIME
         {
             string sql = this.GenerateSqlWithSymbol(currency, true, side, totalDivide);
             DataTable dt = dao.ExecuteDatatable(sql);
-
             return dt;
         }
 
@@ -429,7 +381,6 @@ update_time         DATETIME
                 , side
                 , OrderStatus.Completed
                 );
-
             return sql;
         }
 
@@ -443,14 +394,12 @@ update_time         DATETIME
             , OrderStatus.Completed
             , currency
             );
-
             return sql;
         }
 
         public void UpdateMaxHistoryOrderID()
         {
             var res = dao.ExecuteDatatable( string.Format( "select instrument_id, max(order_id) as m from {0} group by instrument_id" , tableName));
-            
             foreach(DataRow r in res.Rows)
             {
                 var key = r["instrument_id"].ToString();
@@ -466,7 +415,6 @@ update_time         DATETIME
             //return Path.Combine(Application.StartupPath, );
         }
         
-
         /// <summary>
         /// 获取指定时间之前的最后历史价格
         /// </summary>
@@ -476,7 +424,6 @@ update_time         DATETIME
         public decimal GetPriceWithTime(string currency, DateTime time)
         {
             string sql = string.Format(@"select exchangeRate from {0} where symbol = ""{1}"" and type=""buy"" and createdDate < ""{2}"" order by publicOrderId desc limit 1 ", tableName, currency, time.ToString("yyyy-MM-dd HH:mm:ss"));
-
             return dao.ExecuteScalar<decimal>(sql);
         }
 

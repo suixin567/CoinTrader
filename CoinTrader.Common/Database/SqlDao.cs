@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SQLite;
 
@@ -7,7 +6,6 @@ namespace CoinTrader.Common.Database
 {
    public  class SqlDao :IDisposable
     {
-
         private string databasePath = "";
         public string DatabasePath
         {
@@ -21,7 +19,6 @@ namespace CoinTrader.Common.Database
                 {
                     this.CloseConnection();
                 }
-
                 this.databasePath = value;
             }
         }
@@ -96,7 +93,6 @@ namespace CoinTrader.Common.Database
                 cmd.Connection = this.connection;
                 cmd.CommandText = sql;
                 int ret = 0;
-
                 if(withTransaction)
                 {
                     using (SQLiteTransaction transction = connection.BeginTransaction())
@@ -121,7 +117,6 @@ namespace CoinTrader.Common.Database
                 {
                     ret = cmd.ExecuteNonQuery();
                 }
-
                 return ret;
             }
         }
@@ -149,7 +144,6 @@ namespace CoinTrader.Common.Database
         {
             this.InitConnection();
             //在打开数据库时，会判断数据库是否存在，如果不存在，则在当前目录下创建一个
-
             using (SQLiteCommand cmd = new SQLiteCommand())
             {
                 cmd.Connection = this.connection;
@@ -165,17 +159,12 @@ namespace CoinTrader.Common.Database
                     //    str2 = dr.GetValue(1).ToString();
                     //    Console.WriteLine("第{0} 条：{1}", dr.GetValue(0), dr.GetString(1));
                     //}
-
                     dr.Close();
                 }
             }
         }
 
-        private SqlDao()
-        {
-
-        }
-
+        private SqlDao() { }
 
         private static object locker = new object();
         private static SqlDao _instance = null;
@@ -196,7 +185,6 @@ namespace CoinTrader.Common.Database
                         }
                     }
                 }
-
                 return _instance;
             }
         }
