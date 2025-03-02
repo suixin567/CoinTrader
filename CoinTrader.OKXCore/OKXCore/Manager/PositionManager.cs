@@ -294,6 +294,7 @@ namespace CoinTrader.OKXCore.Manager
                     var result = api.ExecSync();
                     if(result.success)
                     {
+                        Logger.Instance.LogInfo($"平仓{id} size:{size} odrType:{odrType} 限价?:{price}");
                         if (pos.AvailPos <= size)//全平仓
                             monitor.RemovePosition(id);
                         else
@@ -424,6 +425,7 @@ namespace CoinTrader.OKXCore.Manager
                 
                 if (result.success)
                 {
+                    Logger.Instance.LogInfo($"购买成功:${instId} side:{side} size:{size} 限价?:{price}");
                     var data = result.data as JArray;
                     return data[0].Value<long>("ordId");
                 }
