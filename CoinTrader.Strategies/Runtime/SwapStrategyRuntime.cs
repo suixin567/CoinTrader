@@ -190,9 +190,9 @@ namespace CoinTrader.Strategies.Runtime
         /// 市价平仓
         /// </summary>
         /// <param name="id"></param>
-        public void ClosePosition(long id)
+        public bool ClosePosition(long id)
         {
-            PositionManager.Instance.ClosePosition(id);
+            return PositionManager.Instance.ClosePosition(id);
         }
 
         /// <summary>

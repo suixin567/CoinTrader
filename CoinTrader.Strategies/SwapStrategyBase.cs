@@ -58,9 +58,9 @@ namespace CoinTrader.Strategies
         /// 市价平仓
         /// </summary>
         /// <param name="id"></param>
-        protected void ClosePosition(long id)
+        protected bool ClosePosition(long id)
         {
-            swapRuntime.ClosePosition(id);
+            return swapRuntime.ClosePosition(id);
         }
 
         /// <summary>
