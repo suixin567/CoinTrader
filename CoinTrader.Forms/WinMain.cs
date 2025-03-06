@@ -15,6 +15,7 @@ using CoinTrader.Forms.StrategiesRuntime;
 using CommonTools.Coroutines;
 using System.Linq;
 using System.Runtime.InteropServices;
+using CoinTrader.Common.Database;
 
 namespace CoinTrader.Forms
 {
@@ -267,6 +268,10 @@ namespace CoinTrader.Forms
                     }
                 }
             }
+
+            // 创建一个工作流
+            var db = MysqlHelper.Instance.getDB();
+            var dbId = db.Insertable(new Workflow { Instrument = instId }).ExecuteReturnIdentity();
 
             string err;
             if(!StrategyRunner.Instance.RunStrategy(instId,strategyGroup,run, out err))

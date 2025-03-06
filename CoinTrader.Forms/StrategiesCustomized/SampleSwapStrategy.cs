@@ -13,6 +13,7 @@ using CoinTrader.OKXCore.Entity;
 using CoinTrader.OKXCore.Enum;
 using CoinTrader.Common;
 using CoinTrader.Strategies;
+using CoinTrader.Common.Database;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -192,11 +193,37 @@ namespace CoinTrader.Forms.Strategies.Customer
                         SetLever(side, Mode, lever);
                         resetLever = false;
                     }
-                    
+                    Logger.Instance.LogInfo("准备CreatePosition()");
+                    // 记录操作到数据库
+                    var db = MysqlHelper.Instance.getDB();
+                    var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && (it.Status == 0 || it.Status == 1)).First();
+                    Operation newOperation = new Operation()
+                    {
+                        WorkflowId = workflow.Id,
+                        Side = 2
+                    };
+                    var operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
                     {
-                        Wait(delay);
+                        // 标记为操作成功
+                        db.Updateable<Operation>()
+                       .SetColumns(it => it.Status == 1)
+                       .Where(it => it.Id == operationId)
+                       .ExecuteCommand();
+                        // 标记工作流为工作状态
+                        db.Updateable<Workflow>()
+                         .SetColumns(it => it.Status == 1)
+                         .Where(it => it.Id == workflow.Id)
+                         .ExecuteCommand();
                     }
+                    else {
+                        // 标记为操作失败
+                        db.Updateable<Operation>()
+                        .SetColumns(it => it.Status == 2)
+                        .Where(it => it.Id == operationId)
+                        .ExecuteCommand();
+                    }
+                    Wait(delay);
                 }
             }
             else //已持仓情况
@@ -204,7 +231,44 @@ namespace CoinTrader.Forms.Strategies.Customer
                 if (CanClose(pos, Ask, Bid))//判断是否可以平仓， 包括止盈、止损两种情况
                 {
                     this.Executing = true;
-                    ClosePosition(pos.PosId); //平仓
+                    Logger.Instance.LogInfo("准备ClosePosition()");
+                    // 记录操作到数据库
+                    var db = MysqlHelper.Instance.getDB();
+                    var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && it.Status == 1).First();
+                    var operationId = 0;
+                    if (workflow != null) {
+                        Operation newOperation = new Operation()
+                        {
+                            WorkflowId = workflow.Id,
+                            Side = 2,
+                            Status = 1
+                        };
+                        operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
+                    }
+
+                    var result = ClosePosition(pos.PosId); //平仓
+                    if (result)
+                    {
+                        if (workflow != null)
+                        {
+                            // 标记为操作成功
+                            db.Updateable<Operation>()
+                           .SetColumns(it => it.Status == 1)
+                           .Where(it => it.Id == operationId)
+                           .ExecuteCommand();
+                        }
+                    }
+                    else
+                    {
+                        if (workflow != null)
+                        {
+                            // 标记为操作失败
+                            db.Updateable<Operation>()
+                            .SetColumns(it => it.Status == 2)
+                            .Where(it => it.Id == operationId)
+                            .ExecuteCommand();
+                        }
+                    }
                     Wait(delay);
                 }
                 else if (CanAppend(pos, Ask, Bid))//是否可以追加仓位
