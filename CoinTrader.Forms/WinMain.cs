@@ -39,6 +39,18 @@ namespace CoinTrader.Forms
             Ticker.Start();
 
             this.GenerateTitle();
+            // 恢复所有工作流
+            var db = MysqlHelper.Instance.getDB();
+            var workflows = db.Queryable<Workflow>()
+                .Where(it => (it.Status == 0 || it.Status == 1))
+                .ToList();
+
+            var stategyGroups = StrategyManager.Instance.GetStrategyGroups(StrategyType.Swap);
+            var group = stategyGroups.First(x=> x.name == "合约交易策略(c#)");
+            foreach (var workflow in workflows)
+            {
+                AddView<SwapView>(workflow.Instrument, group, true);
+            }
         }
 
         private void GenerateTitle()
