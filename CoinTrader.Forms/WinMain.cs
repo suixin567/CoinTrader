@@ -49,7 +49,7 @@ namespace CoinTrader.Forms
             var group = stategyGroups.First(x=> x.name == "合约交易策略(c#)");
             foreach (var workflow in workflows)
             {
-                AddView<SwapView>(workflow.Instrument, group, true);
+                AddView<SwapView>(workflow.Instrument, group, false);
             }
         }
 
