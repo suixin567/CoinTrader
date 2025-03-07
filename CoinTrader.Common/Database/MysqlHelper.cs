@@ -26,6 +26,9 @@ namespace CoinTrader.Common.Database
 
         [SugarColumn(ColumnName = "status")]
         public int Status { get; set; }
+
+        [SugarColumn(ColumnName = "stoped_at", IsNullable = true)]
+        public DateTime? EndedAt { get; set; } = null;
     }
 
     [SugarTable("operation")]

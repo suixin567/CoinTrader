@@ -1,4 +1,6 @@
-﻿using CoinTrader.Forms.Chromium;
+﻿using CoinTrader.Common;
+using CoinTrader.Common.Database;
+using CoinTrader.Forms.Chromium;
 using CoinTrader.Forms.Strategies;
 using CoinTrader.Forms.StrategiesRuntime;
 using CoinTrader.OKXCore;
@@ -112,6 +114,14 @@ namespace CoinTrader.Forms.Control
                 this.dataProvider = null;
             }
             StrategyRunner.Instance.StopStrategiesByInstId(InstId);
+            // 标记一个工作流结束
+            var db = MysqlHelper.Instance.getDB();
+            db.Updateable<Workflow>()
+             .SetColumns(it => it.Status == 2)
+             .SetColumns(it => it.EndedAt == DateTime.Now)
+             .Where(it => it.Instrument == this.instId)
+             .ExecuteCommand();
+            Logger.Instance.LogInfo("已结束工作流");
         }
 
         protected override void OnParentChanged(EventArgs e)
