@@ -334,8 +334,7 @@ namespace CoinTrader.OKXCore.Manager
         public static int AmountToSize(string instId, decimal amount)
         {
             InstrumentSwap instrument = InstrumentManager.SwapInstrument.GetInstrument(instId);
-            int size = (int)Math.Round(amount / instrument.CtVal);
-
+            int size = (int)Math.Floor(amount / instrument.CtVal);
             return size;
         }
 

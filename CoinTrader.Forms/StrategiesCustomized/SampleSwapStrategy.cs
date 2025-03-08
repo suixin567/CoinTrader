@@ -330,7 +330,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             var balance = QuoteAvailable; //获取稳定币结余
             var quoteAmount = Math.Min(balance, PositionSizeUsd);
-            var amount = quoteAmount / ((ask + bid) * 0.5M);//计算出每次下单的大小
+            var amount = quoteAmount / ((ask + bid) * 0.5M) * Lever;//计算出每次下单的大小
             return amount;
         }
 
