@@ -200,7 +200,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     Operation newOperation = new Operation()
                     {
                         WorkflowId = workflow.Id,
-                        Side = 2
+                        Side = (byte)PositionType.Long
                     };
                     var operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
@@ -240,7 +240,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         Operation newOperation = new Operation()
                         {
                             WorkflowId = workflow.Id,
-                            Side = 2,
+                            Side = (byte)PositionType.Short,
                             Status = 1
                         };
                         operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
