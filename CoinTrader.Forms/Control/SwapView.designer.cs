@@ -32,14 +32,6 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.lblInstrument = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblMinSize = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblMinAmount = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblLever = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lblFee = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.pnlBehavior = new System.Windows.Forms.FlowLayoutPanel();
@@ -77,7 +69,7 @@
             // 
             this.lblInstrument.AutoSize = true;
             this.lblInstrument.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Underline);
-            this.lblInstrument.Location = new System.Drawing.Point(40, 25);
+            this.lblInstrument.Location = new System.Drawing.Point(30, 22);
             this.lblInstrument.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblInstrument.Name = "lblInstrument";
             this.lblInstrument.Size = new System.Drawing.Size(39, 16);
@@ -91,86 +83,6 @@
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 64);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
-            this.label1.TabIndex = 52;
-            this.label1.Text = "最小下单量";
-            // 
-            // lblMinSize
-            // 
-            this.lblMinSize.AutoSize = true;
-            this.lblMinSize.Location = new System.Drawing.Point(88, 64);
-            this.lblMinSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblMinSize.Name = "lblMinSize";
-            this.lblMinSize.Size = new System.Drawing.Size(17, 12);
-            this.lblMinSize.TabIndex = 52;
-            this.lblMinSize.Text = "--";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 84);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 12);
-            this.label3.TabIndex = 52;
-            this.label3.Text = "最小面值";
-            // 
-            // lblMinAmount
-            // 
-            this.lblMinAmount.AutoSize = true;
-            this.lblMinAmount.Location = new System.Drawing.Point(88, 84);
-            this.lblMinAmount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblMinAmount.Name = "lblMinAmount";
-            this.lblMinAmount.Size = new System.Drawing.Size(17, 12);
-            this.lblMinAmount.TabIndex = 52;
-            this.lblMinAmount.Text = "--";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(180, 60);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 12);
-            this.label5.TabIndex = 52;
-            this.label5.Text = "最大杠杆";
-            // 
-            // lblLever
-            // 
-            this.lblLever.AutoSize = true;
-            this.lblLever.Location = new System.Drawing.Point(240, 60);
-            this.lblLever.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblLever.Name = "lblLever";
-            this.lblLever.Size = new System.Drawing.Size(17, 12);
-            this.lblLever.TabIndex = 52;
-            this.lblLever.Text = "--";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(180, 84);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
-            this.label2.TabIndex = 52;
-            this.label2.Text = "资金费率";
-            // 
-            // lblFee
-            // 
-            this.lblFee.AutoSize = true;
-            this.lblFee.Location = new System.Drawing.Point(240, 84);
-            this.lblFee.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblFee.Name = "lblFee";
-            this.lblFee.Size = new System.Drawing.Size(17, 12);
-            this.lblFee.TabIndex = 52;
-            this.lblFee.Text = "--";
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -179,7 +91,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(332, 222);
+            this.tabControl1.Size = new System.Drawing.Size(332, 128);
             this.tabControl1.TabIndex = 53;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -188,38 +100,30 @@
             this.tabPage1.Controls.Add(this.pnlBehavior);
             this.tabPage1.Controls.Add(this.lblMonitor);
             this.tabPage1.Controls.Add(this.lblPostion);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.lblFee);
             this.tabPage1.Controls.Add(this.lblInstrument);
-            this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.tickView1);
-            this.tabPage1.Controls.Add(this.lblLever);
-            this.tabPage1.Controls.Add(this.lblMinSize);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.lblMinAmount);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(324, 196);
+            this.tabPage1.Size = new System.Drawing.Size(324, 102);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "合约";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // pnlBehavior
             // 
-            this.pnlBehavior.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBehavior.Location = new System.Drawing.Point(2, 110);
+            this.pnlBehavior.BackColor = System.Drawing.Color.Silver;
+            this.pnlBehavior.Location = new System.Drawing.Point(2, 54);
             this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2);
             this.pnlBehavior.Name = "pnlBehavior";
-            this.pnlBehavior.Size = new System.Drawing.Size(320, 84);
+            this.pnlBehavior.Size = new System.Drawing.Size(320, 42);
             this.pnlBehavior.TabIndex = 55;
             // 
             // lblMonitor
             // 
             this.lblMonitor.AutoSize = true;
-            this.lblMonitor.Location = new System.Drawing.Point(14, 25);
+            this.lblMonitor.Location = new System.Drawing.Point(7, 25);
             this.lblMonitor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMonitor.Name = "lblMonitor";
             this.lblMonitor.Size = new System.Drawing.Size(17, 12);
@@ -253,7 +157,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(324, 196);
+            this.tabPage3.Size = new System.Drawing.Size(324, 102);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "数据";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -264,7 +168,7 @@
             this.pnlMonitor.Location = new System.Drawing.Point(0, 0);
             this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMonitor.Name = "pnlMonitor";
-            this.pnlMonitor.Size = new System.Drawing.Size(324, 196);
+            this.pnlMonitor.Size = new System.Drawing.Size(324, 102);
             this.pnlMonitor.TabIndex = 0;
             // 
             // btnStat
@@ -299,10 +203,10 @@
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Controls.Add(this.pnlEmpty);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 263);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 130);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(320, 192);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(320, 156);
             this.flowLayoutPanel1.TabIndex = 58;
             // 
             // pnlEmpty
@@ -336,7 +240,7 @@
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 506);
+            this.Size = new System.Drawing.Size(332, 292);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -353,26 +257,18 @@
         private System.Windows.Forms.Label lblInstrument;
         private TickView tickView1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblMinSize;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label lblMinAmount;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label lblLever;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblFee;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.FlowLayoutPanel pnlMonitor;
         private System.Windows.Forms.Label lblPostion;
         private System.Windows.Forms.Label lblMonitor;
-        private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
         private System.Windows.Forms.Button btnStat;
         private System.Windows.Forms.Timer timerPosition;
         private System.Windows.Forms.Button buttonInfo;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Panel pnlEmpty;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
     }
 }

@@ -55,10 +55,10 @@ namespace CoinTrader.Forms.Control
             this.instrument = InstrumentManager.SwapInstrument.GetInstrument(instId);
             this.lblInstrument.Text = instId;
             this.instId = instId;
-            this.lblMinSize.Text = instrument.MinSize.ToString()+"张";
-            this.lblMinAmount.Text = instrument.CtVal.ToString()+instrument.CtValCcy;
-            this.lblLever.Text = instrument.Lever.ToString();
-            this.lblFee.Text = instrument.Category.ToString();
+            //this.lblMinSize.Text = instrument.MinSize.ToString()+"张";
+            //this.lblMinAmount.Text = instrument.CtVal.ToString()+instrument.CtValCcy;
+            //this.lblLever.Text = instrument.Lever.ToString();
+            //this.lblFee.Text = instrument.Category.ToString();
             fundingRateMonitor=dataProvider.GetMonitor<SWPFundingRateMonitor>();
             //fundingRateMonitor = new SWPFundingRateMonitor(this.instId);
             //dataProvider.AddMonitor(fundingRateMonitor);
@@ -194,10 +194,10 @@ namespace CoinTrader.Forms.Control
             this.lblMonitor.ForeColor = this.dataProvider != null && this.dataProvider.Effective ? Color.Red : Color.Black;
 
             lblPostion.Visible = PositionManager.Instance.HasPosition(this.instId);
-            if (fundingRateMonitor != null)
-            {
-                lblFee.Text = Math.Round( fundingRateMonitor.FundingRate.Rate * 100,3) + "%";
-            }
+            //if (fundingRateMonitor != null)
+            //{
+            //    lblFee.Text = Math.Round( fundingRateMonitor.FundingRate.Rate * 100,3) + "%";
+            //}
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
