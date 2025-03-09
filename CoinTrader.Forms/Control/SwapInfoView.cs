@@ -1,6 +1,9 @@
 ﻿
+using CefSharp.DevTools.Profiler;
+using CoinTrader.Common.Database;
 using CoinTrader.Forms.Entity;
 using CoinTrader.OKXCore.Entity;
+using CoinTrader.OKXCore.Enum;
 using CoinTrader.OKXCore.Manager;
 using System;
 
@@ -81,10 +84,49 @@ namespace CoinTrader.Forms.Control
         private void btnClose_Click_1(object sender, EventArgs e)
         {
 
-            var result = MessageBox.Show("确定全部平仓?", "平仓", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (result == DialogResult.OK)
+            var ok = MessageBox.Show("确定全部平仓?", "平仓", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (ok == DialogResult.OK)
             {
-                PositionManager.Instance.ClosePosition(this.Id);
+                var position = PositionManager.Instance.GetPosition(this.Id);
+                // 记录操作到数据库
+                var db = MysqlHelper.Instance.getDB();
+                var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == position.InstId && it.Status == 1).First();
+                var operationId = 0;
+                if (workflow != null)
+                {
+                    Operation newOperation = new Operation()
+                    {
+                        WorkflowId = workflow.Id,
+                        Side = (byte)PositionType.Short,
+                        Status = 1
+                    };
+                    operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
+                }
+                var result = PositionManager.Instance.ClosePosition(this.Id);
+                if (result)
+                {
+                    if (workflow != null)
+                    {
+                        // 标记为操作成功
+                        db.Updateable<Operation>()
+                       .SetColumns(it => it.Des == "手动平仓")
+                       .SetColumns(it => it.Profit == position.Margin * (decimal)position.UplRatio)
+                       .SetColumns(it => it.Status == 1)
+                       .Where(it => it.Id == operationId)
+                       .ExecuteCommand();
+                    }
+                }
+                else
+                {
+                    if (workflow != null)
+                    {
+                        // 标记为操作失败
+                        db.Updateable<Operation>()
+                        .SetColumns(it => it.Status == 2)
+                        .Where(it => it.Id == operationId)
+                        .ExecuteCommand();
+                    }
+                }
             }
         }
 
