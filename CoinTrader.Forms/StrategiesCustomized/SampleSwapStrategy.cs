@@ -227,7 +227,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             }
             else //已持仓情况
             {
-                if (CanClose(pos, Ask, Bid, out string des))//判断是否可以平仓， 包括止盈、止损两种情况
+                if (CanClose(pos, Ask, Bid, out string des, out decimal profit))//判断是否可以平仓， 包括止盈、止损两种情况
                 {
                     this.Executing = true;
                     // 记录操作到数据库
@@ -252,6 +252,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                             // 标记为操作成功
                             db.Updateable<Operation>()
                            .SetColumns(it => it.Des == des)
+                           .SetColumns(it => it.Profit == profit)
                            .SetColumns(it => it.Status == 1)
                            .Where(it => it.Id == operationId)
                            .ExecuteCommand();
@@ -388,9 +389,10 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <param name="ask">卖价</param>
         /// <param name="bid">买价</param>
         /// <returns></returns>
-        private bool CanClose(Position pos, decimal ask, decimal bid, out string des)
+        private bool CanClose(Position pos, decimal ask, decimal bid, out string operationDes, out decimal operationProfit)
         {
-            des = "";
+            operationDes = "";
+            operationProfit = 0;
             var profit = GetProfitPercent(pos, ask, bid);// 盈利百分比
             //Logger.Instance.LogDebug($"利润:{profit}% 止盈:{this.StopSurplus}% 止损:{-this.StopLoss}%");
             if (profit > 0) //持仓已盈利情况
@@ -426,7 +428,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                 {
                     if (profit >= (decimal)StopSurplus) //达到盈利目标
                     {
-                        des = $"止盈:{StopSurplus}%";
+                        operationDes = $"止盈:{StopSurplus}%";
+                        operationProfit = pos.Margin * profit / 100;
                         return true;
                     }
                 }
@@ -435,7 +438,8 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
-                    des = $"止损:{StopLoss}%";
+                    operationDes = $"止损:{StopLoss}%";
+                    operationProfit = pos.Margin * profit / 100;
                     return true;
                 }
             }
