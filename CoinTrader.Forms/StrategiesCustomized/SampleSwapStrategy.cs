@@ -184,6 +184,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 if (coinAmount > 0 && CanOpen(Ask, Bid, out side) && !isBanned()) //判断是否可以开仓
                 {
                     this.Executing = true;
+                    MoveProfit = false; //新仓位禁止移动止盈
                     lastTrigerPrice = 0;//清零移动止盈标记价格
                     if (resetLever) //重置杠杆倍数
                     {
@@ -369,7 +370,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 var longRetracemented = closePrice <= lastTrigerPrice * (1 - ToPercent(Retracement));// 多头回撤
                                 if (longRetracemented)
                                 {
-
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
                                     if (CanOpen(Ask, Bid, out PositionType side))
                                     {
