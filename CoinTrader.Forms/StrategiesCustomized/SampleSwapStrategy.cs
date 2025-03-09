@@ -127,6 +127,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// </summary>
         public decimal lastTrigerPrice = 0;
         public DateTime bannedTime;
+        public string debugText;
         /// <summary>
         /// 交易冷却（主要是等待同步数据)
         /// </summary>
@@ -375,6 +376,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         {
                             case PositionType.Long: //多头持仓的情况                                
                                 var longRetracemented = closePrice <= (lastTrigerPrice * (1 - ToPercent(Retracement)));// 多头回撤
+                                debugText = $"{Retracement}% 极限:{lastTrigerPrice} 回撤:{(lastTrigerPrice * (1 - ToPercent(Retracement)))}";
                                 if (longRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -391,7 +393,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 }
                                 return longRetracemented;                            
                             case PositionType.Short: //空头持仓的情况 
-                                var shortRetracemented = closePrice >= (lastTrigerPrice * (1 + ToPercent(Retracement)));
+                                var shortRetracemented = closePrice >= (lastTrigerPrice * (1 - ToPercent(Retracement)));
+                                debugText = $"极限价:{lastTrigerPrice} 回撤价:{(lastTrigerPrice * (1 - ToPercent(Retracement)))}";
                                 if (shortRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -399,7 +402,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     {
                                         if (side == pos.SideType)
                                         {
-                                            bannedTime = DateTime.Now.AddMinutes(15);
+                                            bannedTime = DateTime.Now.AddMinutes(5);
                                         }
                                     }
                                     operationDes = $"止盈回撤:{Retracement}%";

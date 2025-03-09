@@ -34,6 +34,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.labelBanned = new System.Windows.Forms.Label();
             this.pnlBehavior = new System.Windows.Forms.FlowLayoutPanel();
             this.lblMonitor = new System.Windows.Forms.Label();
             this.lblPostion = new System.Windows.Forms.Label();
@@ -46,7 +47,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlEmpty = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
-            this.labelBanned = new System.Windows.Forms.Label();
+            this.labelDebug = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -112,6 +113,19 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "合约";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // labelBanned
+            // 
+            this.labelBanned.BackColor = System.Drawing.Color.MediumOrchid;
+            this.labelBanned.ForeColor = System.Drawing.Color.White;
+            this.labelBanned.Location = new System.Drawing.Point(40, 0);
+            this.labelBanned.Margin = new System.Windows.Forms.Padding(2);
+            this.labelBanned.Name = "labelBanned";
+            this.labelBanned.Size = new System.Drawing.Size(45, 17);
+            this.labelBanned.TabIndex = 56;
+            this.labelBanned.Text = "Banned";
+            this.labelBanned.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelBanned.Visible = false;
             // 
             // pnlBehavior
             // 
@@ -230,24 +244,21 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "暂无持仓";
             // 
-            // labelBanned
+            // labelDebug
             // 
-            this.labelBanned.BackColor = System.Drawing.Color.MediumOrchid;
-            this.labelBanned.ForeColor = System.Drawing.Color.White;
-            this.labelBanned.Location = new System.Drawing.Point(40, 0);
-            this.labelBanned.Margin = new System.Windows.Forms.Padding(2);
-            this.labelBanned.Name = "labelBanned";
-            this.labelBanned.Size = new System.Drawing.Size(45, 17);
-            this.labelBanned.TabIndex = 56;
-            this.labelBanned.Text = "Banned";
-            this.labelBanned.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelBanned.Visible = false;
+            this.labelDebug.AutoSize = true;
+            this.labelDebug.Location = new System.Drawing.Point(6, 287);
+            this.labelDebug.Name = "labelDebug";
+            this.labelDebug.Size = new System.Drawing.Size(41, 12);
+            this.labelDebug.TabIndex = 59;
+            this.labelDebug.Text = "label1";
             // 
             // SwapView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.labelDebug);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.buttonInfo);
             this.Controls.Add(this.btnStat);
@@ -255,7 +266,7 @@
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 280);
+            this.Size = new System.Drawing.Size(332, 308);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -264,6 +275,7 @@
             this.pnlEmpty.ResumeLayout(false);
             this.pnlEmpty.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -286,5 +298,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
         private System.Windows.Forms.Label labelBanned;
+        private System.Windows.Forms.Label labelDebug;
     }
 }

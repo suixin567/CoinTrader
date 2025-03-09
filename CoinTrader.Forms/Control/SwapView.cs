@@ -202,6 +202,13 @@ namespace CoinTrader.Forms.Control
                 if (strategy != null)
                 {
                     labelBanned.Visible = strategy.bannedTime > DateTime.Now;
+                    if (strategy.MoveProfit)
+                    {
+                        this.labelDebug.Text = strategy.debugText;
+                    }
+                    else {
+                        this.labelDebug.Text = "";
+                    }
                 }
             }
             //if (fundingRateMonitor != null)
