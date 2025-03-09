@@ -214,7 +214,7 @@ namespace CoinTrader.Forms.Control
             //}
             else if (this.tabControl1.SelectedTab == this.tabPage1)
             {
-                this.HidePosition();
+                this.ShowPosition();
                 this.pnlMonitor.Controls.Clear();
             }
         }
