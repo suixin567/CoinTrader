@@ -376,7 +376,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         {
                             case PositionType.Long: //多头持仓的情况                                
                                 var longRetracemented = closePrice <= (lastTrigerPrice * (1 - ToPercent(Retracement)));// 多头回撤
-                                debugText = $"{Retracement}% 极限:{lastTrigerPrice} 回撤:{(lastTrigerPrice * (1 - ToPercent(Retracement)))}";
+                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{lastTrigerPrice * (1 - ToPercent(Retracement))}";
                                 if (longRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -391,10 +391,10 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo("触发多头回撤");
                                 }
-                                return longRetracemented;                            
-                            case PositionType.Short: //空头持仓的情况 
+                                return longRetracemented;
+                            case PositionType.Short: //空头持仓的情况
                                 var shortRetracemented = closePrice >= (lastTrigerPrice * (1 - ToPercent(Retracement)));
-                                debugText = $"极限价:{lastTrigerPrice} 回撤价:{(lastTrigerPrice * (1 - ToPercent(Retracement)))}";
+                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{lastTrigerPrice * (1 - ToPercent(Retracement))}";
                                 if (shortRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时

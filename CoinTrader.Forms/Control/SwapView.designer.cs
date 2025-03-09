@@ -93,7 +93,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(332, 128);
+            this.tabControl1.Size = new System.Drawing.Size(328, 128);
             this.tabControl1.TabIndex = 53;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -109,7 +109,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(324, 102);
+            this.tabPage1.Size = new System.Drawing.Size(320, 102);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "合约";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -133,7 +133,7 @@
             this.pnlBehavior.Location = new System.Drawing.Point(2, 54);
             this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2);
             this.pnlBehavior.Name = "pnlBehavior";
-            this.pnlBehavior.Size = new System.Drawing.Size(320, 42);
+            this.pnlBehavior.Size = new System.Drawing.Size(312, 42);
             this.pnlBehavior.TabIndex = 55;
             // 
             // lblMonitor
@@ -161,7 +161,7 @@
             // 
             // tickView1
             // 
-            this.tickView1.Location = new System.Drawing.Point(188, 5);
+            this.tickView1.Location = new System.Drawing.Point(183, 5);
             this.tickView1.Margin = new System.Windows.Forms.Padding(1);
             this.tickView1.Name = "tickView1";
             this.tickView1.Size = new System.Drawing.Size(136, 46);
@@ -173,7 +173,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(324, 102);
+            this.tabPage3.Size = new System.Drawing.Size(320, 102);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "数据";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -184,7 +184,7 @@
             this.pnlMonitor.Location = new System.Drawing.Point(0, 0);
             this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMonitor.Name = "pnlMonitor";
-            this.pnlMonitor.Size = new System.Drawing.Size(324, 102);
+            this.pnlMonitor.Size = new System.Drawing.Size(320, 102);
             this.pnlMonitor.TabIndex = 0;
             // 
             // btnStat
@@ -231,7 +231,7 @@
             this.pnlEmpty.Location = new System.Drawing.Point(2, 2);
             this.pnlEmpty.Margin = new System.Windows.Forms.Padding(2);
             this.pnlEmpty.Name = "pnlEmpty";
-            this.pnlEmpty.Size = new System.Drawing.Size(304, 64);
+            this.pnlEmpty.Size = new System.Drawing.Size(316, 64);
             this.pnlEmpty.TabIndex = 3;
             // 
             // label4
