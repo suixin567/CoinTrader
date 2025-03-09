@@ -430,9 +430,11 @@ namespace CoinTrader.Forms.Strategies.Customer
                         {
                             case PositionType.Long: //多头持仓的情况
                                 lastTrigerPrice = Math.Max(lastTrigerPrice, closePrice);// 取最高价
+                                Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
                                 break;
                             case PositionType.Short: //空头持仓的情况
                                 lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
+                                Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
                                 break;
                         }
                     }
