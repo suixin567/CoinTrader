@@ -469,21 +469,18 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             side = PositionType.Long;
             var candleProvider = GetCandleProvider(_candle);//获取K线
-
             if(KLinSample > 0 && candleProvider != null)//k线是否已经加载成功
             {
-                int num = 0;//
+                int num = 0;
                 int downCount = 0, upCount = 0; //涨跌幅计数
                 candleProvider.EachCandle((candle) =>
                 {
                     var amp = (candle.Close / candle.Open) - 1.0m; //当前k线的涨跌幅
-
-                    if (amp >= (decimal)ToPercent(Range))//上涨超过超过设定幅度
+                    if (amp >= ToPercent(Range))//上涨超过超过设定幅度
                     {
                         upCount++;
                     }
-
-                    if (amp <= (decimal)ToPercent(-Range))//下跌超过设定幅度
+                    if (amp <= ToPercent(-Range))//下跌超过设定幅度
                     {
                         downCount++;
                     }
@@ -502,7 +499,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                             side = PositionType.Short;
                             break;
                     }
-
                     return true;
                 }
                 else if (downCount >= KLineCount) //下跌数量达到设定数量
@@ -516,11 +512,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                             side = PositionType.Long;
                             break;
                     }
-
                     return true;
                 }
             }
-
             return false;
         }
 
