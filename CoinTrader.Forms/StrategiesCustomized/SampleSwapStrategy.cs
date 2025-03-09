@@ -470,11 +470,22 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <param name="ask"></param>
         /// <param name="bid"></param>
         /// <returns></returns>
-        private bool CanOpen(decimal ask, decimal bid,out PositionType side)
+        private bool CanOpen(decimal ask, decimal bid, out PositionType finalSide)
         {
-            if(CheckKLine(out side)) //检查K线是否符合触发条件
+            finalSide = PositionType.Long;
+            // 判断15分钟线有初步机会
+            if (CheckKLine(_candle, KLinSample, Range, KLineCount, DirectionType, out PositionType side_15m)) //检查K线是否符合触发条件
             {
-                return true;
+                //判断4小时线有稳定机会
+                if (CheckKLine(CandleGranularity.H4, 10, 3.1f, 7, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
+                {
+                    if (side_15m == side_4h)
+                    {
+                        finalSide = side_4h;
+                        return true;
+                    }
+                    return false;
+                }
             }
             return false;
         }
@@ -482,33 +493,38 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <summary>
         /// 检查K线是否已经符合触发建仓条件
         /// </summary>
+        /// <param name="_candle">k线类型</param>
+        /// <param name="_kLinSample">k线采样数</param>
+        /// <param name="_range">k线振幅</param>
+        /// <param name="_kLineCount">k线数量阈值</param>
+        /// <param name="_directionType">顺势、逆势</param>
         /// <returns></returns>
-        private bool CheckKLine(out PositionType side)
+        private bool CheckKLine(CandleGranularity _candle, int _kLinSample, float _range, int _kLineCount, Direction _directionType, out PositionType side)
         {
             side = PositionType.Long;
             var candleProvider = GetCandleProvider(_candle);//获取K线
-            if(KLinSample > 0 && candleProvider != null)//k线是否已经加载成功
+            if(_kLinSample > 0 && candleProvider != null)//k线是否已经加载成功
             {
                 int num = 0;
                 int downCount = 0, upCount = 0; //涨跌幅计数
                 candleProvider.EachCandle((candle) =>
                 {
                     var amp = (candle.Close / candle.Open) - 1.0m; //当前k线的涨跌幅
-                    if (amp >= ToPercent(Range))//上涨超过超过设定幅度
+                    if (amp >= ToPercent(_range))//上涨超过超过设定幅度
                     {
                         upCount++;
                     }
-                    if (amp <= ToPercent(-Range))//下跌超过设定幅度
+                    if (amp <= ToPercent(-_range))//下跌超过设定幅度
                     {
                         downCount++;
                     }
                     num++;
-                    return num >= KLinSample;
+                    return num >= _kLinSample;
                 });
-                Logger.Instance.LogDebug($"KLinSample:{KLinSample} upCount:{upCount} downCount:{downCount}");
-                if (upCount >= KLineCount)//上涨数量达到设定数量
+                Logger.Instance.LogDebug($"KLinSample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
+                if (upCount >= _kLineCount)//上涨数量达到设定数量
                 {
-                    switch(this.DirectionType)
+                    switch(_directionType)
                     {
                         case Direction.Forward:
                             side = PositionType.Long;
@@ -519,9 +535,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                     }
                     return true;
                 }
-                else if (downCount >= KLineCount) //下跌数量达到设定数量
+                else if (downCount >= _kLineCount) //下跌数量达到设定数量
                 {
-                    switch (this.DirectionType)
+                    switch (_directionType)
                     {
                         case Direction.Forward:
                             side = PositionType.Short;
