@@ -46,6 +46,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlEmpty = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
+            this.labelBanned = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -69,7 +70,7 @@
             // 
             this.lblInstrument.AutoSize = true;
             this.lblInstrument.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Underline);
-            this.lblInstrument.Location = new System.Drawing.Point(30, 22);
+            this.lblInstrument.Location = new System.Drawing.Point(30, 24);
             this.lblInstrument.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblInstrument.Name = "lblInstrument";
             this.lblInstrument.Size = new System.Drawing.Size(39, 16);
@@ -97,6 +98,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.labelBanned);
             this.tabPage1.Controls.Add(this.pnlBehavior);
             this.tabPage1.Controls.Add(this.lblMonitor);
             this.tabPage1.Controls.Add(this.lblPostion);
@@ -123,7 +125,7 @@
             // lblMonitor
             // 
             this.lblMonitor.AutoSize = true;
-            this.lblMonitor.Location = new System.Drawing.Point(7, 25);
+            this.lblMonitor.Location = new System.Drawing.Point(7, 27);
             this.lblMonitor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMonitor.Name = "lblMonitor";
             this.lblMonitor.Size = new System.Drawing.Size(17, 12);
@@ -228,6 +230,19 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "暂无持仓";
             // 
+            // labelBanned
+            // 
+            this.labelBanned.BackColor = System.Drawing.Color.MediumOrchid;
+            this.labelBanned.ForeColor = System.Drawing.Color.White;
+            this.labelBanned.Location = new System.Drawing.Point(40, 0);
+            this.labelBanned.Margin = new System.Windows.Forms.Padding(2);
+            this.labelBanned.Name = "labelBanned";
+            this.labelBanned.Size = new System.Drawing.Size(45, 17);
+            this.labelBanned.TabIndex = 56;
+            this.labelBanned.Text = "Banned";
+            this.labelBanned.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelBanned.Visible = false;
+            // 
             // SwapView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -270,5 +285,6 @@
         private System.Windows.Forms.Panel pnlEmpty;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
+        private System.Windows.Forms.Label labelBanned;
     }
 }

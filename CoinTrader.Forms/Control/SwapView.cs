@@ -2,6 +2,7 @@
 using CoinTrader.Common.Database;
 using CoinTrader.Forms.Chromium;
 using CoinTrader.Forms.Strategies;
+using CoinTrader.Forms.Strategies.Customer;
 using CoinTrader.Forms.StrategiesRuntime;
 using CoinTrader.OKXCore;
 using CoinTrader.OKXCore.Entity;
@@ -194,6 +195,15 @@ namespace CoinTrader.Forms.Control
             this.lblMonitor.ForeColor = this.dataProvider != null && this.dataProvider.Effective ? Color.Red : Color.Black;
 
             lblPostion.Visible = PositionManager.Instance.HasPosition(this.instId);
+            var list = StrategyRunner.Instance.GetStrategiesByInstId(InstId);
+            if (list.Count == 1)
+            {
+                var strategy = list[0] as SampleSwapStrategy;
+                if (strategy != null)
+                {
+                    labelBanned.Visible = strategy.bannedTime > DateTime.Now;
+                }
+            }
             //if (fundingRateMonitor != null)
             //{
             //    lblFee.Text = Math.Round( fundingRateMonitor.FundingRate.Rate * 100,3) + "%";

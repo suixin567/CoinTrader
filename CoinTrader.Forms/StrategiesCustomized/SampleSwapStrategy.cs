@@ -125,8 +125,8 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <summary>
         /// 触发移动止盈的最后最高（最低）价格记录
         /// </summary>
-        private decimal lastTrigerPrice = 0;
-        private DateTime bannedTime;
+        public decimal lastTrigerPrice = 0;
+        public DateTime bannedTime;
         /// <summary>
         /// 交易冷却（主要是等待同步数据)
         /// </summary>
@@ -609,7 +609,8 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             var banned = DateTime.Now < bannedTime;
             if (banned) {
-                Logger.Instance.LogInfo($"{InstId} is Banned");
+                var remainingTime = (bannedTime - DateTime.Now).TotalMinutes;
+                Logger.Instance.LogInfo($"{InstId} is Banned. Remaining time: {remainingTime:F2} minutes.");
             }
             return banned;
         }
