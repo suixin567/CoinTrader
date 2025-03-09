@@ -400,12 +400,27 @@ namespace CoinTrader.Forms.Strategies.Customer
                 if (MoveProfit) //移动盈利
                 {
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                    if (lastTrigerPrice > 0) //已经被触发过，判断是否触发移动止盈
+                    if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
+                    {
+                        switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
+                        {
+                            case PositionType.Long: //多头持仓的情况
+                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Max(lastTrigerPrice, closePrice);// 取最高价
+                                Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
+                                break;
+                            case PositionType.Short: //空头持仓的情况
+                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
+                                Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
+                                break;
+                        }
+                    }
+                    if (lastTrigerPrice > 0) //判断是否触发移动止盈
                     {
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
                             case PositionType.Long: //多头持仓的情况                                
-                                var longRetracemented = lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
+                                //var longRetracemented = lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
+                                var longRetracemented = closePrice <= lastTrigerPrice * (1 - ToPercent(Retracement));// 多头回撤
                                 if (longRetracemented)
                                 {
                                     operationDes = $"止盈回撤:{Retracement}%";
@@ -414,7 +429,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 }
                                 return longRetracemented;                            
                             case PositionType.Short: //空头持仓的情况
-                                var shortRetracemented = closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤  
+                                //var shortRetracemented = closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤  
+                                var shortRetracemented = closePrice >= lastTrigerPrice * (1 + ToPercent(Retracement));
                                 if (shortRetracemented)
                                 {
                                     operationDes = $"止盈回撤:{Retracement}%";
@@ -422,20 +438,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     Logger.Instance.LogInfo("触发空头回撤");
                                 }
                                 return shortRetracemented;
-                        }
-                    }
-                    if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
-                    {
-                        switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
-                        {
-                            case PositionType.Long: //多头持仓的情况
-                                lastTrigerPrice = Math.Max(lastTrigerPrice, closePrice);// 取最高价
-                                Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
-                                break;
-                            case PositionType.Short: //空头持仓的情况
-                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
-                                Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
-                                break;
                         }
                     }
                 }
@@ -449,7 +451,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                             if (side == pos.SideType)
                             {
                                 // 转换为移动止盈
-                                Retracement = StopSurplus / 2;
+                                var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
+                                lastTrigerPrice = closePrice; // 设置回撤极值
+                                Retracement = StopSurplus / 2;// 至少保留一半利润
                                 MoveProfit = true;
                                 Logger.Instance.LogInfo("转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)");
                                 // 记录操作到数据库
