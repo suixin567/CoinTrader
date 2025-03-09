@@ -127,7 +127,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// 触发移动止盈的最后最高（最低）价格记录
         /// </summary>
         private decimal lastTrigerPrice = 0;
-
+        private DateTime bannedTime;
         /// <summary>
         /// 交易冷却（主要是等待同步数据)
         /// </summary>
@@ -184,7 +184,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             if (pos == null) //没有持仓
             {
                 PositionType side;
-                if (coinAmount > 0 && CanOpen(Ask, Bid, out side)) //判断是否可以开仓
+                if (coinAmount > 0 && CanOpen(Ask, Bid, out side) && !isBanned()) //判断是否可以开仓
                 {
                     this.Executing = true;
                     lastTrigerPrice = 0;//清零移动止盈标记价格
@@ -423,6 +423,16 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 var longRetracemented = closePrice <= lastTrigerPrice * (1 - ToPercent(Retracement));// 多头回撤
                                 if (longRetracemented)
                                 {
+
+                                    // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
+                                    if (CanOpen(Ask, Bid, out PositionType side))
+                                    {
+                                        if (side == pos.SideType)
+                                        {
+                                            bannedTime = DateTime.Now.AddMinutes(15);
+                                        }
+                                    }
+
                                     operationDes = $"止盈回撤:{Retracement}%";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo("触发多头回撤");
@@ -585,6 +595,14 @@ namespace CoinTrader.Forms.Strategies.Customer
             }
 
             return false;
+        }
+        bool isBanned()
+        {
+            var banned = DateTime.Now < bannedTime;
+            if (banned) {
+                Logger.Instance.LogInfo($"{InstId} is Banned");
+            }
+            return banned;
         }
     }
 }
