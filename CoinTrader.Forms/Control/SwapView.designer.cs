@@ -71,7 +71,7 @@
             // 
             this.lblInstrument.AutoSize = true;
             this.lblInstrument.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Underline);
-            this.lblInstrument.Location = new System.Drawing.Point(30, 24);
+            this.lblInstrument.Location = new System.Drawing.Point(4, 29);
             this.lblInstrument.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblInstrument.Name = "lblInstrument";
             this.lblInstrument.Size = new System.Drawing.Size(39, 16);
@@ -118,7 +118,7 @@
             // 
             this.labelBanned.BackColor = System.Drawing.Color.MediumOrchid;
             this.labelBanned.ForeColor = System.Drawing.Color.White;
-            this.labelBanned.Location = new System.Drawing.Point(40, 0);
+            this.labelBanned.Location = new System.Drawing.Point(64, 5);
             this.labelBanned.Margin = new System.Windows.Forms.Padding(2);
             this.labelBanned.Name = "labelBanned";
             this.labelBanned.Size = new System.Drawing.Size(45, 17);
@@ -139,7 +139,7 @@
             // lblMonitor
             // 
             this.lblMonitor.AutoSize = true;
-            this.lblMonitor.Location = new System.Drawing.Point(7, 27);
+            this.lblMonitor.Location = new System.Drawing.Point(2, 8);
             this.lblMonitor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMonitor.Name = "lblMonitor";
             this.lblMonitor.Size = new System.Drawing.Size(17, 12);
@@ -150,7 +150,7 @@
             // 
             this.lblPostion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lblPostion.ForeColor = System.Drawing.Color.White;
-            this.lblPostion.Location = new System.Drawing.Point(0, 0);
+            this.lblPostion.Location = new System.Drawing.Point(24, 5);
             this.lblPostion.Margin = new System.Windows.Forms.Padding(2);
             this.lblPostion.Name = "lblPostion";
             this.lblPostion.Size = new System.Drawing.Size(36, 17);
@@ -206,7 +206,7 @@
             // 
             // buttonInfo
             // 
-            this.buttonInfo.Location = new System.Drawing.Point(227, -1);
+            this.buttonInfo.Location = new System.Drawing.Point(227, 1);
             this.buttonInfo.Margin = new System.Windows.Forms.Padding(2);
             this.buttonInfo.Name = "buttonInfo";
             this.buttonInfo.Size = new System.Drawing.Size(36, 20);
@@ -247,11 +247,11 @@
             // labelDebug
             // 
             this.labelDebug.AutoSize = true;
-            this.labelDebug.Location = new System.Drawing.Point(6, 287);
+            this.labelDebug.Location = new System.Drawing.Point(6, 282);
             this.labelDebug.Name = "labelDebug";
-            this.labelDebug.Size = new System.Drawing.Size(41, 12);
+            this.labelDebug.Size = new System.Drawing.Size(35, 12);
             this.labelDebug.TabIndex = 59;
-            this.labelDebug.Text = "label1";
+            this.labelDebug.Text = "debug";
             // 
             // SwapView
             // 
@@ -266,7 +266,7 @@
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 308);
+            this.Size = new System.Drawing.Size(332, 303);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
