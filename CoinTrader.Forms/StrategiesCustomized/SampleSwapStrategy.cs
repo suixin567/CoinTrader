@@ -396,6 +396,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 var shortRetracemented = closePrice >= lastTrigerPrice * (1 + ToPercent(Retracement));
                                 if (shortRetracemented)
                                 {
+                                    // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
+                                    if (CanOpen(Ask, Bid, out PositionType side))
+                                    {
+                                        if (side == pos.SideType)
+                                        {
+                                            bannedTime = DateTime.Now.AddMinutes(15);
+                                        }
+                                    }
                                     operationDes = $"止盈回撤:{Retracement}%";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo("触发空头回撤");
