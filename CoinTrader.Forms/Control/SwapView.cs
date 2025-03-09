@@ -238,5 +238,14 @@ namespace CoinTrader.Forms.Control
             this.ShowPosition();
         }
 
+        private void buttonInfo_Click(object sender, EventArgs e)
+        {
+            string info = "";
+            info += $"最小下单量:{instrument.MinSize}张\n";
+            info += $"最小面值:{instrument.CtVal.ToString() + instrument.CtValCcy}\n";
+            info += $"最大杠杆:{instrument.Lever}\n";
+            info += $"资金费率:{Math.Round(fundingRateMonitor.FundingRate.Rate * 100, 3)}%\n";
+            MessageBox.Show(info);
+        }
     }
 }
