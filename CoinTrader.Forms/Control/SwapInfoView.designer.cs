@@ -55,7 +55,7 @@
             // 
             this.lblSide.AutoSize = true;
             this.lblSide.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblSide.Location = new System.Drawing.Point(101, 9);
+            this.lblSide.Location = new System.Drawing.Point(95, 9);
             this.lblSide.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSide.Name = "lblSide";
             this.lblSide.Size = new System.Drawing.Size(21, 14);
@@ -66,7 +66,7 @@
             // 
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblName.Location = new System.Drawing.Point(8, 9);
+            this.lblName.Location = new System.Drawing.Point(2, 9);
             this.lblName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(34, 16);
@@ -75,8 +75,8 @@
             // 
             // Liquidate
             // 
-            this.Liquidate.Location = new System.Drawing.Point(248, 85);
-            this.Liquidate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Liquidate.Location = new System.Drawing.Point(242, 85);
+            this.Liquidate.Margin = new System.Windows.Forms.Padding(2);
             this.Liquidate.Name = "Liquidate";
             this.Liquidate.Size = new System.Drawing.Size(68, 23);
             this.Liquidate.TabIndex = 2;
@@ -86,8 +86,8 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(248, 108);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnClose.Location = new System.Drawing.Point(242, 108);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(67, 23);
             this.btnClose.TabIndex = 3;
@@ -98,7 +98,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(180, 13);
+            this.label3.Location = new System.Drawing.Point(174, 13);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
@@ -109,7 +109,7 @@
             // 
             this.lblUpl.AutoSize = true;
             this.lblUpl.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblUpl.Location = new System.Drawing.Point(213, 13);
+            this.lblUpl.Location = new System.Drawing.Point(207, 13);
             this.lblUpl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUpl.Name = "lblUpl";
             this.lblUpl.Size = new System.Drawing.Size(61, 12);
@@ -119,7 +119,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(22, 98);
+            this.label5.Location = new System.Drawing.Point(5, 96);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 12);
@@ -129,17 +129,18 @@
             // lblMargin
             // 
             this.lblMargin.AutoSize = true;
-            this.lblMargin.Location = new System.Drawing.Point(65, 98);
+            this.lblMargin.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblMargin.Location = new System.Drawing.Point(55, 96);
             this.lblMargin.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMargin.Name = "lblMargin";
-            this.lblMargin.Size = new System.Drawing.Size(11, 12);
+            this.lblMargin.Size = new System.Drawing.Size(12, 12);
             this.lblMargin.TabIndex = 5;
             this.lblMargin.Text = "0";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(125, 40);
+            this.label7.Location = new System.Drawing.Point(123, 68);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
@@ -149,7 +150,7 @@
             // lblLiqPx
             // 
             this.lblLiqPx.AutoSize = true;
-            this.lblLiqPx.Location = new System.Drawing.Point(179, 40);
+            this.lblLiqPx.Location = new System.Drawing.Point(174, 68);
             this.lblLiqPx.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblLiqPx.Name = "lblLiqPx";
             this.lblLiqPx.Size = new System.Drawing.Size(11, 12);
@@ -159,7 +160,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(125, 68);
+            this.label9.Location = new System.Drawing.Point(123, 40);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(53, 12);
@@ -169,7 +170,7 @@
             // lblAvgPx
             // 
             this.lblAvgPx.AutoSize = true;
-            this.lblAvgPx.Location = new System.Drawing.Point(179, 68);
+            this.lblAvgPx.Location = new System.Drawing.Point(174, 40);
             this.lblAvgPx.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAvgPx.Name = "lblAvgPx";
             this.lblAvgPx.Size = new System.Drawing.Size(11, 12);
@@ -184,7 +185,7 @@
             // lblLever
             // 
             this.lblLever.AutoSize = true;
-            this.lblLever.Location = new System.Drawing.Point(135, 13);
+            this.lblLever.Location = new System.Drawing.Point(129, 13);
             this.lblLever.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblLever.Name = "lblLever";
             this.lblLever.Size = new System.Drawing.Size(17, 12);
@@ -194,7 +195,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 68);
+            this.label1.Location = new System.Drawing.Point(5, 68);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
@@ -204,7 +205,7 @@
             // lblAmount
             // 
             this.lblAmount.AutoSize = true;
-            this.lblAmount.Location = new System.Drawing.Point(65, 68);
+            this.lblAmount.Location = new System.Drawing.Point(56, 68);
             this.lblAmount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAmount.Name = "lblAmount";
             this.lblAmount.Size = new System.Drawing.Size(11, 12);
@@ -214,17 +215,18 @@
             // lblPx
             // 
             this.lblPx.AutoSize = true;
-            this.lblPx.Location = new System.Drawing.Point(65, 40);
+            this.lblPx.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblPx.Location = new System.Drawing.Point(56, 40);
             this.lblPx.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPx.Name = "lblPx";
-            this.lblPx.Size = new System.Drawing.Size(11, 12);
+            this.lblPx.Size = new System.Drawing.Size(12, 12);
             this.lblPx.TabIndex = 9;
             this.lblPx.Text = "0";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 40);
+            this.label2.Location = new System.Drawing.Point(5, 40);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 12);
@@ -233,8 +235,8 @@
             // 
             // btnMagrin
             // 
-            this.btnMagrin.Location = new System.Drawing.Point(248, 39);
-            this.btnMagrin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnMagrin.Location = new System.Drawing.Point(242, 39);
+            this.btnMagrin.Margin = new System.Windows.Forms.Padding(2);
             this.btnMagrin.Name = "btnMagrin";
             this.btnMagrin.Size = new System.Drawing.Size(68, 23);
             this.btnMagrin.TabIndex = 2;
@@ -244,8 +246,8 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(248, 62);
-            this.btnStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStop.Location = new System.Drawing.Point(242, 62);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(68, 23);
             this.btnStop.TabIndex = 3;
@@ -277,9 +279,9 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapInfoView";
-            this.Size = new System.Drawing.Size(319, 135);
+            this.Size = new System.Drawing.Size(313, 135);
             this.ResumeLayout(false);
             this.PerformLayout();
 

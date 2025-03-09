@@ -206,7 +206,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 130);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(320, 156);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(320, 144);
             this.flowLayoutPanel1.TabIndex = 58;
             // 
             // pnlEmpty
@@ -240,7 +240,7 @@
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 292);
+            this.Size = new System.Drawing.Size(332, 280);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
