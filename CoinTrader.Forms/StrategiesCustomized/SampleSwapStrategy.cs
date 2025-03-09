@@ -477,7 +477,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             if (CheckKLine(_candle, KLinSample, Range, KLineCount, DirectionType, out PositionType side_15m)) //检查K线是否符合触发条件
             {
                 //判断4小时线有稳定机会
-                if (CheckKLine(CandleGranularity.H4, 10, 3.1f, 7, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
+                if (CheckKLine(CandleGranularity.H4, KLinSample, Range * 2, KLinSample / 2, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
                 {
                     if (side_15m == side_4h)
                     {
@@ -503,53 +503,60 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             side = PositionType.Long;
             var candleProvider = GetCandleProvider(_candle);//获取K线
-            if(_kLinSample > 0 && candleProvider != null)//k线是否已经加载成功
+            if (_kLinSample <= 0 || candleProvider == null)//k线是否已经加载成功
             {
-                int num = 0;
-                int downCount = 0, upCount = 0; //涨跌幅计数
-                candleProvider.EachCandle((candle) =>
-                {
-                    var amp = (candle.Close / candle.Open) - 1.0m; //当前k线的涨跌幅
-                    if (amp >= ToPercent(_range))//上涨超过超过设定幅度
-                    {
-                        upCount++;
-                    }
-                    if (amp <= ToPercent(-_range))//下跌超过设定幅度
-                    {
-                        downCount++;
-                    }
-                    num++;
-                    return num >= _kLinSample;
-                });
-                Logger.Instance.LogDebug($"KLinSample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
-                if (upCount >= _kLineCount)//上涨数量达到设定数量
-                {
-                    switch(_directionType)
-                    {
-                        case Direction.Forward:
-                            side = PositionType.Long;
-                            break;
-                        case Direction.Reverse:
-                            side = PositionType.Short;
-                            break;
-                    }
-                    return true;
-                }
-                else if (downCount >= _kLineCount) //下跌数量达到设定数量
-                {
-                    switch (_directionType)
-                    {
-                        case Direction.Forward:
-                            side = PositionType.Short;
-                            break;
-                        case Direction.Reverse:
-                            side = PositionType.Long;
-                            break;
-                    }
-                    return true;
-                }
+                return false;
             }
-            return false;
+            int num = 0;
+            int downCount = 0, upCount = 0; //涨跌幅计数
+            candleProvider.EachCandle((candle) =>
+            {
+                var amp = (candle.Close / candle.Open) - 1.0m; //当前k线的涨跌幅
+                if (amp >= ToPercent(_range))//上涨超过超过设定幅度
+                {
+                    upCount++;
+                }
+                if (amp <= ToPercent(-_range))//下跌超过设定幅度
+                {
+                    downCount++;
+                }
+                num++;
+                return num >= _kLinSample;
+            });
+            if (upCount >= _kLineCount)//上涨数量达到设定数量
+            {
+                switch (_directionType)
+                {
+                    case Direction.Forward:
+                        side = PositionType.Long;
+                        break;
+                    case Direction.Reverse:
+                        side = PositionType.Short;
+                        break;
+                }
+                Logger.Instance.LogInfo($"{_candle}-[{side}满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
+                return true;
+            }
+            else if (downCount >= _kLineCount) //下跌数量达到设定数量
+            {
+                switch (_directionType)
+                {
+                    case Direction.Forward:
+                        side = PositionType.Short;
+                        break;
+                    case Direction.Reverse:
+                        side = PositionType.Long;
+                        break;
+                }
+                Logger.Instance.LogInfo($"{_candle}-[{side}满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
+                return true;
+            }
+            else
+            {
+                Logger.Instance.LogInfo($"{_candle}-[未满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
+                return false;
+            }
+
         }
 
         /// <summary>
