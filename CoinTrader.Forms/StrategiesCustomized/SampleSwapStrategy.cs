@@ -399,16 +399,29 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 if (MoveProfit) //移动盈利
                 {
-                    var closePrice = GetClosePrice(pos.SideType, ask, bid);
+                    var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                     if (lastTrigerPrice > 0) //已经被触发过，判断是否触发移动止盈
                     {
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
-                            case PositionType.Long: //多头持仓的情况
-                                return lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
-
+                            case PositionType.Long: //多头持仓的情况                                
+                                var longRetracemented = lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
+                                if (longRetracemented)
+                                {
+                                    operationDes = $"止盈回撤:{Retracement}%";
+                                    operationProfit = pos.Margin * profit / 100;
+                                    Logger.Instance.LogInfo("触发多头回撤");
+                                }
+                                return longRetracemented;                            
                             case PositionType.Short: //空头持仓的情况
-                                return closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤
+                                var shortRetracemented = closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤  
+                                if (shortRetracemented)
+                                {
+                                    operationDes = $"止盈回撤:{Retracement}%";
+                                    operationProfit = pos.Margin * profit / 100;
+                                    Logger.Instance.LogInfo("触发空头回撤");
+                                }
+                                return shortRetracemented;
                         }
                     }
                     if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
@@ -428,6 +441,32 @@ namespace CoinTrader.Forms.Strategies.Customer
                 {
                     if (profit >= (decimal)StopSurplus) //达到盈利目标
                     {
+                        // 判断下次操作的方向 如果方向相同，防止没意义的止盈
+                        if (CanOpen(Ask, Bid, out PositionType side))
+                        {
+                            if (side == pos.SideType)
+                            {
+                                // 转换为移动止盈
+                                Retracement = StopSurplus / 2;
+                                MoveProfit = true;
+                                Logger.Instance.LogInfo("转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)");
+                                // 记录操作到数据库
+                                var db = MysqlHelper.Instance.getDB();
+                                var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && it.Status == 1).First();
+                                if (workflow != null)
+                                {
+                                    Operation newOperation = new Operation()
+                                    {
+                                        WorkflowId = workflow.Id,
+                                        Side = (byte)pos.SideType,
+                                        Des = "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)",
+                                        Status = 1
+                                    };
+                                    db.Insertable(newOperation).ExecuteReturnIdentity();
+                                }
+                                return false;
+                            }
+                        }
                         operationDes = $"止盈:{StopSurplus}%";
                         operationProfit = pos.Margin * profit / 100;
                         return true;
@@ -487,7 +526,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     num++;
                     return num >= KLinSample;
                 });
-                // Logger.Instance.LogDebug($"upCount:{upCount} downCount:{downCount}");
+                Logger.Instance.LogDebug($"KLinSample:{KLinSample} upCount:{upCount} downCount:{downCount}");
                 if (upCount >= KLineCount)//上涨数量达到设定数量
                 {
                     switch(this.DirectionType)
