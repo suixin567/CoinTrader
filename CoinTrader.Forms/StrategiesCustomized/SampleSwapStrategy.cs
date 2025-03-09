@@ -4,7 +4,6 @@
  * 每次重启的时候就会动态加载StrategiesCustomized文件夹下的 .cs和.csx文件
  * 这个文件里的代码是动态编译，修改后重启生效。
 */
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -160,7 +159,6 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                  return true;
             }
-
             return false;
         }
 
@@ -170,7 +168,6 @@ namespace CoinTrader.Forms.Strategies.Customer
         protected override void  OnTick()
         {
             this.Executing = false;
-
             if (!Effective)//数据不正常
                 return;
  
@@ -243,7 +240,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                         };
                         operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     }
-
                     var result = ClosePosition(pos.PosId); //平仓
                     if (result)
                     {
@@ -279,7 +275,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                         PlusAppendTimes(pos.PosId);
                         Wait(delay);
                     }
-
                     lastTrigerPrice = 0;//清零移动止盈标记价格
                 }
             }
@@ -293,7 +288,6 @@ namespace CoinTrader.Forms.Strategies.Customer
         private int GetAppendTimes(long posId)
         {
             string storageKey = GetStorageKey(posId);
-
             return LocalStorage.GetValue<int>(storageKey);
         }
 
@@ -332,54 +326,6 @@ namespace CoinTrader.Forms.Strategies.Customer
             var quoteAmount = Math.Min(balance, PositionSizeUsd);
             var amount = quoteAmount / ((ask + bid) * 0.5M) * Lever;//计算出每次下单的大小
             return amount;
-        }
-
-        /// <summary>
-        /// 根据方向选择平仓价格
-        /// </summary>
-        /// <param name="orderSide"></param>
-        /// <param name="ask"></param>
-        /// <param name="bid"></param>
-        /// <returns></returns>
-        private decimal GetClosePrice(PositionType orderSide, decimal ask, decimal bid)
-        {
-            return orderSide == PositionType.Short ? ask : bid;
-        }
-
-        /// <summary>
-        /// 根据盘口报价选择开仓价格
-        /// </summary>
-        /// <param name="orderSide"></param>
-        /// <param name="ask"></param>
-        /// <param name="bid"></param>
-        /// <returns></returns>
-        private decimal GetOpenPrice(PositionType orderSide, decimal ask, decimal bid)
-        {
-            return orderSide == PositionType.Short ? bid : ask;
-        }
-
-        /// <summary>
-        /// 获取持仓盈利百分比
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="ask"></param>
-        /// <param name="bid"></param>
-        /// <returns></returns>
-        private decimal GetProfitPercent(Position pos, decimal ask, decimal bid)
-        {
-            //var openPrice = pos.AvgPx;
-            //var price = GetClosePrice(pos.SideType,ask,bid);
-            //return (pos.SideType == PositionType.Short ? openPrice / price : price / openPrice)-1.0m;
-            return (decimal)pos.UplRatio * 100;
-        }
-
-        private decimal ToPercent(float val)
-        {
-            return Convert.ToDecimal( val) * 0.01m;
-        }
-        private decimal ToPercent(decimal val)
-        {
-            return val * 0.01m;
         }
 
         /// <summary>
@@ -432,7 +378,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                             bannedTime = DateTime.Now.AddMinutes(15);
                                         }
                                     }
-
                                     operationDes = $"止盈回撤:{Retracement}%";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo("触发多头回撤");
@@ -581,21 +526,70 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             if (!this.OpenAppend)
                 return false;
-
             var profit = GetProfitPercent(pos, ask, bid); //获取利润值
-
-            if(profit <= - (decimal)ToPercent( AppendLoss))
+            if(profit <= -ToPercent(AppendLoss))
             {
                 int appendTimes = GetAppendTimes(pos.PosId);//获取当前仓位的补仓次数
-
                 if(appendTimes < this.AppendTimes) //判断是否达到最大补仓数
                 {
                     return true;
                 }
             }
-
             return false;
         }
+
+        // 工具方法
+        // 工具方法
+        // 工具方法
+
+        /// <summary>
+        /// 根据方向选择平仓价格
+        /// </summary>
+        /// <param name="orderSide"></param>
+        /// <param name="ask"></param>
+        /// <param name="bid"></param>
+        /// <returns></returns>
+        private decimal GetClosePrice(PositionType orderSide, decimal ask, decimal bid)
+        {
+            return orderSide == PositionType.Short ? ask : bid;
+        }
+
+        /// <summary>
+        /// 根据盘口报价选择开仓价格
+        /// </summary>
+        /// <param name="orderSide"></param>
+        /// <param name="ask"></param>
+        /// <param name="bid"></param>
+        /// <returns></returns>
+        private decimal GetOpenPrice(PositionType orderSide, decimal ask, decimal bid)
+        {
+            return orderSide == PositionType.Short ? bid : ask;
+        }
+
+        /// <summary>
+        /// 获取持仓盈利百分比
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="ask"></param>
+        /// <param name="bid"></param>
+        /// <returns></returns>
+        private decimal GetProfitPercent(Position pos, decimal ask, decimal bid)
+        {
+            //var openPrice = pos.AvgPx;
+            //var price = GetClosePrice(pos.SideType,ask,bid);
+            //return (pos.SideType == PositionType.Short ? openPrice / price : price / openPrice)-1.0m;
+            return (decimal)pos.UplRatio * 100;
+        }
+
+        private decimal ToPercent(float val)
+        {
+            return Convert.ToDecimal(val) * 0.01m;
+        }
+        private decimal ToPercent(decimal val)
+        {
+            return val * 0.01m;
+        }
+
         bool isBanned()
         {
             var banned = DateTime.Now < bannedTime;
