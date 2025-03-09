@@ -349,15 +349,23 @@ namespace CoinTrader.Forms.Strategies.Customer
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                     if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
                     {
-                        switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
+                        switch (pos.SideType)
                         {
                             case PositionType.Long: //多头持仓的情况
-                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Max(lastTrigerPrice, closePrice);// 取最高价
-                                Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
+                                var newHigh = lastTrigerPrice == 0 ? closePrice : Math.Max(lastTrigerPrice, closePrice);
+                                if (newHigh > lastTrigerPrice)
+                                {
+                                    lastTrigerPrice = newHigh;// 刷新最高价
+                                    Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
+                                }
                                 break;
                             case PositionType.Short: //空头持仓的情况
-                                lastTrigerPrice = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);// 取最低价
-                                Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
+                                var newLow = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);
+                                if (newLow < lastTrigerPrice)
+                                {
+                                    lastTrigerPrice = newLow;// 刷新最低价
+                                    Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
+                                }
                                 break;
                         }
                     }
