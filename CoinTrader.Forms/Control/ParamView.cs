@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
-using CoinTrader.Common.Classes;
-using CoinTrader;
 using CoinTrader.Common.Util;
 using CoinTrader.Strategies;
 
@@ -22,7 +14,6 @@ namespace CoinTrader.Forms.Control
         private string name = "";
         private System.Windows.Forms.Control control = null;
         private Action<ParamView> valueChangedCallback = null;
-        
 
         public string Depend
         {
@@ -52,8 +43,6 @@ namespace CoinTrader.Forms.Control
             this.valueChangedCallback = callback;
         }
 
-
-
         public void SetProperty(Object obj, PropertyInfo property)
         {
             this.property = property;
@@ -67,7 +56,6 @@ namespace CoinTrader.Forms.Control
 
             this.Depend = attribute.Dependent;
             this.DependValue = attribute.DependentValue;
-
 
             System.Windows.Forms.Control control = null;
 
@@ -97,7 +85,6 @@ namespace CoinTrader.Forms.Control
                 foreach(var s in fileds)
                 {
                     var val = Enum.Parse(property.PropertyType, s.ValueName);
-                    
                     if(Equals(val, curValue))
                     {
                         sel = s;
@@ -107,9 +94,7 @@ namespace CoinTrader.Forms.Control
                 comboBox.SelectedItem = sel;
                 this.Controls.Add(comboBox);
                 control = comboBox;
-
                 comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-
                 comboBox.SelectedIndexChanged += Combobox_SelectedIndexChanged;
             }
             else
@@ -120,21 +105,15 @@ namespace CoinTrader.Forms.Control
                 text.TextChanged += Text_TextChanged;
                 control = text;
             }
-            
             control.Location = this.lblPos.Location;
-
-
             if (!string.IsNullOrEmpty(intro))
                 this.toolTip1.SetToolTip(control, intro);
-            
             this.control = control;
         }
-
 
         public string ValidateValues()
         {
             StrategyParameterAttribute attribute = property.GetCustomAttribute<StrategyParameterAttribute>();
-
             Type valueType = property.PropertyType;
 
             if (valueType == typeof(string) || valueType == typeof(bool))
@@ -169,7 +148,6 @@ namespace CoinTrader.Forms.Control
                     return string.Format("{0}不在有效范围内{1}-{2}", name, attribute.Min, attribute.Max);
                 }
             }
-
             return "";
         }
 
@@ -179,9 +157,7 @@ namespace CoinTrader.Forms.Control
             {
                 return null;
             }
-
             Type valueType = property.PropertyType;
-
             if (valueType == typeof(bool))
             {
                 CheckBox checkBox = control as CheckBox;
@@ -238,11 +214,8 @@ namespace CoinTrader.Forms.Control
                      return number;
                 }
             }
-
             //return null;
         }
-
-        
 
         public void   Save()
         {
