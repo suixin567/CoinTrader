@@ -52,7 +52,7 @@
             // btnRetry
             // 
             this.btnRetry.Location = new System.Drawing.Point(189, 90);
-            this.btnRetry.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRetry.Margin = new System.Windows.Forms.Padding(2);
             this.btnRetry.Name = "btnRetry";
             this.btnRetry.Size = new System.Drawing.Size(103, 29);
             this.btnRetry.TabIndex = 1;
@@ -119,13 +119,14 @@
             this.Controls.Add(this.pnlLogin);
             this.Controls.Add(this.pnlStart);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WinStartup";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "初始化";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WinStartup_FormClosing);
             this.Load += new System.EventHandler(this.WinInitiate_Load);
             this.pnlStart.ResumeLayout(false);

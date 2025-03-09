@@ -56,6 +56,9 @@ namespace CoinTrader.Common.Database
         [SugarColumn(ColumnName = "side")]
         public byte Side { get; set; }
 
+        [SugarColumn(ColumnName = "des")]
+        public string Des { get; set; } = "";
+
         [SugarColumn(ColumnName = "status")]
         public int Status { get; set; }
     }
