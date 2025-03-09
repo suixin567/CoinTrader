@@ -141,7 +141,7 @@ namespace CoinTrader.Forms.Control
 
         private void HidePosition()
         {
-            var controls = this.pnlPosition.Controls;
+            var controls = this.flowLayoutPanel1.Controls;
 
             for(int i = controls.Count - 1; i>0;i-- )
             {
@@ -154,21 +154,21 @@ namespace CoinTrader.Forms.Control
         {
             this.timerPosition.Enabled = true;
             var postions = PositionManager.Instance.GetPositions(this.instId);
-            var controls = this.pnlPosition.Controls;
+            var controls = this.flowLayoutPanel1.Controls;
             int mindex = 1;
             foreach (var pos in postions)
             {
                 SwapInfoView pv;
-                if (this.pnlPosition.Controls.Count > mindex)
+                if (this.flowLayoutPanel1.Controls.Count > mindex)
                 {
-                    var control = this.pnlPosition.Controls[mindex];
+                    var control = this.flowLayoutPanel1.Controls[mindex];
                     pv = control as SwapInfoView;
                     pv.Visible = true;
                 }
                 else
                 {
                     pv = new SwapInfoView();
-                    this.pnlPosition.Controls.Add(pv);
+                    this.flowLayoutPanel1.Controls.Add(pv);
                 }
 
                 pv.SetId(pos.PosId);
@@ -207,11 +207,11 @@ namespace CoinTrader.Forms.Control
                 this.ShowMonitorList();
                 this.HidePosition();
             }
-            else if (this.tabControl1.SelectedTab == this.tabPage2)
-            {
-                this.ShowPosition();
-                this.pnlMonitor.Controls.Clear();
-            }
+            //else if (this.tabControl1.SelectedTab == this.tabPage2)
+            //{
+            //    this.ShowPosition();
+            //    this.pnlMonitor.Controls.Clear();
+            //}
             else if (this.tabControl1.SelectedTab == this.tabPage1)
             {
                 this.HidePosition();

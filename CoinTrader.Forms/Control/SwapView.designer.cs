@@ -46,28 +46,26 @@
             this.lblMonitor = new System.Windows.Forms.Label();
             this.lblPostion = new System.Windows.Forms.Label();
             this.tickView1 = new CoinTrader.Forms.Control.TickView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.pnlPosition = new System.Windows.Forms.FlowLayoutPanel();
-            this.pnlEmpty = new System.Windows.Forms.Panel();
-            this.lblEmpty = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.pnlMonitor = new System.Windows.Forms.FlowLayoutPanel();
             this.btnStat = new System.Windows.Forms.Button();
             this.timerPosition = new System.Windows.Forms.Timer(this.components);
             this.buttonInfo = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlEmpty = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.pnlPosition.SuspendLayout();
-            this.pnlEmpty.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.pnlEmpty.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.Location = new System.Drawing.Point(307, 2);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(23, 19);
             this.btnClose.TabIndex = 49;
@@ -176,10 +174,9 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(2, 2);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(332, 222);
@@ -202,9 +199,9 @@
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.lblMinAmount);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(324, 196);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "合约";
@@ -214,7 +211,7 @@
             // 
             this.pnlBehavior.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlBehavior.Location = new System.Drawing.Point(2, 110);
-            this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlBehavior.Margin = new System.Windows.Forms.Padding(2);
             this.pnlBehavior.Name = "pnlBehavior";
             this.pnlBehavior.Size = new System.Drawing.Size(320, 84);
             this.pnlBehavior.TabIndex = 55;
@@ -234,7 +231,7 @@
             this.lblPostion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lblPostion.ForeColor = System.Drawing.Color.White;
             this.lblPostion.Location = new System.Drawing.Point(0, 0);
-            this.lblPostion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lblPostion.Margin = new System.Windows.Forms.Padding(2);
             this.lblPostion.Name = "lblPostion";
             this.lblPostion.Size = new System.Drawing.Size(36, 17);
             this.lblPostion.TabIndex = 53;
@@ -245,58 +242,16 @@
             // tickView1
             // 
             this.tickView1.Location = new System.Drawing.Point(188, 5);
-            this.tickView1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.tickView1.Margin = new System.Windows.Forms.Padding(1);
             this.tickView1.Name = "tickView1";
             this.tickView1.Size = new System.Drawing.Size(136, 46);
             this.tickView1.TabIndex = 51;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.pnlPosition);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage2.Size = new System.Drawing.Size(324, 196);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "持仓";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // pnlPosition
-            // 
-            this.pnlPosition.AutoScroll = true;
-            this.pnlPosition.Controls.Add(this.pnlEmpty);
-            this.pnlPosition.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPosition.Location = new System.Drawing.Point(2, 2);
-            this.pnlPosition.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.pnlPosition.Name = "pnlPosition";
-            this.pnlPosition.Size = new System.Drawing.Size(320, 192);
-            this.pnlPosition.TabIndex = 1;
-            // 
-            // pnlEmpty
-            // 
-            this.pnlEmpty.Controls.Add(this.lblEmpty);
-            this.pnlEmpty.Location = new System.Drawing.Point(2, 2);
-            this.pnlEmpty.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.pnlEmpty.Name = "pnlEmpty";
-            this.pnlEmpty.Size = new System.Drawing.Size(304, 64);
-            this.pnlEmpty.TabIndex = 3;
-            // 
-            // lblEmpty
-            // 
-            this.lblEmpty.AutoSize = true;
-            this.lblEmpty.Location = new System.Drawing.Point(126, 29);
-            this.lblEmpty.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblEmpty.Name = "lblEmpty";
-            this.lblEmpty.Size = new System.Drawing.Size(53, 12);
-            this.lblEmpty.TabIndex = 2;
-            this.lblEmpty.Text = "暂无持仓";
             // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.pnlMonitor);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(324, 196);
             this.tabPage3.TabIndex = 2;
@@ -307,7 +262,7 @@
             // 
             this.pnlMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMonitor.Location = new System.Drawing.Point(0, 0);
-            this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMonitor.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMonitor.Name = "pnlMonitor";
             this.pnlMonitor.Size = new System.Drawing.Size(324, 196);
             this.pnlMonitor.TabIndex = 0;
@@ -315,7 +270,7 @@
             // btnStat
             // 
             this.btnStat.Location = new System.Drawing.Point(266, 1);
-            this.btnStat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStat.Margin = new System.Windows.Forms.Padding(2);
             this.btnStat.Name = "btnStat";
             this.btnStat.Size = new System.Drawing.Size(36, 20);
             this.btnStat.TabIndex = 56;
@@ -325,6 +280,7 @@
             // 
             // timerPosition
             // 
+            this.timerPosition.Enabled = true;
             this.timerPosition.Interval = 300;
             this.timerPosition.Tick += new System.EventHandler(this.timerPosition_Tick);
             // 
@@ -339,26 +295,55 @@
             this.buttonInfo.UseVisualStyleBackColor = true;
             this.buttonInfo.Click += new System.EventHandler(this.buttonInfo_Click);
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Controls.Add(this.pnlEmpty);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 263);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(320, 192);
+            this.flowLayoutPanel1.TabIndex = 58;
+            // 
+            // pnlEmpty
+            // 
+            this.pnlEmpty.Controls.Add(this.label4);
+            this.pnlEmpty.Location = new System.Drawing.Point(2, 2);
+            this.pnlEmpty.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlEmpty.Name = "pnlEmpty";
+            this.pnlEmpty.Size = new System.Drawing.Size(304, 64);
+            this.pnlEmpty.TabIndex = 3;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(126, 29);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "暂无持仓";
+            // 
             // SwapView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.buttonInfo);
             this.Controls.Add(this.btnStat);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 224);
+            this.Size = new System.Drawing.Size(332, 506);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.pnlPosition.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.pnlEmpty.ResumeLayout(false);
             this.pnlEmpty.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -378,17 +363,16 @@
         private System.Windows.Forms.Label lblFee;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.FlowLayoutPanel pnlMonitor;
-        private System.Windows.Forms.FlowLayoutPanel pnlPosition;
         private System.Windows.Forms.Label lblPostion;
         private System.Windows.Forms.Label lblMonitor;
         private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
-        private System.Windows.Forms.Panel pnlEmpty;
-        private System.Windows.Forms.Label lblEmpty;
         private System.Windows.Forms.Button btnStat;
         private System.Windows.Forms.Timer timerPosition;
         private System.Windows.Forms.Button buttonInfo;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Panel pnlEmpty;
+        private System.Windows.Forms.Label label4;
     }
 }
