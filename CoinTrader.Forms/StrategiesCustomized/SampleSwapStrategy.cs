@@ -374,8 +374,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
                             case PositionType.Long: //多头持仓的情况                                
-                                //var longRetracemented = lastTrigerPrice / closePrice >= 1.0m + ToPercent(Retracement);// 多头回撤
-                                var longRetracemented = closePrice <= lastTrigerPrice * (1 - ToPercent(Retracement));// 多头回撤
+                                var longRetracemented = closePrice <= (lastTrigerPrice * (1 - ToPercent(Retracement)));// 多头回撤
                                 if (longRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -391,9 +390,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     Logger.Instance.LogInfo("触发多头回撤");
                                 }
                                 return longRetracemented;                            
-                            case PositionType.Short: //空头持仓的情况
-                                //var shortRetracemented = closePrice / lastTrigerPrice >= 1.0m + ToPercent(Retracement);// 空头回撤  
-                                var shortRetracemented = closePrice >= lastTrigerPrice * (1 + ToPercent(Retracement));
+                            case PositionType.Short: //空头持仓的情况 
+                                var shortRetracemented = closePrice >= (lastTrigerPrice * (1 + ToPercent(Retracement)));
                                 if (shortRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -456,6 +454,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 {
                     operationDes = $"止损:{StopLoss}%";
                     operationProfit = pos.Margin * profit / 100;
+                    bannedTime = DateTime.Now.AddMinutes(15);
                     return true;
                 }
             }
