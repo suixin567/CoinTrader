@@ -476,8 +476,8 @@ namespace CoinTrader.Forms.Strategies.Customer
             // 判断15分钟线有初步机会
             if (CheckKLine(_candle, KLinSample, Range, KLineCount, DirectionType, out PositionType side_15m)) //检查K线是否符合触发条件
             {
-                //判断4小时线有稳定机会
-                if (CheckKLine(CandleGranularity.H4, KLinSample, Range * 2, KLinSample / 2, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
+                //判断最近4小时
+                if (CheckKLine(CandleGranularity.H4, 1, Range * 2, 1, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
                 {
                     if (side_15m == side_4h)
                     {
