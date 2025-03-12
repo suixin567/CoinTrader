@@ -432,7 +432,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 lastTrigerPrice = closePrice; // 设置回撤极值
                                 Retracement = StopSurplus / 2;// 至少保留一半利润
                                 MoveProfit = true;
-                                Logger.Instance.LogInfo("转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)");
+                                Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)");
                                 // 记录操作到数据库
                                 var db = MysqlHelper.Instance.getDB();
                                 var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && it.Status == 1).First();
@@ -442,7 +442,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     {
                                         WorkflowId = workflow.Id,
                                         Side = (byte)pos.SideType,
-                                        Des = "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)",
+                                        Des = (pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)",
                                         Status = 1
                                     };
                                     db.Insertable(newOperation).ExecuteReturnIdentity();
@@ -488,7 +488,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     if (side_15m == side_4h)
                     {
                         finalSide = side_4h;
-                        des = "15m与4h一致" + (finalSide == PositionType.Long ? "开多" : "开空");
+                        des = (finalSide == PositionType.Long ? "开多" : "开空" + " 15m与4h一致");
                         return true;
                     }
                     return false;
