@@ -488,7 +488,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     if (side_15m == side_4h)
                     {
                         finalSide = side_4h;
-                        des = (finalSide == PositionType.Long ? "开多" : "开空" + " 15m与4h一致");
+                        des = (finalSide == PositionType.Long ? "开多" : "开空") + " 15m与4h一致";
                         return true;
                     }
                     return false;
