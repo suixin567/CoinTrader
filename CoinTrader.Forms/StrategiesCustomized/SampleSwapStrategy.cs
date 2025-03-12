@@ -237,7 +237,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         Operation newOperation = new Operation()
                         {
                             WorkflowId = workflow.Id,
-                            Side = (byte)PositionType.Short,
+                            Side = pos.SideType == PositionType.Long ? (byte)PositionType.Short : (byte)PositionType.Long,
                             Status = 1
                         };
                         operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
@@ -388,7 +388,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                             bannedTime = DateTime.Now.AddMinutes(15);
                                         }
                                     }
-                                    operationDes = $"止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice}";
+                                    operationDes = $"多头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -407,7 +407,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                             bannedTime = DateTime.Now.AddMinutes(5);
                                         }
                                     }
-                                    operationDes = $"止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
+                                    operationDes = $"空头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
