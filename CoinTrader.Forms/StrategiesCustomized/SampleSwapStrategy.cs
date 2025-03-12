@@ -375,8 +375,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                         switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
                         {
                             case PositionType.Long: //多头持仓的情况                                
-                                var longRetracemented = closePrice <= (lastTrigerPrice * (1 - ToPercent(Retracement)));// 多头回撤
-                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{lastTrigerPrice * (1 - ToPercent(Retracement))}";
+                                var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
+                                var longRetracemented = closePrice <= longStopPrice;// 多头回撤
+                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                 if (longRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -387,14 +388,15 @@ namespace CoinTrader.Forms.Strategies.Customer
                                             bannedTime = DateTime.Now.AddMinutes(15);
                                         }
                                     }
-                                    operationDes = $"止盈回撤:{Retracement}%";
+                                    operationDes = $"止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
-                                    Logger.Instance.LogInfo("触发多头回撤");
+                                    Logger.Instance.LogInfo(operationDes);
                                 }
                                 return longRetracemented;
                             case PositionType.Short: //空头持仓的情况
-                                var shortRetracemented = closePrice >= (lastTrigerPrice * (1 - ToPercent(Retracement)));
-                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{lastTrigerPrice * (1 - ToPercent(Retracement))}";
+                                var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
+                                var shortRetracemented = closePrice >= shortStopPrice;// 空头回撤
+                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                 if (shortRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
@@ -405,9 +407,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                                             bannedTime = DateTime.Now.AddMinutes(5);
                                         }
                                     }
-                                    operationDes = $"止盈回撤:{Retracement}%";
+                                    operationDes = $"止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
-                                    Logger.Instance.LogInfo("触发空头回撤");
+                                    Logger.Instance.LogInfo(operationDes);
                                 }
                                 return shortRetracemented;
                         }
