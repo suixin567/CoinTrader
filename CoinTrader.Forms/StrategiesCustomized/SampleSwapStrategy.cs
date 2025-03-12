@@ -13,6 +13,8 @@ using CoinTrader.OKXCore.Enum;
 using CoinTrader.Common;
 using CoinTrader.Strategies;
 using CoinTrader.Common.Database;
+using System.Security.Cryptography;
+using System.Threading;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -182,7 +184,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             if (pos == null) //没有持仓
             {
                 PositionType side;
-                if (coinAmount > 0 && CanOpen(Ask, Bid, out side) && !isBanned()) //判断是否可以开仓
+                if (coinAmount > 0 && CanOpen(Ask, Bid, out side, out string des) && !isBanned()) //判断是否可以开仓
                 {
                     this.Executing = true;
                     MoveProfit = false; //新仓位禁止移动止盈
@@ -198,13 +200,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                     Operation newOperation = new Operation()
                     {
                         WorkflowId = workflow.Id,
-                        Side = (byte)PositionType.Long
+                        Side = (byte)side
                     };
                     var operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
                     {
                         // 标记为操作成功
                         db.Updateable<Operation>()
+                       .SetColumns(it => it.Des == des)
                        .SetColumns(it => it.Status == 1)
                        .Where(it => it.Id == operationId)
                        .ExecuteCommand();
@@ -381,7 +384,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 if (longRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                    if (CanOpen(Ask, Bid, out PositionType side))
+                                    if (CanOpen(Ask, Bid, out PositionType side, out string des))
                                     {
                                         if (side == pos.SideType)
                                         {
@@ -400,7 +403,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 if (shortRetracemented)
                                 {
                                     // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                    if (CanOpen(Ask, Bid, out PositionType side))
+                                    if (CanOpen(Ask, Bid, out PositionType side, out string des))
                                     {
                                         if (side == pos.SideType)
                                         {
@@ -420,7 +423,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     if (profit >= (decimal)StopSurplus) //达到盈利目标
                     {
                         // 判断下次操作的方向 如果方向相同，防止没意义的止盈
-                        if (CanOpen(Ask, Bid, out PositionType side))
+                        if (CanOpen(Ask, Bid, out PositionType side, out string des))
                         {
                             if (side == pos.SideType)
                             {
@@ -472,9 +475,10 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <param name="ask"></param>
         /// <param name="bid"></param>
         /// <returns></returns>
-        private bool CanOpen(decimal ask, decimal bid, out PositionType finalSide)
+        private bool CanOpen(decimal ask, decimal bid, out PositionType finalSide, out string des)
         {
             finalSide = PositionType.Long;
+            des = "";
             // 判断15分钟线有初步机会
             if (CheckKLine(_candle, KLinSample, Range, KLineCount, DirectionType, out PositionType side_15m)) //检查K线是否符合触发条件
             {
@@ -484,6 +488,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     if (side_15m == side_4h)
                     {
                         finalSide = side_4h;
+                        des = "15m与4h一致" + (finalSide == PositionType.Long ? "开多" : "开空");
                         return true;
                     }
                     return false;
