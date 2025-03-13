@@ -383,14 +383,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                 if (longRetracemented)
                                 {
-                                    // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                    if (CanOpen(Ask, Bid, out PositionType side, out string des))
-                                    {
-                                        if (side == pos.SideType)
-                                        {
-                                            bannedTime = DateTime.Now.AddMinutes(15);
-                                        }
-                                    }
                                     operationDes = $"多头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
@@ -402,6 +394,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
+                                // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
+                                if (CanOpen(Ask, Bid, out PositionType nextSide, out string _))
+                                {
+                                    if (nextSide == pos.SideType)
+                                    {
+                                        bannedTime = DateTime.Now.AddMinutes(5);
+                                    }
+                                }
                                 return longRetracemented;
                             case PositionType.Short: //空头持仓的情况
                                 var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
@@ -409,14 +409,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                 if (shortRetracemented)
                                 {
-                                    // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                    if (CanOpen(Ask, Bid, out PositionType side, out string des))
-                                    {
-                                        if (side == pos.SideType)
-                                        {
-                                            bannedTime = DateTime.Now.AddMinutes(5);
-                                        }
-                                    }
                                     operationDes = $"空头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
@@ -427,6 +419,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     operationDes = $"空头放弃更多利润的尝试，立即平仓，收益:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
+                                }
+                                // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
+                                if (CanOpen(Ask, Bid, out PositionType nextSide2, out string _))
+                                {
+                                    if (nextSide2 == pos.SideType)
+                                    {
+                                        bannedTime = DateTime.Now.AddMinutes(5);
+                                    }
                                 }
                                 return shortRetracemented;
                         }
