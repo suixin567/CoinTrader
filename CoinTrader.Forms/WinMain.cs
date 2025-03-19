@@ -246,8 +246,8 @@ namespace CoinTrader.Forms
 
             // 创建一个工作流
             var db = MysqlHelper.Instance.getDB();
-            var dbId = db.Insertable(new Workflow { Instrument = instId }).ExecuteReturnIdentity();
-            Logger.Instance.LogInfo("创建工作流:" + instId);
+            var dbId = db.Insertable(new Workflow { Instrument = instId, Strategy = group.name }).ExecuteReturnIdentity();
+            Logger.Instance.LogInfo($"创建工作流:{instId}_{group.name}");
 
             if (UseSmallSwapView)
             {

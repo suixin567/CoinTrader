@@ -336,6 +336,7 @@
       <DependentUpon>StrategyView.cs</DependentUpon>
     </Compile>
     <Compile Include="StrategiesBuiltin\SwapHedgeStrategy.cs" />
+    <Compile Include="StrategiesCustomized\RandomSwapStrategy.cs" />
     <Compile Include="StrategiesCustomized\SampleSwapStrategy.cs" />
     <Compile Include="StrategiesRuntime\StrategyCompiler.cs" />
     <Compile Include="StrategiesRuntime\StrategyManager.cs" />

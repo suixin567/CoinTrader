@@ -18,6 +18,9 @@ namespace CoinTrader.Common.Database
         // 币种
         [SugarColumn(ColumnName = "instrument")]
         public string Instrument { get; set; }
+        // 策略名
+        [SugarColumn(ColumnName = "strategy")]
+        public string Strategy { get; set; }
 
         // 导航属性：一个工作流有多个操作
         [SugarColumn(IsIgnore = true)]
