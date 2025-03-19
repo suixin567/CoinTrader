@@ -379,10 +379,10 @@ namespace CoinTrader.Forms.Strategies.Customer
                             case PositionType.Long: //多头持仓的情况                                
                                 var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
                                 var longRetracemented = closePrice <= longStopPrice;// 多头回撤
-                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
+                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"多头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -397,10 +397,10 @@ namespace CoinTrader.Forms.Strategies.Customer
                             case PositionType.Short: //空头持仓的情况
                                 var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
                                 var shortRetracemented = closePrice >= shortStopPrice;// 空头回撤
-                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
+                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}% 开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"空头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}% 开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
