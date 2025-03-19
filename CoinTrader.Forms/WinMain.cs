@@ -46,9 +46,14 @@ namespace CoinTrader.Forms
                 .ToList();
 
             var stategyGroups = StrategyManager.Instance.GetStrategyGroups(StrategyType.Swap);
-            var group = stategyGroups.First(x=> x.name == "合约交易策略(c#)");
             foreach (var workflow in workflows)
             {
+                var group = stategyGroups.First(x => x.name == workflow.Strategy);
+                if (group == null)
+                {
+                    Logger.Instance.LogError($"恢复工作流失败，策略不存在:{workflow.Status}");
+                    continue;
+                }
                 AddView<SwapView>(workflow.Instrument, group, false);
             }
         }
