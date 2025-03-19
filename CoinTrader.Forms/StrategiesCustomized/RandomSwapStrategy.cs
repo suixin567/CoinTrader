@@ -19,7 +19,7 @@ using System.Threading;
 namespace CoinTrader.Forms.Strategies.Customer
 {
 
-    [Strategy(Name = "合约交易策略(c#)")]
+    [Strategy(Name = "合约交易策略(随机方向)")]
     internal class RandomSwapStrategy : SwapStrategyBase
     {
         [StrategyParameter(Name = "仓位大小(USD)", Min = 1, Max = 100000000, Intro = "按稳定币计价的仓位大小")]
@@ -368,7 +368,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     }
                     if (lastTrigerPrice > 0) //判断是否触发移动止盈
                     {
-                        switch (pos.SideType)//记录移动止盈的 最高（最低）参考价。
+                        switch (pos.SideType)
                         {
                             case PositionType.Long: //多头持仓的情况                                
                                 var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
@@ -376,7 +376,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice}";
+                                    operationDes = $"多头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -387,14 +387,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
-                                // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                if (CanOpen(Ask, Bid, out PositionType nextSide, out string _))
-                                {
-                                    if (nextSide == pos.SideType)
-                                    {
-                                        //bannedTime = DateTime.Now.AddMinutes(5);
-                                    }
-                                }
                                 return longRetracemented;
                             case PositionType.Short: //空头持仓的情况
                                 var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
@@ -402,7 +394,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
+                                    operationDes = $"空头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -413,53 +405,34 @@ namespace CoinTrader.Forms.Strategies.Customer
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
-                                // 判断下次操作的方向 如果方向相同，防止没意义的回撤止盈，设置延时
-                                if (CanOpen(Ask, Bid, out PositionType nextSide2, out string _))
-                                {
-                                    if (nextSide2 == pos.SideType)
-                                    {
-                                        //bannedTime = DateTime.Now.AddMinutes(5);
-                                    }
-                                }
                                 return shortRetracemented;
                         }
                     }
                 }
                 else
                 {
-                    if (profit >= (decimal)StopSurplus) //达到盈利目标
+                    if (profit >= (decimal)StopSurplus) //达到盈利目标，转换为移动止盈
                     {
-                        // 判断下次操作的方向 如果方向相同，防止没意义的止盈
-                        if (CanOpen(Ask, Bid, out PositionType side, out string des))
+                        var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
+                        lastTrigerPrice = closePrice; // 设置回撤极值
+                        Retracement = StopSurplus / 2;// 容忍回撤幅度
+                        MoveProfit = true;
+                        Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈");
+                        // 记录操作到数据库
+                        var db = MysqlHelper.Instance.getDB();
+                        var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && it.Status == 1).First();
+                        if (workflow != null)
                         {
-                            if (side == pos.SideType)
+                            Operation newOperation = new Operation()
                             {
-                                // 转换为移动止盈
-                                var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                                lastTrigerPrice = closePrice; // 设置回撤极值
-                                Retracement = StopSurplus / 2;// 容忍回撤幅度
-                                MoveProfit = true;
-                                Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)");
-                                // 记录操作到数据库
-                                var db = MysqlHelper.Instance.getDB();
-                                var workflow = db.Queryable<Workflow>().Where(it => it.Instrument == InstId && it.Status == 1).First();
-                                if (workflow != null)
-                                {
-                                    Operation newOperation = new Operation()
-                                    {
-                                        WorkflowId = workflow.Id,
-                                        Side = (byte)pos.SideType,
-                                        Des = (pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈 (由于下次开仓方向相同，防止没意义的止盈)",
-                                        Status = 1
-                                    };
-                                    db.Insertable(newOperation).ExecuteReturnIdentity();
-                                }
-                                return false;
-                            }
+                                WorkflowId = workflow.Id,
+                                Side = (byte)pos.SideType,
+                                Des = (pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈",
+                                Status = 1
+                            };
+                            db.Insertable(newOperation).ExecuteReturnIdentity();
                         }
-                        operationDes = $"止盈:{profit}% (仓位:{pos.Margin} 基准{StopSurplus}%)";
-                        operationProfit = pos.Margin * profit / 100;
-                        return true;
+                        return false;
                     }
                 }
             }
@@ -469,7 +442,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                 {
                     operationDes = $"止损:{profit}% (仓位:{pos.Margin} 基准{StopLoss}%)";
                     operationProfit = pos.Margin * profit / 100;
-                    //bannedTime = DateTime.Now.AddMinutes(15);
                     return true;
                 }
             }
@@ -489,96 +461,6 @@ namespace CoinTrader.Forms.Strategies.Customer
             finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
             des = finalSide == PositionType.Long ? "随机开多" : "随机开空";
             return true;
-
-
-            finalSide = PositionType.Long;
-            des = "";
-            // 判断15分钟线有初步机会
-            if (CheckKLine(_candle, KLinSample, Range, KLineCount, DirectionType, out PositionType side_15m)) //检查K线是否符合触发条件
-            {
-                ////判断最近4小时
-                //if (CheckKLine(CandleGranularity.H4, 2, Range * 2, 1, DirectionType, out PositionType side_4h)) //检查K线是否符合触发条件
-                //{
-                //    if (side_15m == side_4h)
-                //    {
-                //        finalSide = side_4h;
-                //        des = (finalSide == PositionType.Long ? "开多" : "开空") + " 15m与4h一致";
-                //        return true;
-                //    }
-                //    return false;
-                //}
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 检查K线是否已经符合触发建仓条件
-        /// </summary>
-        /// <param name="_candle">k线类型</param>
-        /// <param name="_kLinSample">k线采样数</param>
-        /// <param name="_range">k线振幅</param>
-        /// <param name="_kLineCount">k线数量阈值</param>
-        /// <param name="_directionType">顺势、逆势</param>
-        /// <returns></returns>
-        private bool CheckKLine(CandleGranularity _candle, int _kLinSample, float _range, int _kLineCount, Direction _directionType, out PositionType side)
-        {
-            side = PositionType.Long;
-            var candleProvider = GetCandleProvider(_candle);//获取K线
-            if (_kLinSample <= 0 || candleProvider == null)//k线是否已经加载成功
-            {
-                return false;
-            }
-            int num = 0;
-            int downCount = 0, upCount = 0; //涨跌幅计数
-            candleProvider.EachCandle((candle) =>
-            {
-                var amp = (candle.Close / candle.Open) - 1.0m; //当前k线的涨跌幅
-                if (amp >= ToPercent(_range))//上涨超过超过设定幅度
-                {
-                    upCount++;
-                }
-                if (amp <= ToPercent(-_range))//下跌超过设定幅度
-                {
-                    downCount++;
-                }
-                num++;
-                return num >= _kLinSample;
-            });
-            if (upCount >= _kLineCount)//上涨数量达到设定数量
-            {
-                switch (_directionType)
-                {
-                    case Direction.Forward:
-                        side = PositionType.Long;
-                        break;
-                    case Direction.Reverse:
-                        side = PositionType.Short;
-                        break;
-                }
-                Logger.Instance.LogInfo($"{_candle}-[{side}满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
-                return true;
-            }
-            else if (downCount >= _kLineCount) //下跌数量达到设定数量
-            {
-                switch (_directionType)
-                {
-                    case Direction.Forward:
-                        side = PositionType.Short;
-                        break;
-                    case Direction.Reverse:
-                        side = PositionType.Long;
-                        break;
-                }
-                Logger.Instance.LogInfo($"{_candle}-[{side}满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
-                return true;
-            }
-            else
-            {
-                Logger.Instance.LogInfo($"{_candle}-[未满足]-sample:{_kLinSample} upCount:{upCount} downCount:{downCount}");
-                return false;
-            }
-
         }
 
         /// <summary>
