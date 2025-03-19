@@ -338,7 +338,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             operationDes = "";
             operationProfit = 0;
             var profit = GetProfitPercent(pos, ask, bid);// 盈利百分比
-            //Logger.Instance.LogDebug($"利润:{profit}% 止盈:{this.StopSurplus}% 止损:{-this.StopLoss}%");
+            //Logger.Instance.LogDebug($"利润:{profit.ToString("F2")}% 止盈:{this.StopSurplus}% 止损:{-this.StopLoss}%");
             if (profit > 0) //持仓已盈利情况
             {
                 if (MoveProfit) //移动盈利
@@ -382,14 +382,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头回撤:{Retracement}%后止盈 盈利:{profit}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"多头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
                                 else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
                                 {
                                     longRetracemented = true;
-                                    operationDes = $"多头放弃更多利润的尝试，立即平仓，剩余收益:{profit}% (理论收益:{StopSurplus}%)  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 平仓价:{closePrice}";
+                                    operationDes = $"多头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -400,14 +400,14 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头回撤:{Retracement}%后止盈 盈利:{profit}% 开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"空头回撤:{Retracement}%后止盈 盈利:{profit.ToString("F2")}% 开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
                                 else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
                                 {
                                     longRetracemented = true;
-                                    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit}% (理论收益:{Retracement}%)  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 平仓价:{closePrice}";
+                                    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{Retracement}%)  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -447,7 +447,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                    operationDes = $"止损:{profit}% (仓位:{pos.Margin} 基准{StopLoss}%) 开仓均价{pos.AvgPx} 平仓价:{closePrice}";
+                    operationDes = $"止损:{profit.ToString("F2")}% (仓位:{pos.Margin} 基准{StopLoss}%) 开仓均价{pos.AvgPx} 平仓价:{closePrice}";
                     operationProfit = pos.Margin * profit / 100;
                     return true;
                 }
