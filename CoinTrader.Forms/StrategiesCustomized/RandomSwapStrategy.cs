@@ -354,6 +354,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newHigh;// 刷新最高价
                                     Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
+                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
                                 }
                                 break;
                             case PositionType.Short: //空头持仓的情况
@@ -362,6 +363,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newLow;// 刷新最低价
                                     Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
+                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
                                 }
                                 break;
                         }
@@ -376,7 +378,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"多头回撤:{Retracement}%后止盈 盈利:{profit}%  开仓均价{pos.AvgPx} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -394,7 +396,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头止盈回撤:{Retracement}%  开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
+                                    operationDes = $"空头回撤:{Retracement}%后止盈 盈利:{profit}% 开仓均价{pos.AvgPx} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice} 平仓价:{closePrice}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -415,7 +417,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     {
                         var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                         lastTrigerPrice = closePrice; // 设置回撤极值
-                        Retracement = StopSurplus / 2;// 容忍回撤幅度
+                        Retracement = StopSurplus * 0.1f;// 容忍回撤幅度
                         MoveProfit = true;
                         Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈");
                         // 记录操作到数据库
@@ -440,12 +442,19 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
-                    operationDes = $"止损:{profit}% (仓位:{pos.Margin} 基准{StopLoss}%)";
+                    var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
+                    operationDes = $"止损:{profit}% (仓位:{pos.Margin} 基准{StopLoss}%) 开仓均价{pos.AvgPx} 平仓价:{closePrice}";
                     operationProfit = pos.Margin * profit / 100;
                     return true;
                 }
             }
             return false;
+        }
+
+        // 动态计算移动止盈时的容忍回撤幅度
+        float updateRetracement(float profit, float StopSurplus)
+        {
+            return (profit - StopSurplus) * StopSurplus * 0.1f;
         }
 
         /// <summary>
