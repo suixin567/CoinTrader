@@ -458,7 +458,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         // 动态计算移动止盈时的容忍回撤幅度
         float updateRetracement(float profit, float StopSurplus)
         {
-            var retracement =(profit - StopSurplus) * StopSurplus * 0.1f;
+            var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.1f;
             if (retracement <= 0)
             {
                 retracement = StopSurplus * 0.1f;
