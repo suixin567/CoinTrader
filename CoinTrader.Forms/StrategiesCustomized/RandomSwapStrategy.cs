@@ -344,7 +344,11 @@ namespace CoinTrader.Forms.Strategies.Customer
                 if (MoveProfit) //移动盈利
                 {
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                    if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
+                    if (Retracement == 0) // 初始化移动止盈时的容忍回撤幅度
+                    {
+                        Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
+                    }
+                    else if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
                     {
                         switch (pos.SideType)
                         {
@@ -417,8 +421,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                     {
                         var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                         lastTrigerPrice = closePrice; // 设置回撤极值
-                        Retracement = StopSurplus * 0.1f;// 容忍回撤幅度
                         MoveProfit = true;
+                        Retracement = 0;// 重置容忍回撤幅度
                         Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈");
                         // 记录操作到数据库
                         var db = MysqlHelper.Instance.getDB();
@@ -454,7 +458,12 @@ namespace CoinTrader.Forms.Strategies.Customer
         // 动态计算移动止盈时的容忍回撤幅度
         float updateRetracement(float profit, float StopSurplus)
         {
-            return (profit - StopSurplus) * StopSurplus * 0.1f;
+            var retracement =(profit - StopSurplus) * StopSurplus * 0.1f;
+            if (retracement <= 0)
+            {
+                retracement = StopSurplus * 0.1f;
+            }
+            return retracement;
         }
 
         /// <summary>
