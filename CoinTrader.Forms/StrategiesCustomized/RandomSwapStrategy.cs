@@ -339,7 +339,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             operationProfit = 0;
             var profit = GetProfitPercent(pos, ask, bid);// 盈利百分比
             //Logger.Instance.LogDebug($"利润:{profit.ToString("F2")}% 止盈:{this.StopSurplus}% 止损:{-this.StopLoss}%");
-            if (profit > 0) //持仓已盈利情况
+            if (profit > 0) //持仓盈利的情况
             {
                 if (MoveProfit) //移动盈利
                 {
@@ -442,7 +442,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     }
                 }
             }
-            else //持仓非盈利情况
+            else //持仓亏损的情况
             {
                 if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
@@ -455,13 +455,17 @@ namespace CoinTrader.Forms.Strategies.Customer
             return false;
         }
 
-        // 动态计算移动止盈时的容忍回撤幅度
+        // 动态计算移动止盈时容忍的盈利回撤幅度
         float updateRetracement(float profit, float StopSurplus)
         {
             var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.1f;
             if (retracement <= 0)
             {
                 retracement = StopSurplus * 0.1f;
+            }
+            // 回撤幅度不能低于1%,否则再算上杠杆后，过于灵敏
+            if (retracement < 1) {
+                retracement = 1;
             }
             return retracement;
         }
