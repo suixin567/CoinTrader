@@ -399,6 +399,12 @@
     <Compile Include="WinCTCConfig.Designer.cs">
       <DependentUpon>WinCTCConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinSwapEmulator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinSwapEmulator.Designer.cs">
+      <DependentUpon>WinSwapEmulator.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinEmulator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -545,6 +551,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinCTCConfig.resx">
       <DependentUpon>WinCTCConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinSwapEmulator.resx">
+      <DependentUpon>WinSwapEmulator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinEmulator.resx">
       <DependentUpon>WinEmulator.cs</DependentUpon>

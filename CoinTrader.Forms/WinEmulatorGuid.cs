@@ -51,7 +51,7 @@ namespace CoinTrader.Forms
 
         private void btnOk_Click(object sender, System.EventArgs e)
         {
-            var win = WindowManager.Instance.OpenWindow<WinEmulator>();
+            var win = WindowManager.Instance.OpenWindow<WinSwapEmulator>();
             win.SetStrategyGroup(this.group, this.cmbInstruments.Text);
             this.Close();
         }
