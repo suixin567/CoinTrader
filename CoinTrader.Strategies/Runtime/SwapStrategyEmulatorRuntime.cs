@@ -136,505 +136,430 @@ namespace CoinTrader.Strategies.Runtime
         }
     }
 
-    /// <summary>
-    /// 现货复盘模拟器
-    /// </summary>
+
     public class SwapStrategyEmulatorRuntime : ITradeStrategyRuntime
     {
-        /// <summary>
-        /// 佣金设置
-        /// </summary>
-        public decimal Fee { get; set; } = 0;
-        public event Action<decimal, decimal> OnTick;
-        public string InstId => instId;
-        public List<long> idForRemove = new List<long>();
-        public List<TradeOrder> orderForAdd = new List<TradeOrder>();
+        #region 仓位管理
+        private Dictionary<string, Position> positions = new Dictionary<string, Position>();
+        private Dictionary<CandleGranularity, SwapEmulatorCandleProvider> candles = new Dictionary<CandleGranularity, SwapEmulatorCandleProvider>();
+        #endregion
 
-
-        private BalanceVO baseCcyBalance;
-        private BalanceVO quoteCcyBalance;
+        #region 账户和合约信息
+        private BalanceVO quoteBalance;
         private string instId;
+        private InstrumentSwap instrument;
         private long orderIdSeed = 10000;
-        private bool traversingOrders = false;
         private decimal ask;
         private decimal bid;
         private DateTime now;
+        private uint maxLeverage = 125;
+        private uint currentLeverage = 1;
+        private LeverageMode leverageMode = LeverageMode.Cross;
+        private DateTime lastFundingTime = DateTime.MinValue;
+        private decimal fundingRate = 0.0002m;
+        #endregion
 
+        #region 订单管理
+        private List<TradeOrder> orders = new List<TradeOrder>();
+        private List<TradeOrder> historyOrders = new List<TradeOrder>();
+        private List<long> idForRemove = new List<long>();
+        private List<TradeOrder> orderForAdd = new List<TradeOrder>();
+        private bool traversingOrders = false;
+        #endregion
 
+        public event Action<decimal, decimal> OnTick;
+        public decimal Fee { get; set; } = 0.0005m;
 
-        /// <summary>
-        /// 基础币种
-        /// </summary> 
-        public string BaseCurrency => instrument.BaseCcy;
-
-        /// <summary>
-        /// 计价币种
-        /// </summary>
-        public string QuoteCurrency => instrument.QuoteCcy;
-
-        public  BalanceVO BaseBalance => baseCcyBalance;
-
-        public BalanceVO QuoteBalance
-        {
-            get
-            {
-                return quoteCcyBalance;
-            }
-
-            set
-            {
-                quoteCcyBalance = value;
-            }
-        }
-
-        /// <summary>
-        /// 最小交易数量
-        /// </summary>
+        public string InstId => instId;
+        public BalanceVO QuoteBalance => quoteBalance;
         public decimal MinSize => instrument.MinSize;
-
         public decimal TickSize => instrument.TickSize;
-
         public bool IsEmulator => true;
-
-        
         public bool Effective => true;
 
-        public uint Lever { get; set; } = 1;
+        #region 核心接口实现
+        public uint GetMaxLever() => maxLeverage;
+        public decimal GetFundingRate() => fundingRate;
 
-        List<TradeOrder> orders = new List<TradeOrder>();
-
-        List<TradeOrder> historyOrders = new List<TradeOrder>();
-
-        InstrumentBase instrument = null;
-
-        Dictionary<CandleGranularity, EmulatorCandleProvider> candles = new Dictionary<CandleGranularity, EmulatorCandleProvider>();
-
-        public SwapStrategyEmulatorRuntime()
+        public void SetLever(OrderSide side, LeverageMode mode, uint lever)
         {
-
+            currentLeverage = Math.Min(lever, maxLeverage);
+            leverageMode = mode;
         }
 
-        public void StartEmulation(string instId, CandleGranularity candleGranularity, IEnumerable<Type> strategyTypes)
-        {
-            foreach (var type in strategyTypes)
-            {
-                var strategy = Activator.CreateInstance(type) as TradeStrategyBase;
+        public List<Position> GetPositions() => positions.Values.ToList();
+        public Position GetPosition(string id) => positions.TryGetValue(id, out var pos) ? pos : null;
 
-                if (strategy == null)
-                {
-                    strategy.Init(instId);
-                }
+        public void ClosePosition(string id, decimal? size = null, decimal? amount = null)
+        {
+            if (positions.TryGetValue(id, out var position))
+            {
+                decimal closeSize = size ?? position.Amount;
+                if (amount.HasValue) closeSize = amount.Value / position.OpenPrice;
+
+                closeSize = Math.Min(closeSize, position.Amount);
+                ClosePosition(position, closeSize);
             }
         }
 
+        public string CreatePosition(OrderSide side, decimal amount, LeverageMode mode)
+        {
+            return CreatePositionInternal(side, amount, mode);
+        }
+
+        public string CreatePosition(OrderSide side, decimal size, LeverageMode mode)
+        {
+            return CreatePositionInternal(side, size, mode);
+        }
+
+        protected void EachPosition(Action<Position> callback)
+        {
+            foreach (var pos in positions.Values.ToArray())
+            {
+                callback(pos);
+            }
+        }
+        #endregion
+
+        #region 初始化方法
         public bool Init(string instId)
         {
-            instrument = InstrumentManager.GetInstrument(instId);
+            instrument = InstrumentManager.GetInstrument(instId) as InstrumentSwap;
             this.instId = instId;
-            if (instrument == null) return false;
-            return true;
+            return instrument != null;
         }
+        #endregion
 
-        public void LoadCandle(CandleGranularity granularity)
+        #region 价格更新和资金费率
+        public void UpdatePrices(decimal ask, decimal bid, DateTime time)
         {
+            this.ask = ask;
+            this.bid = bid;
+            this.now = time;
 
-        }
+            UpdateFunding(time);
+            UpdatePositionPrices();
+            CheckOrders();
+            OnTick?.Invoke(ask, bid);
 
-        public void EachCandle(CandleGranularity granularity, Func<Candle, bool> callback)
-        {
-            EmulatorCandleProvider provider;
-            if (candles.TryGetValue(granularity, out provider))
+            foreach (var cp in candles.Values)
             {
-                provider.EachCandle(callback);
+                cp.UpdateLastPrice((ask + bid) / 2, time);
             }
         }
 
-        public ICandleProvider GetCandleProvider(CandleGranularity granularity)
+        private void UpdatePositionPrices()
         {
-            EmulatorCandleProvider provider;
-            if (!this.candles.TryGetValue(granularity, out provider))
+            foreach (var pos in positions.Values)
             {
-                provider = new EmulatorCandleProvider(granularity);
-                this.candles[granularity] = provider;
-            }
-
-            return provider;
-        }
-        public void UnloadCandle(CandleGranularity granularity)
-        {
-            this.candles.Remove(granularity);
-        }
-
-        public OrderBase GetOrder(long id)
-        {
-            TradeOrder order = null;
-            foreach (var o in orders)
-            {
-                if (o.PublicId == id)
-                {
-                    order = new TradeOrder();
-                    order.CopyFrom(o);
-                    break;
-                }
-            }
-
-            return order;
-        }
-
-        private void EachOrders(OrderSide side, Action<OrderBase> callback)
-        {
-            traversingOrders = true;
-            for (int i = orders.Count - 1; i >= 0; i--)
-            {
-                if (orders[i].Side == side)
-                {
-                    callback?.Invoke(orders[i]);
-                }
-            }
-            traversingOrders = false;
-
-            for(int i = orderForAdd.Count - 1; i >= 0; i--)
-            {
-                orders.Add(orderForAdd[i]);
-            }
-
-            orderForAdd.Clear();
-            this.CancelOrders(idForRemove);
-            idForRemove.Clear();
-        }
-
-        public void EachSellOrder(Action<OrderBase> orderCallback)
-        {
-            EachOrders(OrderSide.Sell, orderCallback);
-        }
-
-        public void EachBuyOrder(Action<OrderBase> orderCallback)
-        {
-            EachOrders(OrderSide.Buy, orderCallback);
-        }
-
-        public void CancelOrderBySide(OrderSide side, bool async)
-        {
-            for (int i = orders.Count - 1; i >= 0; i--)
-            {
-                if (orders[i].Side == side)
-                {
-                    InnerRemoveOrder(orders[i]);
-                    orders.RemoveAt(i);
-                }
+                pos.CurrentPrice = pos.Side == OrderSide.Buy ? bid : ask;
             }
         }
+
+        private void UpdateFunding(DateTime time)
+        {
+            if ((time - lastFundingTime).TotalHours >= 8)
+            {
+                ApplyFunding();
+                lastFundingTime = time;
+            }
+        }
+
+        private void ApplyFunding()
+        {
+            foreach (var position in positions.Values)
+            {
+                decimal funding = position.Amount * position.OpenPrice * fundingRate;
+                quoteBalance.Avalible += position.Side == OrderSide.Sell ? funding : -funding;
+            }
+        }
+        #endregion
+
+        #region 仓位操作核心逻辑
+        private string CreatePositionInternal(OrderSide side, decimal amount, LeverageMode mode)
+        {
+            decimal price = side == OrderSide.Buy ? ask : bid;
+            decimal margin = (amount * price) / currentLeverage;
+
+            if (quoteBalance.Avalible < margin)
+                throw new Exception("Insufficient margin");
+
+            var position = new Position
+            {
+                Id = Guid.NewGuid().ToString(),
+                Side = side,
+                Amount = amount,
+                OpenPrice = price,
+                Lever = currentLeverage,
+                Mode = mode,
+                Margin = margin,
+                CreateTime = now,
+                CurrentPrice = price
+            };
+
+            quoteBalance.Avalible -= margin;
+            quoteBalance.Frozen += margin;
+            positions.Add(position.Id, position);
+
+            return position.Id;
+        }
+
+        private void ClosePosition(Position position, decimal closeSize)
+        {
+            decimal closeValue = closeSize * position.OpenPrice;
+            decimal fee = closeValue * Fee;
+            decimal pnl = (position.CurrentPrice - position.OpenPrice) * closeSize *
+                        (position.Side == OrderSide.Buy ? 1 : -1);
+
+            // 释放保证金
+            decimal marginRatio = closeSize / position.Amount;
+            decimal returnMargin = position.Margin * marginRatio;
+
+            quoteBalance.Frozen -= returnMargin;
+            quoteBalance.Avalible += returnMargin + pnl - fee;
+
+            // 更新仓位
+            position.Amount -= closeSize;
+            position.Margin -= returnMargin;
+
+            if (position.Amount <= 0)
+                positions.Remove(position.Id);
+        }
+        #endregion
+
+        #region 订单系统
+        public long SendOrder(OrderSide side, decimal amount, decimal price, bool postOnly)
+        {
+            if (amount < MinSize) return 0;
+
+            var order = CreateOrder(side, amount, price, postOnly);
+            if (order == null) return 0;
+
+            if (traversingOrders)
+                orderForAdd.Add(order);
+            else
+                orders.Add(order);
+
+            return order.PublicId;
+        }
+
+        private TradeOrder CreateOrder(OrderSide side, decimal amount, decimal price, bool postOnly)
+        {
+            if (postOnly && ((side == OrderSide.Sell && price <= bid) ||
+                           (side == OrderSide.Buy && price >= ask)))
+                return null;
+
+            orderIdSeed++;
+            return new TradeOrder
+            {
+                PublicId = orderIdSeed,
+                Side = side,
+                Amount = amount,
+                Price = price,
+                AvailableAmount = amount,
+                CreatedDate = now,
+                InstId = instId
+            };
+        }
+
+        public void CancelOrder(long id) => CancelOrders(new[] { id });
 
         public void CancelOrders(IEnumerable<long> ids)
         {
-            if (ids == null || ids.Count() == 0) return;
-
-            if(traversingOrders)
+            if (traversingOrders)
             {
                 idForRemove.AddRange(ids);
                 return;
             }
 
-            for (int i = orders.Count - 1; i >= 0; i--)
+            foreach (var id in ids)
             {
-                if (ids.Contains(orders[i].PublicId))
+                var order = orders.FirstOrDefault(o => o.PublicId == id);
+                if (order != null)
                 {
-                    InnerRemoveOrder(orders[i]);
-                    orders.RemoveAt(i);
+                    orders.Remove(order);
+                    ReleaseOrderMargin(order);
                 }
             }
         }
 
-        public List<TradeOrder> GetHistoryList()
+        private void ReleaseOrderMargin(TradeOrder order)
         {
-            return historyOrders;
+            decimal margin = (order.AvailableAmount * order.Price) / currentLeverage;
+            quoteBalance.Frozen -= margin;
+            quoteBalance.Avalible += margin;
         }
+        #endregion
 
-        private void InnerRemoveOrder(long id)
-        {
-            TradeOrder order = GetOrder(id) as TradeOrder;
- 
-            if (order != null)
-            {
-                InnerRemoveOrder(order);
-            }
-        }
-
-        private void InnerRemoveOrder(OrderBase order)
-        {
-            if (order == null) return;
-
-            if(order.AvailableAmount < order.Amount)
-            {
-                var newOrder = new TradeOrder();
-                newOrder.CopyFrom(order);
-                newOrder.FilledSize = order.Amount - order.AvailableAmount;
-                historyOrders.Insert(0,newOrder);
-            }
-
-            var baseBalance = BaseBalance;
-            var quoteBalance = QuoteBalance;
-
-            switch (order.Side)
-            {
-                case OrderSide.Sell:
-                    baseBalance.Avalible += order.AvailableAmount;
-                    baseBalance.Frozen -= order.AvailableAmount;
-                    break;
-                case OrderSide.Buy:
-                    quoteBalance.Avalible += order.AvailableAmount * order.Price;
-                    quoteBalance.Frozen -= order.AvailableAmount * order.Price;
-                    break;
-            }
-
-            Debug.Assert(baseBalance.Avalible >=0  && baseBalance.Frozen >=0);
-            Debug.Assert(quoteBalance.Avalible >= 0 && quoteBalance.Frozen >= 0);
-
-            baseCcyBalance = baseBalance;
-            quoteCcyBalance = quoteBalance;
-        }
-        public TradeOrder InnerCreateOrder(OrderSide side, decimal amount, decimal price, bool postOnly)
-        {
-            if (postOnly)
-            {
-                if (side == OrderSide.Sell && bid > price)
-                {
-                    return null;
-                }
-
-                else if (side == OrderSide.Buy && ask < price)
-                {
-                    return null;
-                }
-            }
-
-            switch (side)
-            {
-                case OrderSide.Sell:
-                    BalanceVO b = baseCcyBalance;
-                    var frozen = Math.Min(amount, b.Avalible);
-                    b.Avalible -= frozen;
-                    b.Frozen += frozen;
-                    baseCcyBalance = b;
-                    break;
-                case OrderSide.Buy:
-                    var quoteBalance = quoteCcyBalance;
-                    var needCash = Math.Min(quoteBalance.Avalible, price * amount);
-                    amount = Math.Min(amount, needCash / price);
-                    quoteBalance.Avalible -= needCash;
-                    quoteBalance.Frozen += needCash;
-                    quoteCcyBalance = quoteBalance;
-                    break;
-            }
-            Debug.Assert(baseCcyBalance.Avalible >= 0 && baseCcyBalance.Frozen >= 0);
-            Debug.Assert(quoteCcyBalance.Avalible >= 0 && quoteCcyBalance.Frozen >= 0);
-            orderIdSeed++;
-            TradeOrder order = new TradeOrder
-            {
-                Side = side,
-                Amount = amount,
-                Price = price,
-                InstId = instrument.InstrumentId,
-                PublicId = orderIdSeed,
-                AvailableAmount = amount,
-                CreatedDate = now
-            };
-
-            return order;
-        }
-
-        public bool ModifyOrder(long id, decimal amount, decimal newPrice, bool cancelOrderWhenFailed)
-        {
-            TradeOrder order = GetOrder(id) as TradeOrder;
-
-            if (order == null)
-                return false;
-
-            var baseBalance = BaseBalance;
-            var quoteBalance = QuoteBalance;
-
-            if (amount <= 0)
-            {
-                if (cancelOrderWhenFailed)
-                    CancelOrder(id);
-                return false;
-            }
-
-
-            switch (order.Side)
-            {
-                case OrderSide.Sell:
-                    if (baseBalance.Total < amount)//可出售的数量不足
-                    {
-                        if (cancelOrderWhenFailed)
-                            CancelOrder(order.PublicId);
-                        return false;
-                    }
-
-                    if (newPrice <= bid) //价格无效
-                    {
-                        if (cancelOrderWhenFailed)
-                            CancelOrder(order.PublicId);
-                        return false;
-                    }
-
-                    break;
-                case OrderSide.Buy:
-                    if (quoteBalance.Avalible + order.AvailableAmount * order.Price < amount * newPrice)//可用稳定币的数量不足
-                    {
-                        if (cancelOrderWhenFailed)
-                            CancelOrder(order.PublicId);
-                        return false;
-                    }
-
-                    if (newPrice >= ask) //价格无效
-                    {
-                        if (cancelOrderWhenFailed)
-                            CancelOrder(order.PublicId);
-                        return false;
-                    }
-                    break;
-            }
-
- 
-            CancelOrder(order.PublicId);
-
-            TradeOrder newOrder = InnerCreateOrder(order.Side, amount, newPrice, false);
-            newOrder.PublicId = order.PublicId;
-            newOrder.CreatedDate = order.CreatedDate;
-
-            if (traversingOrders)
-            {
-                orderForAdd.Add(newOrder);
-            }
-            else
-            {
-                orders.Add(newOrder);
-            }
-
-            return true;
-        }
-        
-        public long SendOrder(OrderSide side, decimal amount, decimal price, bool postOnly)
-        {
-            if (amount < instrument.MinSize)
-                return 0;
-            var order = InnerCreateOrder(side, amount, price, postOnly);
-
-            if(order!= null)
-            {
-                if (traversingOrders)
-                {
-                    orderForAdd.Add(order);
-                }
-                else
-                {
-                    orders.Add(order);
-                }
-
-                return order.PublicId;
-            }
-
-            return 0;
-        }
-
-
-        public void Sell(decimal amount)
-        {
-            SendOrder(OrderSide.Sell, amount, 0, false);
-            CheckOrders();
-        }
-        public void Buy(decimal amount)
-        {
-            SendOrder(OrderSide.Buy, amount, decimal.MaxValue, false);
-            CheckOrders();
-        }
-        public void CancelOrder(long id)
-        {
-           CancelOrders(new[] { id });
-        }
-
+        #region 订单匹配逻辑
         private void CheckOrders()
         {
             for (int i = orders.Count - 1; i >= 0; i--)
             {
                 var order = orders[i];
+                bool filled = false;
 
                 if (order.Side == OrderSide.Buy && ask <= order.Price)
                 {
-                    var price = Math.Min(order.Price, ask); 
-                    var quoteBalance = quoteCcyBalance;
-                    var frozenCash = quoteBalance.Frozen;
-                    var amount = Math.Min(frozenCash / price, order.AvailableAmount);
-                    var fee = Fee * amount;
-                    BalanceVO baseBalance = baseCcyBalance;
-                    baseBalance.Avalible += amount - fee;
-                    baseCcyBalance = baseBalance;
-                    quoteBalance.Frozen -= amount * price;
-                    quoteCcyBalance = quoteBalance;
-                    order.PriceAvg = order.PriceAvg * (order.Amount - order.AvailableAmount) + (amount * ask) / (order.Amount - order.AvailableAmount + amount);
-                    order.AvailableAmount -= amount;
-                    order.Fee += fee;
-                    order.UpdateTime = now;
-                    
-                    if (order.AvailableAmount <= 0)
-                    {
-                        order.FeeCurrency = instrument.BaseCcy;
-                        historyOrders.Insert(0,order);
-                        orders.RemoveAt(i);
-                    }
+                    filled = TryFillOrder(order, ask);
                 }
                 else if (order.Side == OrderSide.Sell && bid >= order.Price)
                 {
-                    var price = Math.Max(order.Price, bid);
-                    var amount = order.AvailableAmount;
-                    var cash = price * amount;
-                    var fee = cash * Fee;
-                    cash -= fee;
-                    BalanceVO quoteBalance = quoteCcyBalance;
-                    BalanceVO baseBalance = baseCcyBalance;
-                    baseBalance.Frozen -= amount;
-                    baseCcyBalance = baseBalance;
+                    filled = TryFillOrder(order, bid);
+                }
 
-                    quoteBalance.Avalible += cash;
-                    quoteCcyBalance = quoteBalance;
-
-                    order.PriceAvg = order.PriceAvg * (order.Amount - order.AvailableAmount) + (amount * ask) / (order.Amount - order.AvailableAmount + amount);
-                    order.AvailableAmount -= amount;
-                    order.Fee = +fee;
-                    order.UpdateTime = now;
- 
+                if (filled)
+                {
                     if (order.AvailableAmount <= 0)
                     {
-                        order.FeeCurrency = instrument.QuoteCcy;
-                        historyOrders.Insert(0, order);
                         orders.RemoveAt(i);
+                        historyOrders.Add(order);
                     }
-                 }
+                }
             }
 
-            Debug.Assert(baseCcyBalance.Avalible >= 0 && baseCcyBalance.Frozen >= 0);
-            Debug.Assert(quoteCcyBalance.Avalible >= 0 && quoteCcyBalance.Frozen >= 0);
+            ProcessPendingOrders();
         }
-        public void UpdatePrices(decimal ask, decimal bid,DateTime time)
+
+        private bool TryFillOrder(TradeOrder order, decimal fillPrice)
         {
-            this.ask = ask;
-            this.bid = bid;
-            this.now = time;
-            
-            foreach(var cp in this.candles)
+            try
             {
-                cp.Value.UpdateLastPrice(0.5m * (ask + bid),time);
+                // 计算实际可成交数量（考虑最小交易单位）
+                decimal amount = Math.Max(order.AvailableAmount, MinSize);
+                amount = NormalizeSize(amount);
+
+                // 计算需要的保证金
+                decimal requiredMargin = (amount * fillPrice) / currentLeverage;
+
+                if (quoteBalance.Avalible < requiredMargin)
+                    return false;
+
+                // 创建仓位
+                var positionId = CreatePositionInternal(order.Side, amount, leverageMode);
+                var position = GetPosition(positionId);
+                position.OpenPrice = fillPrice; // 更新实际成交价格
+
+                // 冻结保证金
+                quoteBalance.Avalible -= requiredMargin;
+                quoteBalance.Frozen += requiredMargin;
+
+                // 更新订单状态
+                order.AvailableAmount -= amount;
+                order.FilledSize += amount;
+                order.AvgPrice = (order.AvgPrice * (order.FilledSize - amount) + fillPrice * amount) / order.FilledSize;
+                order.Fee += amount * fillPrice * Fee;
+                order.LastFillTime = now;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Order fill failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        private decimal NormalizeSize(decimal amount)
+        {
+            // 根据合约规则标准化交易数量
+            decimal size = Math.Floor(amount / instrument.LotSize) * instrument.LotSize;
+            return Math.Max(size, instrument.MinSize);
+        }
+
+        private void ProcessPendingOrders()
+        {
+            // 处理遍历期间添加/删除的订单
+            foreach (var id in idForRemove)
+            {
+                var order = orders.FirstOrDefault(o => o.PublicId == id);
+                if (order != null)
+                {
+                    orders.Remove(order);
+                    ReleaseOrderMargin(order);
+                }
             }
 
-            CheckOrders();
-
-            OnTick?.Invoke(ask, bid);
+            orders.AddRange(orderForAdd);
+            idForRemove.Clear();
+            orderForAdd.Clear();
         }
+        #endregion
 
-        public void Dispose()
+        #region 辅助方法
+        public void EachBuyOrder(Action<OrderBase> callback) => EachOrders(OrderSide.Buy, callback);
+        public void EachSellOrder(Action<OrderBase> callback) => EachOrders(OrderSide.Sell, callback);
+
+        private void EachOrders(OrderSide side, Action<OrderBase> callback)
         {
-
+            traversingOrders = true;
+            try
+            {
+                foreach (var order in orders.Where(o => o.Side == side).ToArray())
+                {
+                    callback?.Invoke(order);
+                }
+            }
+            finally
+            {
+                traversingOrders = false;
+                ProcessPendingOrders();
+            }
         }
+
+        public OrderBase GetOrder(long id)
+        {
+            return orders.Concat(historyOrders)
+                         .FirstOrDefault(o => o.PublicId == id);
+        }
+        #endregion
+
+        #region 蜡烛图管理
+        public ICandleProvider GetCandleProvider(CandleGranularity granularity)
+        {
+            if (!candles.TryGetValue(granularity, out var provider))
+            {
+                provider = new SwapEmulatorCandleProvider(granularity);
+                candles[granularity] = provider;
+            }
+            return provider;
+        }
+
+        public void EachCandle(CandleGranularity granularity, Func<Candle, bool> callback)
+        {
+            if (candles.TryGetValue(granularity, out var provider))
+            {
+                provider.EachCandle(callback);
+            }
+        }
+        #endregion
+
+        #region 清算逻辑
+        public void CheckLiquidation()
+        {
+            foreach (var position in positions.Values.ToArray())
+            {
+                decimal marginRatio = CalculateMarginRatio(position);
+
+                if (marginRatio <= instrument.MaintenanceRate)
+                {
+                    // 触发强制平仓
+                    ClosePosition(position.Id);
+                    Debug.WriteLine($"Position {position.Id} liquidated");
+                }
+            }
+        }
+
+        private decimal CalculateMarginRatio(Position position)
+        {
+            decimal markPrice = position.Side == OrderSide.Buy ? bid : ask;
+            decimal unrealizedPnl = (markPrice - position.OpenPrice) * position.Amount *
+                                   (position.Side == OrderSide.Buy ? 1 : -1);
+            decimal maintenanceMargin = position.Margin * instrument.MaintenanceRate;
+
+            return (position.Margin + unrealizedPnl) / position.Margin;
+        }
+        #endregion
+
     }
 }

@@ -19,7 +19,7 @@ namespace CoinTrader.Forms
     public partial class WinSwapEmulator : Form
     {
 
-        private StrategyEmulatorRuntime runtime = null;
+        private SwapStrategyEmulatorRuntime runtime = null;
         private WaitForSeconds wait = new WaitForSeconds(0.033f);
 
         private ICoroutine coroutine = null;
@@ -90,7 +90,7 @@ namespace CoinTrader.Forms
                 StrategyView view = new StrategyView();
                 view.SetStrategy(strategy);
                 flowLayoutPanel1.Controls.Add(view);
-                runtime = strategy.Runtime as StrategyEmulatorRuntime;
+                runtime = strategy.Runtime as SwapStrategyEmulatorRuntime;
             }
 
             if (runtime != null)
