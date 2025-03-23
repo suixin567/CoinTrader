@@ -248,6 +248,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                            .SetColumns(it => it.Des == des)
                            .SetColumns(it => it.Profit == profit)
                            .SetColumns(it => it.Status == 1)
+                           .SetColumns(it => it.Fee == GetTradeFee(pos)) // 记录平仓交易费用
                            .Where(it => it.Id == operationId)
                            .ExecuteCommand();
                         }
@@ -276,6 +277,11 @@ namespace CoinTrader.Forms.Strategies.Customer
                     lastTrigerPrice = 0;//清零移动止盈标记价格
                 }
             }
+        }
+
+        private decimal GetTradeFee(Position pos)
+        {
+            return (decimal)FundingRate * pos.Margin;
         }
 
         /// <summary>

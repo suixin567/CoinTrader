@@ -65,6 +65,9 @@ namespace CoinTrader.Common.Database
         [SugarColumn(ColumnName = "profit")]
         public decimal Profit { get; set; }
 
+        [SugarColumn(ColumnName = "fee")]
+        public decimal Fee { get; set; }
+
         [SugarColumn(ColumnName = "status")]
         public int Status { get; set; }
     }
