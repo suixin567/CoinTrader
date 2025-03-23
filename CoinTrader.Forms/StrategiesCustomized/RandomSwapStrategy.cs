@@ -200,6 +200,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     {
                         // 标记为操作成功
                         db.Updateable<Operation>()
+                       .SetColumns(it => it.Position == pos.Margin)
                        .SetColumns(it => it.Des == des)
                        .SetColumns(it => it.Status == 1)
                        .Where(it => it.Id == operationId)

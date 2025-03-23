@@ -55,6 +55,9 @@ namespace CoinTrader.Common.Database
         //[SugarColumn(ColumnName = "orderId ")]
         //public long OrderId { get; set; }
 
+        [SugarColumn(ColumnName = "position")]
+        public decimal Position { get; set; }
+
         // 操作方向
         [SugarColumn(ColumnName = "side")]
         public byte Side { get; set; }
