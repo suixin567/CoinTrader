@@ -154,7 +154,7 @@ namespace CoinTrader.Strategies.Runtime
         private DateTime now;
         private uint maxLeverage = 125;
         private uint currentLeverage = 1;
-        private LeverageMode leverageMode = LeverageMode.Cross;
+        private string leverageMode = MarginMode.Cross;
         private DateTime lastFundingTime = DateTime.MinValue;
         private decimal fundingRate = 0.0002m;
         #endregion
@@ -181,7 +181,7 @@ namespace CoinTrader.Strategies.Runtime
         public uint GetMaxLever() => maxLeverage;
         public decimal GetFundingRate() => fundingRate;
 
-        public void SetLever(OrderSide side, LeverageMode mode, uint lever)
+        public void SetLever(OrderSide side, string mode, uint lever)
         {
             currentLeverage = Math.Min(lever, maxLeverage);
             leverageMode = mode;
@@ -202,12 +202,12 @@ namespace CoinTrader.Strategies.Runtime
             }
         }
 
-        public string CreatePosition(OrderSide side, decimal amount, LeverageMode mode)
+        public string CreatePosition(OrderSide side, decimal amount, string mode)
         {
             return CreatePositionInternal(side, amount, mode);
         }
 
-        public string CreatePosition(OrderSide side, decimal size, LeverageMode mode)
+        public string CreatePosition(OrderSide side, decimal size, string mode)
         {
             return CreatePositionInternal(side, size, mode);
         }
@@ -276,7 +276,7 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private string CreatePositionInternal(OrderSide side, decimal amount, LeverageMode mode)
+        private string CreatePositionInternal(OrderSide side, decimal amount, string mode)
         {
             decimal price = side == OrderSide.Buy ? ask : bid;
             decimal margin = (amount * price) / currentLeverage;
