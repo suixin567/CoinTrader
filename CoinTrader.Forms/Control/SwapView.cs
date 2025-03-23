@@ -210,6 +210,19 @@ namespace CoinTrader.Forms.Control
                         this.labelDebug.Text = "";
                     }
                 }
+                var strategy2 = list[0] as RandomSwapStrategy;
+                if (strategy2 != null)
+                {
+                    labelBanned.Visible = strategy2.bannedTime > DateTime.Now;
+                    if (strategy2.MoveProfit)
+                    {
+                        this.labelDebug.Text = strategy2.debugText;
+                    }
+                    else
+                    {
+                        this.labelDebug.Text = "";
+                    }
+                }
             }
             //if (fundingRateMonitor != null)
             //{
