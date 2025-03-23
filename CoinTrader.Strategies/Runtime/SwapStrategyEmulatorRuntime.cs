@@ -13,6 +13,7 @@ using System.Data.Odbc;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace CoinTrader.Strategies.Runtime
 {
@@ -271,9 +272,9 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private string CreatePositionInternal(OrderSide side, decimal amount, string mode)
+        private string CreatePositionInternal(PositionType side, decimal amount, string mode)
         {
-            decimal price = side == OrderSide.Buy ? ask : bid;
+            decimal price = side == PositionType.Short ? ask : bid;
             decimal margin = (amount * price) / currentLeverage;
 
             if (quoteBalance.Avalible < margin)
@@ -281,44 +282,44 @@ namespace CoinTrader.Strategies.Runtime
 
             var position = new Position
             {
-                Id = Guid.NewGuid().ToString(),
-                Side = side,
-                Amount = amount,
-                OpenPrice = price,
+                PosId = DateTime.UtcNow.Ticks,
+                PosSide = side.ToString(),// 可能有问题
+                Pos = amount,
+                AvgPx = price,
                 Lever = currentLeverage,
-                Mode = mode,
+                MgnMode = mode,
                 Margin = margin,
-                CreateTime = now,
-                CurrentPrice = price
+                CTime = now,
+                Last = price
             };
 
             quoteBalance.Avalible -= margin;
             quoteBalance.Frozen += margin;
-            positions.Add(position.Id, position);
+            positions.Add(position.PosId.ToString(), position);// 有可能出错
 
-            return position.Id;
+            return position.PosId.ToString();// 有可能出错
         }
 
         private void ClosePosition(Position position, decimal closeSize)
         {
-            decimal closeValue = closeSize * position.OpenPrice;
+            decimal closeValue = closeSize * position.AvgPx;
             decimal fee = closeValue * Fee;
-            decimal pnl = (position.CurrentPrice - position.OpenPrice) * closeSize *
-                        (position.Side == OrderSide.Buy ? 1 : -1);
+            decimal pnl = (position.Last - position.AvgPx) * closeSize *
+                        (position.SideType == PositionType.Long ? 1 : -1);
 
             // 释放保证金
-            decimal marginRatio = closeSize / position.Amount;
+            decimal marginRatio = closeSize / position.Pos;
             decimal returnMargin = position.Margin * marginRatio;
 
             quoteBalance.Frozen -= returnMargin;
             quoteBalance.Avalible += returnMargin + pnl - fee;
 
             // 更新仓位
-            position.Amount -= closeSize;
+            position.Pos -= closeSize;
             position.Margin -= returnMargin;
 
-            if (position.Amount <= 0)
-                positions.Remove(position.Id);
+            if (position.Pos <= 0)
+                positions.Remove(position.PosId.ToString());// 有可能出错
         }
         #endregion
 
@@ -442,9 +443,9 @@ namespace CoinTrader.Strategies.Runtime
                 // 更新订单状态
                 order.AvailableAmount -= amount;
                 order.FilledSize += amount;
-                order.AvgPrice = (order.AvgPrice * (order.FilledSize - amount) + fillPrice * amount) / order.FilledSize;
+                order.PriceAvg = (order.PriceAvg * (order.FilledSize - amount) + fillPrice * amount) / order.FilledSize;
                 order.Fee += amount * fillPrice * Fee;
-                order.LastFillTime = now;
+                order.UpdateTime = now;
 
                 return true;
             }
@@ -458,7 +459,7 @@ namespace CoinTrader.Strategies.Runtime
         private decimal NormalizeSize(decimal amount)
         {
             // 根据合约规则标准化交易数量
-            decimal size = Math.Floor(amount / instrument.LotSize) * instrument.LotSize;
+            decimal size = Math.Floor(amount / instrument.MinSize) * instrument.MinSize;
             return Math.Max(size, instrument.MinSize);
         }
 
@@ -530,27 +531,27 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 清算逻辑
-        public void CheckLiquidation()
-        {
-            foreach (var position in positions.Values.ToArray())
-            {
-                decimal marginRatio = CalculateMarginRatio(position);
+        //public void CheckLiquidation()
+        //{
+        //    foreach (var position in positions.Values.ToArray())
+        //    {
+        //        decimal marginRatio = CalculateMarginRatio(position);
 
-                if (marginRatio <= instrument.MaintenanceRate)
-                {
-                    // 触发强制平仓
-                    ClosePosition(position.Id);
-                    Debug.WriteLine($"Position {position.Id} liquidated");
-                }
-            }
-        }
+        //        if (marginRatio <= instrument.MaintenanceRate)
+        //        {
+        //            // 触发强制平仓
+        //            ClosePosition(position.Id);
+        //            Debug.WriteLine($"Position {position.Id} liquidated");
+        //        }
+        //    }
+        //}
 
         private decimal CalculateMarginRatio(Position position)
         {
             decimal markPrice = position.SideType == PositionType.Short ? ask : bid;
             decimal unrealizedPnl = (markPrice - position.AvgPx) * position.Pos *
                                    (position.SideType == PositionType.Long ? 1 : -1);
-            decimal maintenanceMargin = position.Margin * instrument.MaintenanceRate;
+            decimal maintenanceMargin = position.Margin * instrument.CtMult;
 
             return (position.Margin + unrealizedPnl) / position.Margin;
         }
