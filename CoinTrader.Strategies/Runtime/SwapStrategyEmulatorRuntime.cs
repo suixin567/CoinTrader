@@ -207,11 +207,6 @@ namespace CoinTrader.Strategies.Runtime
             return CreatePositionInternal(side, amount, mode);
         }
 
-        public string CreatePosition(OrderSide side, decimal size, string mode)
-        {
-            return CreatePositionInternal(side, size, mode);
-        }
-
         protected void EachPosition(Action<Position> callback)
         {
             foreach (var pos in positions.Values.ToArray())
@@ -269,8 +264,8 @@ namespace CoinTrader.Strategies.Runtime
         {
             foreach (var position in positions.Values)
             {
-                decimal funding = position.Amount * position.OpenPrice * fundingRate;
-                quoteBalance.Avalible += position.Side == OrderSide.Sell ? funding : -funding;
+                decimal funding = position.Pos * position.AvgPx * fundingRate;
+                quoteBalance.Avalible += position.SideType == PositionType.Short ? funding : -funding;
             }
         }
         #endregion
@@ -438,7 +433,7 @@ namespace CoinTrader.Strategies.Runtime
                 // 创建仓位
                 var positionId = CreatePositionInternal(order.Side, amount, mgnMode);
                 var position = GetPosition(positionId);
-                position.OpenPrice = fillPrice; // 更新实际成交价格
+                position.AvgPx = fillPrice; // 更新实际成交价格
 
                 // 冻结保证金
                 quoteBalance.Avalible -= requiredMargin;
@@ -552,9 +547,9 @@ namespace CoinTrader.Strategies.Runtime
 
         private decimal CalculateMarginRatio(Position position)
         {
-            decimal markPrice = position.Side == OrderSide.Buy ? bid : ask;
-            decimal unrealizedPnl = (markPrice - position.OpenPrice) * position.Amount *
-                                   (position.Side == OrderSide.Buy ? 1 : -1);
+            decimal markPrice = position.SideType == PositionType.Short ? ask : bid;
+            decimal unrealizedPnl = (markPrice - position.AvgPx) * position.Pos *
+                                   (position.SideType == PositionType.Long ? 1 : -1);
             decimal maintenanceMargin = position.Margin * instrument.MaintenanceRate;
 
             return (position.Margin + unrealizedPnl) / position.Margin;
