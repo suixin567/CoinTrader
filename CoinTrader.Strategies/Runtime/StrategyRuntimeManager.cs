@@ -33,7 +33,7 @@ namespace CoinTrader.Strategies.Runtime
             {
                 if (isSwap)
                 {
-                   
+                    runtime = new SwapStrategyEmulatorRuntime();
                 }
                 else
                 {

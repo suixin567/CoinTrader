@@ -48,6 +48,7 @@
             this.pnlEmpty = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.labelDebug = new System.Windows.Forms.Label();
+            this.buttonEmulator = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -253,11 +254,23 @@
             this.labelDebug.TabIndex = 59;
             this.labelDebug.Text = "debug";
             // 
+            // buttonEmulator
+            // 
+            this.buttonEmulator.Location = new System.Drawing.Point(186, 1);
+            this.buttonEmulator.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonEmulator.Name = "buttonEmulator";
+            this.buttonEmulator.Size = new System.Drawing.Size(36, 20);
+            this.buttonEmulator.TabIndex = 60;
+            this.buttonEmulator.Text = "回测";
+            this.buttonEmulator.UseVisualStyleBackColor = true;
+            this.buttonEmulator.Click += new System.EventHandler(this.buttonEmulator_Click);
+            // 
             // SwapView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.buttonEmulator);
             this.Controls.Add(this.labelDebug);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.buttonInfo);
@@ -299,5 +312,6 @@
         private System.Windows.Forms.FlowLayoutPanel pnlBehavior;
         private System.Windows.Forms.Label labelBanned;
         private System.Windows.Forms.Label labelDebug;
+        private System.Windows.Forms.Button buttonEmulator;
     }
 }

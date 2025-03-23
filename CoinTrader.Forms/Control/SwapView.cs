@@ -13,6 +13,7 @@ using CoinTrader.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CoinTrader.Forms.Control
@@ -276,6 +277,17 @@ namespace CoinTrader.Forms.Control
             info += $"最大杠杆:{instrument.Lever}\n";
             info += $"资金费率:{Math.Round(fundingRateMonitor.FundingRate.Rate * 100, 3)}%\n";
             MessageBox.Show(info);
+        }
+
+        // 回测
+        private void buttonEmulator_Click(object sender, EventArgs e)
+        {
+            var stategyGroups = StrategyManager.Instance.GetStrategyGroups(StrategyType.Swap);
+            var group = stategyGroups.First(x => x.name == "合约交易策略(随机方向)");
+
+            var window = new WinEmulatorGuid();
+            window.SetStrategyGroup(group);
+            window.Show();
         }
     }
 }
