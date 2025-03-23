@@ -154,7 +154,7 @@ namespace CoinTrader.Strategies.Runtime
         private DateTime now;
         private uint maxLeverage = 125;
         private uint currentLeverage = 1;
-        private string leverageMode = MarginMode.Cross;
+        private string mgnMode = MarginMode.Cross;
         private DateTime lastFundingTime = DateTime.MinValue;
         private decimal fundingRate = 0.0002m;
         #endregion
@@ -184,7 +184,7 @@ namespace CoinTrader.Strategies.Runtime
         public void SetLever(OrderSide side, string mode, uint lever)
         {
             currentLeverage = Math.Min(lever, maxLeverage);
-            leverageMode = mode;
+            mgnMode = mode;
         }
 
         public List<Position> GetPositions() => positions.Values.ToList();
@@ -194,10 +194,10 @@ namespace CoinTrader.Strategies.Runtime
         {
             if (positions.TryGetValue(id, out var position))
             {
-                decimal closeSize = size ?? position.Amount;
-                if (amount.HasValue) closeSize = amount.Value / position.OpenPrice;
+                decimal closeSize = size ?? position.Pos;
+                if (amount.HasValue) closeSize = amount.Value / position.AvgPx;
 
-                closeSize = Math.Min(closeSize, position.Amount);
+                closeSize = Math.Min(closeSize, position.Pos);
                 ClosePosition(position, closeSize);
             }
         }
@@ -252,7 +252,7 @@ namespace CoinTrader.Strategies.Runtime
         {
             foreach (var pos in positions.Values)
             {
-                pos.CurrentPrice = pos.Side == OrderSide.Buy ? bid : ask;
+                //pos.CurrentPrice = pos.SideType == PositionType.Short ? ask : bid;
             }
         }
 
@@ -436,7 +436,7 @@ namespace CoinTrader.Strategies.Runtime
                     return false;
 
                 // 创建仓位
-                var positionId = CreatePositionInternal(order.Side, amount, leverageMode);
+                var positionId = CreatePositionInternal(order.Side, amount, mgnMode);
                 var position = GetPosition(positionId);
                 position.OpenPrice = fillPrice; // 更新实际成交价格
 
