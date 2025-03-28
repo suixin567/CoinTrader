@@ -146,6 +146,7 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 账户和合约信息
+        private BalanceVO baseBalance;
         private BalanceVO quoteBalance;
         private string instId;
         private InstrumentSwap instrument;
@@ -583,7 +584,18 @@ namespace CoinTrader.Strategies.Runtime
 
         public uint Lever { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public BalanceVO BaseBalance => throw new NotImplementedException();
+        public BalanceVO BaseBalance
+        {
+            get
+            {
+                return baseBalance;
+            }
+
+            set
+            {
+                baseBalance = value;
+            }
+        }
 
         public void LoadCandle(CandleGranularity granularity)
         {
