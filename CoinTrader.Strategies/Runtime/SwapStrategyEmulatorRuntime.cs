@@ -157,7 +157,7 @@ namespace CoinTrader.Strategies.Runtime
         private uint currentLeverage = 1;
         private string mgnMode = MarginMode.Cross;
         private DateTime lastFundingTime = DateTime.MinValue;
-        private decimal fundingRate = 0.0002m;
+        private double fundingRate = 0.0002;
         #endregion
 
         #region 订单管理
@@ -180,7 +180,7 @@ namespace CoinTrader.Strategies.Runtime
 
         #region 核心接口实现
         public uint GetMaxLever() => maxLeverage;
-        public decimal GetFundingRate() => fundingRate;
+        public double GetFundingRate() => fundingRate;
 
         public void SetLever(OrderSide side, string mode, uint lever)
         {
@@ -265,7 +265,7 @@ namespace CoinTrader.Strategies.Runtime
         {
             foreach (var position in positions.Values)
             {
-                decimal funding = position.Pos * position.AvgPx * fundingRate;
+                decimal funding = position.Pos * position.AvgPx * (decimal)fundingRate;
                 quoteBalance.Avalible += position.SideType == PositionType.Short ? funding : -funding;
             }
         }
