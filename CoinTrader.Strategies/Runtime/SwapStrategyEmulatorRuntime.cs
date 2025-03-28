@@ -155,7 +155,7 @@ namespace CoinTrader.Strategies.Runtime
         private DateTime now;
         private uint maxLeverage = 125;
         private uint currentLeverage = 1;
-        private string mgnMode = MarginMode.Cross;
+        private SwapMarginMode mgnMode = SwapMarginMode.Cross;
         private DateTime lastFundingTime = DateTime.MinValue;
         private double fundingRate = 0.0002;
         #endregion
@@ -172,7 +172,20 @@ namespace CoinTrader.Strategies.Runtime
         public decimal Fee { get; set; } = 0.0005m;
 
         public string InstId => instId;
-        public BalanceVO QuoteBalance => quoteBalance;
+
+        public BalanceVO QuoteBalance
+        {
+            get
+            {
+                return quoteBalance;
+            }
+
+            set
+            {
+                quoteBalance = value;
+            }
+        }
+
         public decimal MinSize => instrument.MinSize;
         public decimal TickSize => instrument.TickSize;
         public bool IsEmulator => true;
@@ -188,16 +201,7 @@ namespace CoinTrader.Strategies.Runtime
                 return;
 
             currentLeverage = Math.Min(lever, maxLeverage);
-
-            switch (mode)
-            {
-                case SwapMarginMode.Cross:
-                    mgnMode = "cross";
-                    break;
-                case SwapMarginMode.Isolated:
-                    mgnMode = "isolated";
-                    break;
-            }
+            mgnMode = mode;
             // 正式运行时是这样写的:
             //AccountManager.SetLever(InstId, side, mode, lever);
         }
@@ -219,7 +223,7 @@ namespace CoinTrader.Strategies.Runtime
             return false;
         }
 
-        public long CreatePosition(PositionType side, decimal amount, string mode)
+        public long CreatePosition(PositionType side, decimal amount, SwapMarginMode mode)
         {
             return CreatePositionInternal(side, amount, mode);
         }
@@ -288,7 +292,7 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private long CreatePositionInternal(PositionType side, decimal amount, string mode)
+        private long CreatePositionInternal(PositionType side, decimal amount, SwapMarginMode mode)
         {
             decimal price = side == PositionType.Long ? bid : ask;
             decimal margin = (amount * price) / currentLeverage;
@@ -303,7 +307,7 @@ namespace CoinTrader.Strategies.Runtime
                 Pos = amount,
                 AvgPx = price,
                 Lever = currentLeverage,
-                MgnMode = mode,
+                MgnMode = mode == SwapMarginMode.Cross ? MarginMode.Cross : MarginMode.Isolated,
                 Margin = margin,
                 CTime = now,
                 Last = price
@@ -614,6 +618,11 @@ namespace CoinTrader.Strategies.Runtime
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public List<TradeOrder> GetHistoryList()
+        {
+            return historyOrders;
         }
     }
 }
