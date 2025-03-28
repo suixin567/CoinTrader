@@ -557,5 +557,47 @@ namespace CoinTrader.Strategies.Runtime
         //}
         #endregion
 
+        public string QuoteCurrency => throw new NotImplementedException();
+
+        public string BaseCurrency => throw new NotImplementedException();
+
+        public uint Lever { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public BalanceVO BaseBalance => throw new NotImplementedException();
+
+        public void LoadCandle(CandleGranularity granularity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnloadCandle(CandleGranularity granularity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ModifyOrder(long id, decimal amount, decimal newPrice, bool cancelOrderWhenFailed)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CancelOrderBySide(OrderSide side, bool async)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sell(decimal amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Buy(decimal amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
