@@ -219,12 +219,12 @@ namespace CoinTrader.Strategies.Runtime
             return false;
         }
 
-        public long CreatePosition(OrderSide side, decimal amount, string mode)
+        public long CreatePosition(PositionType side, decimal amount, string mode)
         {
             return CreatePositionInternal(side, amount, mode);
         }
 
-        protected void EachPosition(Action<Position> callback)
+        public void EachPosition(Action<Position> callback)
         {
             foreach (var pos in positions.Values.ToArray())
             {
@@ -288,9 +288,9 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private long CreatePositionInternal(OrderSide side, decimal amount, string mode)
+        private long CreatePositionInternal(PositionType side, decimal amount, string mode)
         {
-            decimal price = side == OrderSide.Buy ? bid : ask;
+            decimal price = side == PositionType.Long ? bid : ask;
             decimal margin = (amount * price) / currentLeverage;
 
             if (quoteBalance.Avalible < margin)
@@ -448,7 +448,7 @@ namespace CoinTrader.Strategies.Runtime
                     return false;
 
                 // 创建仓位
-                var positionId = CreatePositionInternal(order.Side, amount, mgnMode);
+                var positionId = CreatePositionInternal(order.Side == OrderSide.Buy ? PositionType.Long : PositionType.Short, amount, mgnMode);
                 var position = GetPosition(positionId);
                 position.AvgPx = fillPrice; // 更新实际成交价格
 
