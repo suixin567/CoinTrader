@@ -141,7 +141,7 @@ namespace CoinTrader.Strategies.Runtime
     public class SwapStrategyEmulatorRuntime : ITradeStrategyRuntime
     {
         #region 仓位管理
-        private Dictionary<string, Position> positions = new Dictionary<string, Position>();
+        private Dictionary<long, Position> positions = new Dictionary<long, Position>();
         private Dictionary<CandleGranularity, SwapEmulatorCandleProvider> candles = new Dictionary<CandleGranularity, SwapEmulatorCandleProvider>();
         #endregion
 
@@ -203,9 +203,9 @@ namespace CoinTrader.Strategies.Runtime
         }
 
         public List<Position> GetPositions() => positions.Values.ToList();
-        public Position GetPosition(string id) => positions.TryGetValue(id, out var pos) ? pos : null;
+        public Position GetPosition(long id) => positions.TryGetValue(id, out var pos) ? pos : null;
 
-        public void ClosePosition(string id, decimal? size = null, decimal? amount = null)
+        public bool ClosePosition(long id, decimal? size = null, decimal? amount = null)
         {
             if (positions.TryGetValue(id, out var position))
             {
@@ -214,10 +214,12 @@ namespace CoinTrader.Strategies.Runtime
 
                 closeSize = Math.Min(closeSize, position.Pos);
                 ClosePosition(position, closeSize);
+                return true;
             }
+            return false;
         }
 
-        public string CreatePosition(OrderSide side, decimal amount, string mode)
+        public long CreatePosition(OrderSide side, decimal amount, string mode)
         {
             return CreatePositionInternal(side, amount, mode);
         }
@@ -286,7 +288,7 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private string CreatePositionInternal(OrderSide side, decimal amount, string mode)
+        private long CreatePositionInternal(OrderSide side, decimal amount, string mode)
         {
             decimal price = side == OrderSide.Buy ? bid : ask;
             decimal margin = (amount * price) / currentLeverage;
@@ -309,9 +311,9 @@ namespace CoinTrader.Strategies.Runtime
 
             quoteBalance.Avalible -= margin;
             quoteBalance.Frozen += margin;
-            positions.Add(position.PosId.ToString(), position);// 有可能出错
+            positions.Add(position.PosId, position);// 有可能出错
 
-            return position.PosId.ToString();// 有可能出错
+            return position.PosId;// 有可能出错
         }
 
         private void ClosePosition(Position position, decimal closeSize)
@@ -333,7 +335,7 @@ namespace CoinTrader.Strategies.Runtime
             position.Margin -= returnMargin;
 
             if (position.Pos <= 0)
-                positions.Remove(position.PosId.ToString());// 有可能出错
+                positions.Remove(position.PosId);// 有可能出错
         }
         #endregion
 
