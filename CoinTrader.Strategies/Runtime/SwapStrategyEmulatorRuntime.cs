@@ -182,10 +182,24 @@ namespace CoinTrader.Strategies.Runtime
         public uint GetMaxLever() => maxLeverage;
         public double GetFundingRate() => fundingRate;
 
-        public void SetLever(OrderSide side, string mode, uint lever)
+        public void SetLever(PositionType side, SwapMarginMode mode, uint lever)
         {
+            if (lever < 1 || lever > GetMaxLever())
+                return;
+
             currentLeverage = Math.Min(lever, maxLeverage);
-            mgnMode = mode;
+
+            switch (mode)
+            {
+                case SwapMarginMode.Cross:
+                    mgnMode = "cross";
+                    break;
+                case SwapMarginMode.Isolated:
+                    mgnMode = "isolated";
+                    break;
+            }
+            // 正式运行时是这样写的:
+            //AccountManager.SetLever(InstId, side, mode, lever);
         }
 
         public List<Position> GetPositions() => positions.Values.ToList();
