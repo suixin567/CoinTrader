@@ -248,7 +248,7 @@ namespace CoinTrader.Strategies.Runtime
         {
             foreach (var pos in positions.Values)
             {
-                //pos.CurrentPrice = pos.SideType == PositionType.Short ? ask : bid;
+                pos.Last = pos.SideType == PositionType.Short ? ask : bid;
             }
         }
 
@@ -272,9 +272,9 @@ namespace CoinTrader.Strategies.Runtime
         #endregion
 
         #region 仓位操作核心逻辑
-        private string CreatePositionInternal(PositionType side, decimal amount, string mode)
+        private string CreatePositionInternal(OrderSide side, decimal amount, string mode)
         {
-            decimal price = side == PositionType.Short ? ask : bid;
+            decimal price = side == OrderSide.Buy ? bid : ask;
             decimal margin = (amount * price) / currentLeverage;
 
             if (quoteBalance.Avalible < margin)
@@ -546,15 +546,15 @@ namespace CoinTrader.Strategies.Runtime
         //    }
         //}
 
-        private decimal CalculateMarginRatio(Position position)
-        {
-            decimal markPrice = position.SideType == PositionType.Short ? ask : bid;
-            decimal unrealizedPnl = (markPrice - position.AvgPx) * position.Pos *
-                                   (position.SideType == PositionType.Long ? 1 : -1);
-            decimal maintenanceMargin = position.Margin * instrument.CtMult;
+        //private decimal CalculateMarginRatio(Position position)
+        //{
+        //    decimal markPrice = position.SideType == PositionType.Short ? ask : bid;
+        //    decimal unrealizedPnl = (markPrice - position.AvgPx) * position.Pos *
+        //                           (position.SideType == PositionType.Long ? 1 : -1);
+        //    decimal maintenanceMargin = position.Margin * instrument.CtMult;
 
-            return (position.Margin + unrealizedPnl) / position.Margin;
-        }
+        //    return (position.Margin + unrealizedPnl) / position.Margin;
+        //}
         #endregion
 
     }
