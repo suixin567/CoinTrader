@@ -12,6 +12,7 @@ using CommonTools.Coroutines;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace CoinTrader.Forms
@@ -32,7 +33,7 @@ namespace CoinTrader.Forms
         private string instId;
         private StrategyGroup group;
         private Candle newCandle = new Candle();
-        private InstrumentBase instrument = null;
+        private InstrumentSwap instrument = null;
         private Queue<ListViewItem> orderListItemPool = new Queue<ListViewItem>();
         private Queue<ListViewItem> recordListItemPool = new Queue<ListViewItem>();
         private List<TradeStrategyBase> strategyList = new List<TradeStrategyBase>();
@@ -55,7 +56,7 @@ namespace CoinTrader.Forms
             this.Text = $"{forInstId}{group.name} 复盘测试";
 
             this.instId = forInstId;
-            instrument = InstrumentManager.GetInstrument(forInstId);
+            instrument = (InstrumentSwap)InstrumentManager.GetInstrument(forInstId);
 
             if(instrument == null)
             {
@@ -300,9 +301,25 @@ namespace CoinTrader.Forms
 
             IList<Position> postions = runtime.GetPositions(); //获取当前币种的所有的持仓
             Position pos = postions.Count > 0 ? postions[0] : null;
-            if (pos != null) {
+            if (pos != null)
+            {
+                this.labelSwapName.Text = pos.InstName + "-SWAP";
                 this.labelSide.Text = pos.PosSide == "Long" ? "多头" : "空头";
                 this.labelLever.Text = pos.Lever + "x";
+                // 收益
+                this.lblUpl.Text = String.Format("{0:0.00} ({1:P})", pos.Upl, pos.UplRatio);
+                this.lblUpl.ForeColor = pos.Upl >= 0 ? Color.Green : Color.Red;
+
+                //保证金
+                this.lblMargin.Text = String.Format("{0:0.00} ({1:P})", pos.Margin, pos.MgnRatio);
+                // 标记价格
+                this.lblPx.Text = pos.MarkPx.ToString(instrument.PriceFormat);
+                // 持仓数量
+                this.lblAmount.Text = (pos.Pos * instrument.CtVal).ToString(instrument.AmountFormat) + instrument.CtValCcy;
+                // 开仓均价
+                this.lblAvgPx.Text = pos.AvgPx.ToString(instrument.PriceFormat);
+                // 强平价格
+                this.lblLiqPx.Text = pos.LiqPx.ToString(instrument.PriceFormat);
             }
         }
 

@@ -303,6 +303,7 @@ namespace CoinTrader.Strategies.Runtime
 
             var position = new Position
             {
+                InstId = InstId,
                 PosId = DateTime.UtcNow.Ticks,
                 PosSide = side.ToString(),// 可能有问题
                 Pos = amount,
