@@ -80,16 +80,18 @@
             "1小时",
             "15分钟",
             "5分钟"});
-            this.cmbCandle.Location = new System.Drawing.Point(114, 351);
+            this.cmbCandle.Location = new System.Drawing.Point(62, 201);
+            this.cmbCandle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbCandle.Name = "cmbCandle";
-            this.cmbCandle.Size = new System.Drawing.Size(295, 29);
+            this.cmbCandle.Size = new System.Drawing.Size(163, 20);
             this.cmbCandle.TabIndex = 1;
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(230, 506);
+            this.btnStartStop.Location = new System.Drawing.Point(125, 289);
+            this.btnStartStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(197, 69);
+            this.btnStartStop.Size = new System.Drawing.Size(107, 39);
             this.btnStartStop.TabIndex = 2;
             this.btnStartStop.Text = "开始";
             this.btnStartStop.UseVisualStyleBackColor = true;
@@ -98,9 +100,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(65, 355);
+            this.label2.Location = new System.Drawing.Point(35, 203);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 21);
+            this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 5;
             this.label2.Text = "K线";
             // 
@@ -112,9 +115,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(56, 450);
+            this.label3.Location = new System.Drawing.Point(31, 257);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(52, 21);
+            this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 6;
             this.label3.Text = "速度";
             // 
@@ -129,35 +133,39 @@
             "8x",
             "16x",
             "32x"});
-            this.cmbSpeed.Location = new System.Drawing.Point(114, 446);
+            this.cmbSpeed.Location = new System.Drawing.Point(62, 255);
+            this.cmbSpeed.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbSpeed.Name = "cmbSpeed";
-            this.cmbSpeed.Size = new System.Drawing.Size(121, 29);
+            this.cmbSpeed.Size = new System.Drawing.Size(68, 20);
             this.cmbSpeed.TabIndex = 7;
             this.cmbSpeed.SelectedIndexChanged += new System.EventHandler(this.cmbSpeed_SelectedIndexChanged);
             // 
             // lblStartQuote
             // 
             this.lblStartQuote.AutoSize = true;
-            this.lblStartQuote.Location = new System.Drawing.Point(13, 299);
+            this.lblStartQuote.Location = new System.Drawing.Point(7, 171);
+            this.lblStartQuote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStartQuote.Name = "lblStartQuote";
-            this.lblStartQuote.Size = new System.Drawing.Size(94, 21);
+            this.lblStartQuote.Size = new System.Drawing.Size(53, 12);
             this.lblStartQuote.TabIndex = 8;
             this.lblStartQuote.Text = "起始资金";
             // 
             // txtFunds
             // 
-            this.txtFunds.Location = new System.Drawing.Point(114, 294);
+            this.txtFunds.Location = new System.Drawing.Point(62, 168);
+            this.txtFunds.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtFunds.Name = "txtFunds";
-            this.txtFunds.Size = new System.Drawing.Size(294, 31);
+            this.txtFunds.Size = new System.Drawing.Size(162, 21);
             this.txtFunds.TabIndex = 9;
             this.txtFunds.Text = "10000";
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(69, 11);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(38, 6);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(541, 165);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(295, 94);
             this.flowLayoutPanel1.TabIndex = 10;
             // 
             // groupBox1
@@ -166,9 +174,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.lvHistory);
-            this.groupBox1.Location = new System.Drawing.Point(0, 607);
+            this.groupBox1.Location = new System.Drawing.Point(0, 347);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1262, 397);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(688, 227);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "交易记录";
@@ -190,10 +200,10 @@
             this.lvHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvHistory.FullRowSelect = true;
             this.lvHistory.HideSelection = false;
-            this.lvHistory.Location = new System.Drawing.Point(3, 27);
-            this.lvHistory.Margin = new System.Windows.Forms.Padding(4);
+            this.lvHistory.Location = new System.Drawing.Point(2, 16);
+            this.lvHistory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lvHistory.Name = "lvHistory";
-            this.lvHistory.Size = new System.Drawing.Size(1256, 367);
+            this.lvHistory.Size = new System.Drawing.Size(684, 209);
             this.lvHistory.TabIndex = 1;
             this.lvHistory.UseCompatibleStateImageBehavior = false;
             this.lvHistory.View = System.Windows.Forms.View.Details;
@@ -271,44 +281,49 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.cmbFee);
             this.panel1.Controls.Add(this.cmbSpeed);
-            this.panel1.Location = new System.Drawing.Point(1268, 1);
+            this.panel1.Location = new System.Drawing.Point(692, 1);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(616, 1012);
+            this.panel1.Size = new System.Drawing.Size(336, 578);
             this.panel1.TabIndex = 12;
             // 
             // lblBaseBalance
             // 
             this.lblBaseBalance.AutoSize = true;
-            this.lblBaseBalance.Location = new System.Drawing.Point(108, 237);
+            this.lblBaseBalance.Location = new System.Drawing.Point(59, 135);
+            this.lblBaseBalance.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblBaseBalance.Name = "lblBaseBalance";
-            this.lblBaseBalance.Size = new System.Drawing.Size(76, 21);
+            this.lblBaseBalance.Size = new System.Drawing.Size(41, 12);
             this.lblBaseBalance.TabIndex = 13;
             this.lblBaseBalance.Text = "label4";
             // 
             // lblBaseBalanceStr
             // 
             this.lblBaseBalanceStr.AutoSize = true;
-            this.lblBaseBalanceStr.Location = new System.Drawing.Point(13, 237);
+            this.lblBaseBalanceStr.Location = new System.Drawing.Point(7, 135);
+            this.lblBaseBalanceStr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblBaseBalanceStr.Name = "lblBaseBalanceStr";
-            this.lblBaseBalanceStr.Size = new System.Drawing.Size(76, 21);
+            this.lblBaseBalanceStr.Size = new System.Drawing.Size(41, 12);
             this.lblBaseBalanceStr.TabIndex = 13;
             this.lblBaseBalanceStr.Text = "label4";
             // 
             // lblQuoteBalance
             // 
             this.lblQuoteBalance.AutoSize = true;
-            this.lblQuoteBalance.Location = new System.Drawing.Point(110, 192);
+            this.lblQuoteBalance.Location = new System.Drawing.Point(60, 110);
+            this.lblQuoteBalance.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuoteBalance.Name = "lblQuoteBalance";
-            this.lblQuoteBalance.Size = new System.Drawing.Size(76, 21);
+            this.lblQuoteBalance.Size = new System.Drawing.Size(41, 12);
             this.lblQuoteBalance.TabIndex = 12;
             this.lblQuoteBalance.Text = "label1";
             // 
             // lblQuoteBalanceStr
             // 
             this.lblQuoteBalanceStr.AutoSize = true;
-            this.lblQuoteBalanceStr.Location = new System.Drawing.Point(13, 192);
+            this.lblQuoteBalanceStr.Location = new System.Drawing.Point(7, 110);
+            this.lblQuoteBalanceStr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuoteBalanceStr.Name = "lblQuoteBalanceStr";
-            this.lblQuoteBalanceStr.Size = new System.Drawing.Size(76, 21);
+            this.lblQuoteBalanceStr.Size = new System.Drawing.Size(41, 12);
             this.lblQuoteBalanceStr.TabIndex = 12;
             this.lblQuoteBalanceStr.Text = "label1";
             // 
@@ -318,9 +333,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.lvOrders);
-            this.groupBox2.Location = new System.Drawing.Point(3, 606);
+            this.groupBox2.Location = new System.Drawing.Point(2, 346);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(610, 397);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Size = new System.Drawing.Size(333, 227);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "订单";
@@ -334,9 +351,10 @@
             this.columnHeader4});
             this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvOrders.HideSelection = false;
-            this.lvOrders.Location = new System.Drawing.Point(3, 27);
+            this.lvOrders.Location = new System.Drawing.Point(2, 16);
+            this.lvOrders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lvOrders.Name = "lvOrders";
-            this.lvOrders.Size = new System.Drawing.Size(604, 367);
+            this.lvOrders.Size = new System.Drawing.Size(329, 209);
             this.lvOrders.TabIndex = 0;
             this.lvOrders.UseCompatibleStateImageBehavior = false;
             this.lvOrders.View = System.Windows.Forms.View.Details;
@@ -364,18 +382,20 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(241, 403);
+            this.label4.Location = new System.Drawing.Point(131, 230);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(21, 21);
+            this.label4.Size = new System.Drawing.Size(11, 12);
             this.label4.TabIndex = 6;
             this.label4.Text = "%";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(56, 402);
+            this.label1.Location = new System.Drawing.Point(31, 230);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 21);
+            this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 6;
             this.label1.Text = "佣金";
             // 
@@ -390,9 +410,10 @@
             "0.04",
             "0.02",
             "0"});
-            this.cmbFee.Location = new System.Drawing.Point(114, 398);
+            this.cmbFee.Location = new System.Drawing.Point(62, 227);
+            this.cmbFee.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFee.Name = "cmbFee";
-            this.cmbFee.Size = new System.Drawing.Size(121, 29);
+            this.cmbFee.Size = new System.Drawing.Size(68, 20);
             this.cmbFee.TabIndex = 7;
             this.cmbFee.SelectedIndexChanged += new System.EventHandler(this.cmbSpeed_SelectedIndexChanged);
             // 
@@ -402,22 +423,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.candleView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.candleView1.Location = new System.Drawing.Point(0, 1);
+            this.candleView1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.candleView1.Name = "candleView1";
-            this.candleView1.Size = new System.Drawing.Size(1262, 600);
+            this.candleView1.Size = new System.Drawing.Size(689, 344);
             this.candleView1.TabIndex = 0;
             // 
-            // WinEmulator
+            // WinSwapEmulator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1896, 1016);
+            this.ClientSize = new System.Drawing.Size(1034, 581);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.candleView1);
-            this.Name = "WinEmulator";
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "WinSwapEmulator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WinEmulator";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WinEmulator_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
