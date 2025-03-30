@@ -4,16 +4,11 @@ using CoinTrader.OKXCore;
 using CoinTrader.OKXCore.Entity;
 using CoinTrader.OKXCore.Enum;
 using CoinTrader.OKXCore.Manager;
-using CoinTrader.OKXCore.Monitor;
-using CoinTrader.OKXCore.REST;
 using CoinTrader.OKXCore.VO;
 using System;
 using System.Collections.Generic;
-using System.Data.Odbc;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
 
 namespace CoinTrader.Strategies.Runtime
 {
@@ -180,7 +175,6 @@ namespace CoinTrader.Strategies.Runtime
             {
                 return quoteBalance;
             }
-
             set
             {
                 quoteBalance = value;
@@ -363,8 +357,7 @@ namespace CoinTrader.Strategies.Runtime
 
         private TradeOrder CreateOrder(OrderSide side, decimal amount, decimal price, bool postOnly)
         {
-            if (postOnly && ((side == OrderSide.Sell && price <= bid) ||
-                           (side == OrderSide.Buy && price >= ask)))
+            if (postOnly && ((side == OrderSide.Sell && price <= bid) || (side == OrderSide.Buy && price >= ask)))
                 return null;
 
             orderIdSeed++;
@@ -389,7 +382,6 @@ namespace CoinTrader.Strategies.Runtime
                 idForRemove.AddRange(ids);
                 return;
             }
-
             foreach (var id in ids)
             {
                 var order = orders.FirstOrDefault(o => o.PublicId == id);
@@ -435,7 +427,6 @@ namespace CoinTrader.Strategies.Runtime
                     }
                 }
             }
-
             ProcessPendingOrders();
         }
 
@@ -497,7 +488,6 @@ namespace CoinTrader.Strategies.Runtime
                     ReleaseOrderMargin(order);
                 }
             }
-
             orders.AddRange(orderForAdd);
             idForRemove.Clear();
             orderForAdd.Clear();
@@ -591,7 +581,6 @@ namespace CoinTrader.Strategies.Runtime
             {
                 return baseBalance;
             }
-
             set
             {
                 baseBalance = value;
