@@ -699,5 +699,15 @@ namespace CoinTrader.Forms
         {
             WindowManager.Instance.OpenWindow<WinCross>();
         }
+
+        private void 合约回测ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var stategyGroups = StrategyManager.Instance.GetStrategyGroups(StrategyType.Swap);
+            var group = stategyGroups.First(x => x.name == "合约交易策略(随机方向)");
+
+            var window = new WinEmulatorGuid();
+            window.SetStrategyGroup(group);
+            window.Show();
+        }
     }
 }

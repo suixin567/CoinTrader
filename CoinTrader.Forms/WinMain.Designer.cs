@@ -75,6 +75,8 @@
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.textBoxConsole = new System.Windows.Forms.TextBox();
             this.buttonClearLog = new System.Windows.Forms.Button();
+            this.回测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.合约回测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageOrders.SuspendLayout();
@@ -334,7 +336,8 @@
             this.设置ToolStripMenuItem,
             this.mnSpots,
             this.mnSwap,
-            this.其他ToolStripMenuItem});
+            this.其他ToolStripMenuItem,
+            this.回测ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
@@ -464,7 +467,7 @@
             // 交叉盘ToolStripMenuItem1
             // 
             this.交叉盘ToolStripMenuItem1.Name = "交叉盘ToolStripMenuItem1";
-            this.交叉盘ToolStripMenuItem1.Size = new System.Drawing.Size(112, 22);
+            this.交叉盘ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.交叉盘ToolStripMenuItem1.Text = "交叉盘";
             this.交叉盘ToolStripMenuItem1.Click += new System.EventHandler(this.交叉盘ToolStripMenuItem1_Click);
             // 
@@ -520,6 +523,21 @@
             this.buttonClearLog.Text = "清空日志";
             this.buttonClearLog.UseVisualStyleBackColor = true;
             this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            // 
+            // 回测ToolStripMenuItem
+            // 
+            this.回测ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.合约回测ToolStripMenuItem});
+            this.回测ToolStripMenuItem.Name = "回测ToolStripMenuItem";
+            this.回测ToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
+            this.回测ToolStripMenuItem.Text = "回测";
+            // 
+            // 合约回测ToolStripMenuItem
+            // 
+            this.合约回测ToolStripMenuItem.Name = "合约回测ToolStripMenuItem";
+            this.合约回测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.合约回测ToolStripMenuItem.Text = "合约回测";
+            this.合约回测ToolStripMenuItem.Click += new System.EventHandler(this.合约回测ToolStripMenuItem_Click);
             // 
             // WinMain
             // 
@@ -603,6 +621,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.TextBox textBoxConsole;
         private System.Windows.Forms.Button buttonClearLog;
+        private System.Windows.Forms.ToolStripMenuItem 回测ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 合约回测ToolStripMenuItem;
     }
 }
 
