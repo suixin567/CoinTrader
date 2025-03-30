@@ -297,6 +297,13 @@ namespace CoinTrader.Forms
             var quoteBalance = runtime.QuoteBalance;
             lblQuoteBalance.Text = $"可用:{quoteBalance.Avalible:0.00} 冻结:{quoteBalance.Frozen:0.00}";
             lblBaseBalance.Text = $"可用:{Math.Round( baseBalance.Avalible,instrument.MinSizeDigit)} 冻结:{ Math.Round( baseBalance.Frozen,instrument.MinSizeDigit)}";
+
+            IList<Position> postions = runtime.GetPositions(); //获取当前币种的所有的持仓
+            Position pos = postions.Count > 0 ? postions[0] : null;
+            if (pos != null) {
+                this.labelSide.Text = pos.PosSide == "Long" ? "多头" : "空头";
+                this.labelLever.Text = pos.Lever + "x";
+            }
         }
 
         private void CandleProvider_CandleLoaded(object sender, EventArgs e)

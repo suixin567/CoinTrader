@@ -64,10 +64,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbFee = new System.Windows.Forms.ComboBox();
+            this.panelSwapView = new System.Windows.Forms.Panel();
+            this.labelLever = new System.Windows.Forms.Label();
+            this.labelSide = new System.Windows.Forms.Label();
             this.candleView1 = new CoinTrader.Forms.Control.CandleView();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panelSwapView.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmbCandle
@@ -80,16 +84,16 @@
             "1小时",
             "15分钟",
             "5分钟"});
-            this.cmbCandle.Location = new System.Drawing.Point(62, 201);
-            this.cmbCandle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbCandle.Location = new System.Drawing.Point(62, 161);
+            this.cmbCandle.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCandle.Name = "cmbCandle";
             this.cmbCandle.Size = new System.Drawing.Size(163, 20);
             this.cmbCandle.TabIndex = 1;
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(125, 289);
-            this.btnStartStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStartStop.Location = new System.Drawing.Point(197, 196);
+            this.btnStartStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(107, 39);
             this.btnStartStop.TabIndex = 2;
@@ -100,7 +104,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(35, 203);
+            this.label2.Location = new System.Drawing.Point(35, 163);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 12);
@@ -115,7 +119,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(31, 257);
+            this.label3.Location = new System.Drawing.Point(31, 217);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
@@ -133,8 +137,8 @@
             "8x",
             "16x",
             "32x"});
-            this.cmbSpeed.Location = new System.Drawing.Point(62, 255);
-            this.cmbSpeed.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbSpeed.Location = new System.Drawing.Point(62, 215);
+            this.cmbSpeed.Margin = new System.Windows.Forms.Padding(2);
             this.cmbSpeed.Name = "cmbSpeed";
             this.cmbSpeed.Size = new System.Drawing.Size(68, 20);
             this.cmbSpeed.TabIndex = 7;
@@ -143,7 +147,7 @@
             // lblStartQuote
             // 
             this.lblStartQuote.AutoSize = true;
-            this.lblStartQuote.Location = new System.Drawing.Point(7, 171);
+            this.lblStartQuote.Location = new System.Drawing.Point(7, 131);
             this.lblStartQuote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblStartQuote.Name = "lblStartQuote";
             this.lblStartQuote.Size = new System.Drawing.Size(53, 12);
@@ -152,8 +156,8 @@
             // 
             // txtFunds
             // 
-            this.txtFunds.Location = new System.Drawing.Point(62, 168);
-            this.txtFunds.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtFunds.Location = new System.Drawing.Point(62, 128);
+            this.txtFunds.Margin = new System.Windows.Forms.Padding(2);
             this.txtFunds.Name = "txtFunds";
             this.txtFunds.Size = new System.Drawing.Size(162, 21);
             this.txtFunds.TabIndex = 9;
@@ -163,9 +167,9 @@
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(38, 6);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(295, 94);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(295, 67);
             this.flowLayoutPanel1.TabIndex = 10;
             // 
             // groupBox1
@@ -175,10 +179,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.lvHistory);
             this.groupBox1.Location = new System.Drawing.Point(0, 347);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(688, 227);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(630, 328);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "交易记录";
@@ -201,9 +205,9 @@
             this.lvHistory.FullRowSelect = true;
             this.lvHistory.HideSelection = false;
             this.lvHistory.Location = new System.Drawing.Point(2, 16);
-            this.lvHistory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lvHistory.Margin = new System.Windows.Forms.Padding(2);
             this.lvHistory.Name = "lvHistory";
-            this.lvHistory.Size = new System.Drawing.Size(684, 209);
+            this.lvHistory.Size = new System.Drawing.Size(626, 310);
             this.lvHistory.TabIndex = 1;
             this.lvHistory.UseCompatibleStateImageBehavior = false;
             this.lvHistory.View = System.Windows.Forms.View.Details;
@@ -265,6 +269,7 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.panelSwapView);
             this.panel1.Controls.Add(this.lblBaseBalance);
             this.panel1.Controls.Add(this.lblBaseBalanceStr);
             this.panel1.Controls.Add(this.lblQuoteBalance);
@@ -281,16 +286,16 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.cmbFee);
             this.panel1.Controls.Add(this.cmbSpeed);
-            this.panel1.Location = new System.Drawing.Point(692, 1);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Location = new System.Drawing.Point(634, 1);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(336, 578);
+            this.panel1.Size = new System.Drawing.Size(336, 672);
             this.panel1.TabIndex = 12;
             // 
             // lblBaseBalance
             // 
             this.lblBaseBalance.AutoSize = true;
-            this.lblBaseBalance.Location = new System.Drawing.Point(59, 135);
+            this.lblBaseBalance.Location = new System.Drawing.Point(59, 103);
             this.lblBaseBalance.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblBaseBalance.Name = "lblBaseBalance";
             this.lblBaseBalance.Size = new System.Drawing.Size(41, 12);
@@ -300,7 +305,7 @@
             // lblBaseBalanceStr
             // 
             this.lblBaseBalanceStr.AutoSize = true;
-            this.lblBaseBalanceStr.Location = new System.Drawing.Point(7, 135);
+            this.lblBaseBalanceStr.Location = new System.Drawing.Point(7, 103);
             this.lblBaseBalanceStr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblBaseBalanceStr.Name = "lblBaseBalanceStr";
             this.lblBaseBalanceStr.Size = new System.Drawing.Size(41, 12);
@@ -310,7 +315,7 @@
             // lblQuoteBalance
             // 
             this.lblQuoteBalance.AutoSize = true;
-            this.lblQuoteBalance.Location = new System.Drawing.Point(60, 110);
+            this.lblQuoteBalance.Location = new System.Drawing.Point(60, 78);
             this.lblQuoteBalance.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuoteBalance.Name = "lblQuoteBalance";
             this.lblQuoteBalance.Size = new System.Drawing.Size(41, 12);
@@ -320,7 +325,7 @@
             // lblQuoteBalanceStr
             // 
             this.lblQuoteBalanceStr.AutoSize = true;
-            this.lblQuoteBalanceStr.Location = new System.Drawing.Point(7, 110);
+            this.lblQuoteBalanceStr.Location = new System.Drawing.Point(7, 78);
             this.lblQuoteBalanceStr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuoteBalanceStr.Name = "lblQuoteBalanceStr";
             this.lblQuoteBalanceStr.Size = new System.Drawing.Size(41, 12);
@@ -333,11 +338,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.lvOrders);
-            this.groupBox2.Location = new System.Drawing.Point(2, 346);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Location = new System.Drawing.Point(2, 465);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox2.Size = new System.Drawing.Size(333, 227);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(333, 202);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "订单";
@@ -349,12 +354,11 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
-            this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvOrders.HideSelection = false;
-            this.lvOrders.Location = new System.Drawing.Point(2, 16);
-            this.lvOrders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lvOrders.Location = new System.Drawing.Point(2, 18);
+            this.lvOrders.Margin = new System.Windows.Forms.Padding(2);
             this.lvOrders.Name = "lvOrders";
-            this.lvOrders.Size = new System.Drawing.Size(329, 209);
+            this.lvOrders.Size = new System.Drawing.Size(329, 180);
             this.lvOrders.TabIndex = 0;
             this.lvOrders.UseCompatibleStateImageBehavior = false;
             this.lvOrders.View = System.Windows.Forms.View.Details;
@@ -382,7 +386,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(131, 230);
+            this.label4.Location = new System.Drawing.Point(131, 190);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(11, 12);
@@ -392,7 +396,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 230);
+            this.label1.Location = new System.Drawing.Point(31, 190);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 12);
@@ -410,12 +414,40 @@
             "0.04",
             "0.02",
             "0"});
-            this.cmbFee.Location = new System.Drawing.Point(62, 227);
-            this.cmbFee.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbFee.Location = new System.Drawing.Point(62, 187);
+            this.cmbFee.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFee.Name = "cmbFee";
             this.cmbFee.Size = new System.Drawing.Size(68, 20);
             this.cmbFee.TabIndex = 7;
             this.cmbFee.SelectedIndexChanged += new System.EventHandler(this.cmbSpeed_SelectedIndexChanged);
+            // 
+            // panelSwapView
+            // 
+            this.panelSwapView.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.panelSwapView.Controls.Add(this.labelSide);
+            this.panelSwapView.Controls.Add(this.labelLever);
+            this.panelSwapView.Location = new System.Drawing.Point(9, 259);
+            this.panelSwapView.Name = "panelSwapView";
+            this.panelSwapView.Size = new System.Drawing.Size(321, 183);
+            this.panelSwapView.TabIndex = 14;
+            // 
+            // labelLever
+            // 
+            this.labelLever.AutoSize = true;
+            this.labelLever.Location = new System.Drawing.Point(122, 21);
+            this.labelLever.Name = "labelLever";
+            this.labelLever.Size = new System.Drawing.Size(35, 12);
+            this.labelLever.TabIndex = 0;
+            this.labelLever.Text = "lever";
+            // 
+            // labelSide
+            // 
+            this.labelSide.AutoSize = true;
+            this.labelSide.Location = new System.Drawing.Point(73, 21);
+            this.labelSide.Name = "labelSide";
+            this.labelSide.Size = new System.Drawing.Size(29, 12);
+            this.labelSide.TabIndex = 1;
+            this.labelSide.Text = "side";
             // 
             // candleView1
             // 
@@ -423,20 +455,20 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.candleView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.candleView1.Location = new System.Drawing.Point(0, 1);
-            this.candleView1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.candleView1.Margin = new System.Windows.Forms.Padding(1);
             this.candleView1.Name = "candleView1";
-            this.candleView1.Size = new System.Drawing.Size(689, 344);
+            this.candleView1.Size = new System.Drawing.Size(631, 344);
             this.candleView1.TabIndex = 0;
             // 
             // WinSwapEmulator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 581);
+            this.ClientSize = new System.Drawing.Size(976, 682);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.candleView1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "WinSwapEmulator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WinEmulator";
@@ -445,6 +477,8 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.panelSwapView.ResumeLayout(false);
+            this.panelSwapView.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -487,5 +521,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbFee;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panelSwapView;
+        private System.Windows.Forms.Label labelLever;
+        private System.Windows.Forms.Label labelSide;
     }
 }
