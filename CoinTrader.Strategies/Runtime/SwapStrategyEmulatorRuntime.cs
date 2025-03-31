@@ -1,4 +1,5 @@
-﻿using CoinTrader.Common.Classes;
+﻿using CoinTrader.Common;
+using CoinTrader.Common.Classes;
 using CoinTrader.Common.Interface;
 using CoinTrader.OKXCore;
 using CoinTrader.OKXCore.Entity;
@@ -263,7 +264,55 @@ namespace CoinTrader.Strategies.Runtime
         {
             foreach (var pos in positions.Values)
             {
-                pos.Last = pos.SideType == PositionType.Short ? ask : bid;
+                // 获取最新价格（空头用卖一价，多头用买一价）
+                decimal lastPrice = pos.SideType == PositionType.Short ? ask : bid;
+                pos.Last = lastPrice;
+
+                // 更新标记价格（此处假设用最新价代替）
+                pos.MarkPx = lastPrice;
+
+                // 计算未实现盈亏
+                decimal priceDelta = lastPrice - pos.AvgPx;
+                pos.Upl = pos.Pos * priceDelta * (pos.SideType == PositionType.Long ? 1 : -1);
+
+                // 计算未实现收益率（需要避免除以零）
+                pos.UplRatio = pos.Margin != 0
+                    ? (double)(pos.Upl / pos.Margin)
+                    : 0;
+
+                // 获取维持保证金率（示例值，需根据实际数据源调整）
+                decimal maintenanceRate = 0.005m; // 0.5% 维持保证金率
+
+                // 计算维持保证金
+                decimal notionalValue = pos.Pos * pos.AvgPx;
+                pos.MMR = notionalValue * maintenanceRate / (decimal)pos.Lever;
+
+                // 计算保证金率（需要避免除以零）
+                pos.MgnRatio = pos.MMR != 0
+                    ? (double)(pos.Margin / pos.MMR)
+                    : double.MaxValue;
+
+                // 计算预估强平价
+                if (pos.SideType == PositionType.Long)
+                {
+                    decimal denominator = 1 - maintenanceRate - (1 / (decimal)pos.Lever);
+                    pos.LiqPx = denominator != 0
+                        ? pos.AvgPx * (1 - 1 / (decimal)pos.Lever / (1 - maintenanceRate))
+                        : 0;
+                }
+                else
+                {
+                    decimal denominator = 1 + maintenanceRate + (1 / (decimal)pos.Lever);
+                    pos.LiqPx = denominator != 0
+                        ? pos.AvgPx * (1 + 1 / (decimal)pos.Lever / (1 - maintenanceRate))
+                        : 0;
+                }
+
+                // 更新最后更新时间
+                pos.UTime = now;
+
+                // 可平仓数量假设等于总持仓量（根据业务逻辑可能需要调整）
+                pos.AvailPos = pos.Pos;
             }
         }
 
