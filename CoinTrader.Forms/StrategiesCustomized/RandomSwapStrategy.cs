@@ -465,14 +465,14 @@ namespace CoinTrader.Forms.Strategies.Customer
         // 动态计算移动止盈时容忍的盈利回撤幅度
         float updateRetracement(float profit, float StopSurplus)
         {
-            var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.1f;
+            var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.2f;
             if (retracement <= 0)
             {
                 retracement = StopSurplus * 0.1f;
             }
             // 回撤幅度不能低于1%,否则再算上杠杆后，过于灵敏
-            if (retracement < 1) {
-                retracement = 1;
+            if (retracement < 2) {
+                retracement = 2;
             }
             return retracement;
         }
