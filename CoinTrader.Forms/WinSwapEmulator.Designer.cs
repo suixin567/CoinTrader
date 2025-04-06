@@ -433,7 +433,7 @@
             // lblUpl
             // 
             this.lblUpl.AutoSize = true;
-            this.lblUpl.Location = new System.Drawing.Point(234, 21);
+            this.lblUpl.Location = new System.Drawing.Point(223, 21);
             this.lblUpl.Name = "lblUpl";
             this.lblUpl.Size = new System.Drawing.Size(29, 12);
             this.lblUpl.TabIndex = 4;
@@ -442,7 +442,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(200, 21);
+            this.label5.Location = new System.Drawing.Point(196, 21);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 3;
@@ -451,17 +451,17 @@
             // labelSwapName
             // 
             this.labelSwapName.AutoSize = true;
-            this.labelSwapName.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelSwapName.Location = new System.Drawing.Point(10, 21);
+            this.labelSwapName.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelSwapName.Location = new System.Drawing.Point(3, 19);
             this.labelSwapName.Name = "labelSwapName";
-            this.labelSwapName.Size = new System.Drawing.Size(79, 16);
+            this.labelSwapName.Size = new System.Drawing.Size(79, 15);
             this.labelSwapName.TabIndex = 2;
             this.labelSwapName.Text = "swapName";
             // 
             // labelSide
             // 
             this.labelSide.AutoSize = true;
-            this.labelSide.Location = new System.Drawing.Point(112, 21);
+            this.labelSide.Location = new System.Drawing.Point(139, 21);
             this.labelSide.Name = "labelSide";
             this.labelSide.Size = new System.Drawing.Size(29, 12);
             this.labelSide.TabIndex = 1;
@@ -470,11 +470,11 @@
             // labelLever
             // 
             this.labelLever.AutoSize = true;
-            this.labelLever.Location = new System.Drawing.Point(150, 21);
+            this.labelLever.Location = new System.Drawing.Point(169, 21);
             this.labelLever.Name = "labelLever";
-            this.labelLever.Size = new System.Drawing.Size(35, 12);
+            this.labelLever.Size = new System.Drawing.Size(17, 12);
             this.labelLever.TabIndex = 0;
-            this.labelLever.Text = "lever";
+            this.labelLever.Text = "1x";
             // 
             // lblBaseBalance
             // 
