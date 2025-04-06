@@ -16,6 +16,8 @@ using CoinTrader.Common.Database;
 using System.Security.Cryptography;
 using System.Threading;
 using CoinTrader.Strategies.Runtime;
+using static CoinTrader.Forms.Control.CustomProgressBar;
+using CoinTrader.Forms.Control;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -128,6 +130,12 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// 交易冷却（主要是等待同步数据)
         /// </summary>
         private float delay = 2.0f;
+
+        public CustomProgressBar.ProgressDirection CustomProgressBarDirection;
+        public float CustomProgressBarMin;
+        public float CustomProgressBarMax;
+        public float CustomProgressBarValue;
+        public Marker[] CustomProgressBarMarkers;
 
         public RandomSwapStrategy()
         {
@@ -383,6 +391,37 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 break;
                         }
                     }
+                    // 进度条-移动止盈
+                    if (pos.SideType == PositionType.Long)
+                    {
+                        CustomProgressBarDirection = ProgressDirection.LeftToRight;
+                        CustomProgressBarMin = (float)pos.AvgPx;
+                        CustomProgressBarMax = (float)lastTrigerPrice;
+                        CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+
+                        var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
+                        CustomProgressBarMarkers = new[] {
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" },
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx * (1 + StopSurplus / 100f), TopLabel = ((float)pos.AvgPx * (1 + StopSurplus / 100f)).ToString("F4"), BottomLabel = $"{StopSurplus}%" },
+                        new CustomProgressBar.Marker { Position = (float)longStopPrice , TopLabel = longStopPrice.ToString("F4"), BottomLabel = "回撤" },
+                        new CustomProgressBar.Marker { Position = (float)lastTrigerPrice, TopLabel = lastTrigerPrice.ToString("F4"), BottomLabel = "极限" }
+                        };
+                    }
+                    else
+                    {
+                        CustomProgressBarDirection = ProgressDirection.RightToLeft;
+                        CustomProgressBarMin = (float)lastTrigerPrice;
+                        CustomProgressBarMax = (float)(pos.AvgPx);
+                        CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+
+                        var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
+                        CustomProgressBarMarkers = new[] {
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" },
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx * (1 + StopSurplus / 100f), TopLabel = ((float)pos.AvgPx * (1 + StopSurplus / 100f)).ToString("F4"), BottomLabel = $"{StopSurplus}%" },
+                        new CustomProgressBar.Marker { Position = (float)shortStopPrice , TopLabel = shortStopPrice.ToString("F4"), BottomLabel = "回撤" },
+                        new CustomProgressBar.Marker { Position = (float)(lastTrigerPrice), TopLabel = lastTrigerPrice.ToString("F4"), BottomLabel = "极限" },
+                        };
+                    }
                     if (lastTrigerPrice > 0) //判断是否触发移动止盈
                     {
                         switch (pos.SideType)
@@ -462,6 +501,28 @@ namespace CoinTrader.Forms.Strategies.Customer
                     operationProfit = pos.Margin * profit / 100;
                     return true;
                 }
+            }
+            // 进度条-在常规盈利/亏损范围内
+            CustomProgressBarMin = (float)pos.AvgPx * (100 - StopLoss) / 100;
+            CustomProgressBarMax = (float)pos.AvgPx * (100 + StopLoss) / 100;
+            CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+            if (pos.SideType == PositionType.Long)
+            {
+                CustomProgressBarDirection = ProgressDirection.LeftToRight;
+                CustomProgressBarMarkers = new[] {
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = "止损" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = "止盈" },
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" }
+                        };
+            }
+            else
+            {
+                CustomProgressBarDirection = ProgressDirection.LeftToRight;
+                CustomProgressBarMarkers = new[] {
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = "止盈" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = "止损" },
+                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" }
+                        };
             }
             return false;
         }

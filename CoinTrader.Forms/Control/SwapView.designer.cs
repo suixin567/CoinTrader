@@ -46,9 +46,12 @@
             this.buttonInfo = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlEmpty = new System.Windows.Forms.Panel();
+            this.customProgressBar = new CoinTrader.Forms.Control.CustomProgressBar();
             this.label4 = new System.Windows.Forms.Label();
             this.labelDebug = new System.Windows.Forms.Label();
             this.buttonEmulator = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -235,6 +238,18 @@
             this.pnlEmpty.Size = new System.Drawing.Size(316, 64);
             this.pnlEmpty.TabIndex = 3;
             // 
+            // customProgressBar
+            // 
+            this.customProgressBar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.customProgressBar.Direction = CoinTrader.Forms.Control.CustomProgressBar.ProgressDirection.LeftToRight;
+            this.customProgressBar.Location = new System.Drawing.Point(27, 269);
+            this.customProgressBar.Maximum = 2.5F;
+            this.customProgressBar.Minimum = 1.4F;
+            this.customProgressBar.Name = "customProgressBar";
+            this.customProgressBar.Size = new System.Drawing.Size(280, 60);
+            this.customProgressBar.TabIndex = 61;
+            this.customProgressBar.Value = 1.4F;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -261,7 +276,7 @@
             this.buttonEmulator.Name = "buttonEmulator";
             this.buttonEmulator.Size = new System.Drawing.Size(36, 20);
             this.buttonEmulator.TabIndex = 60;
-            this.buttonEmulator.Text = "回测";
+            this.buttonEmulator.Text = "测试";
             this.buttonEmulator.UseVisualStyleBackColor = true;
             this.buttonEmulator.Click += new System.EventHandler(this.buttonEmulator_Click);
             // 
@@ -270,6 +285,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.customProgressBar);
             this.Controls.Add(this.buttonEmulator);
             this.Controls.Add(this.labelDebug);
             this.Controls.Add(this.flowLayoutPanel1);
@@ -279,7 +295,7 @@
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SwapView";
-            this.Size = new System.Drawing.Size(332, 303);
+            this.Size = new System.Drawing.Size(332, 325);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -313,5 +329,8 @@
         private System.Windows.Forms.Label labelBanned;
         private System.Windows.Forms.Label labelDebug;
         private System.Windows.Forms.Button buttonEmulator;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
+        private CustomProgressBar customProgressBar;
     }
 }
