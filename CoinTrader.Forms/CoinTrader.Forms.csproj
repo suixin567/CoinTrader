@@ -297,6 +297,12 @@
     <Compile Include="Control\SwapInfoView.designer.cs">
       <DependentUpon>SwapInfoView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Control\CustomProgressBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Control\CustomProgressBar.designer.cs">
+      <DependentUpon>CustomProgressBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Control\SwapViewSmall.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -533,6 +539,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Control\SwapInfoView.resx">
       <DependentUpon>SwapInfoView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Control\CustomProgressBar.resx">
+      <DependentUpon>CustomProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Control\SwapViewSmall.resx">
       <DependentUpon>SwapViewSmall.cs</DependentUpon>
