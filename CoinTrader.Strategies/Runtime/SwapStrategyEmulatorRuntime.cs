@@ -348,7 +348,7 @@ namespace CoinTrader.Strategies.Runtime
             {
                 InstId = InstId,
                 PosId = DateTime.UtcNow.Ticks,
-                PosSide = side.ToString(),// 可能有问题
+                PosSide = side.ToString().ToLower(),// 可能有问题
                 Pos = amount,
                 AvgPx = price,
                 Lever = currentLeverage,

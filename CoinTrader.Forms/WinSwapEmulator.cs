@@ -4,6 +4,7 @@ using CoinTrader.Forms.Control;
 using CoinTrader.Forms.Strategies;
 using CoinTrader.OKXCore;
 using CoinTrader.OKXCore.Entity;
+using CoinTrader.OKXCore.Enum;
 using CoinTrader.OKXCore.Manager;
 using CoinTrader.OKXCore.VO;
 using CoinTrader.Strategies;
@@ -304,8 +305,8 @@ namespace CoinTrader.Forms
             if (pos != null)
             {
                 this.labelSwapName.Text = pos.InstName + "-SWAP";
-                this.labelSide.Text = pos.PosSide == "Long" ? "多头" : "空头";
-                this.labelSide.ForeColor = pos.PosSide == "Long" ? Color.Green : Color.Red;
+                this.labelSide.Text = pos.SideType == PositionType.Long ? "多头" : "空头";
+                this.labelSide.ForeColor = pos.SideType == PositionType.Long ? Color.Green : Color.Red;
                 this.labelLever.Text = pos.Lever + "x";
                 // 收益
                 this.lblUpl.Text = String.Format("{0:0.00} ({1:P})", pos.Upl, pos.UplRatio);
