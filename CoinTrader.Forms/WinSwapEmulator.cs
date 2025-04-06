@@ -305,6 +305,7 @@ namespace CoinTrader.Forms
             {
                 this.labelSwapName.Text = pos.InstName + "-SWAP";
                 this.labelSide.Text = pos.PosSide == "Long" ? "多头" : "空头";
+                this.labelSide.ForeColor = pos.PosSide == "Long" ? Color.Green : Color.Red;
                 this.labelLever.Text = pos.Lever + "x";
                 // 收益
                 this.lblUpl.Text = String.Format("{0:0.00} ({1:P})", pos.Upl, pos.UplRatio);
@@ -320,6 +321,26 @@ namespace CoinTrader.Forms
                 this.lblAvgPx.Text = pos.AvgPx.ToString(instrument.PriceFormat);
                 // 强平价格
                 this.lblLiqPx.Text = pos.LiqPx.ToString(instrument.PriceFormat);
+            }
+            else {
+                this.labelSwapName.Text = "";
+                this.labelSide.Text = "";
+                this.labelSide.ForeColor = Color.Black;
+                this.labelLever.Text = "";
+                // 收益
+                this.lblUpl.Text = "";
+                this.lblUpl.ForeColor = Color.Black;
+
+                //保证金
+                this.lblMargin.Text = "";
+                // 标记价格
+                this.lblPx.Text = "";
+                // 持仓数量
+                this.lblAmount.Text = "";
+                // 开仓均价
+                this.lblAvgPx.Text = "";
+                // 强平价格
+                this.lblLiqPx.Text = "";
             }
         }
 
