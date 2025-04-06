@@ -15,6 +15,7 @@ using CoinTrader.Strategies;
 using CoinTrader.Common.Database;
 using System.Security.Cryptography;
 using System.Threading;
+using CoinTrader.Strategies.Runtime;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -153,7 +154,10 @@ namespace CoinTrader.Forms.Strategies.Customer
             //基类初始化成功
             if (base.Init(instId))
             {
-                 return true;
+                if (runtime is SwapStrategyEmulatorRuntime) {
+                    delay = 0;
+                }
+                return true;
             }
             return false;
         }
