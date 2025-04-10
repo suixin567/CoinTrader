@@ -503,15 +503,17 @@ namespace CoinTrader.Forms.Strategies.Customer
                 }
             }
             // 进度条-在常规盈利/亏损范围内
-            CustomProgressBarMin = (float)pos.AvgPx * (100 - StopLoss) / 100;
-            CustomProgressBarMax = (float)pos.AvgPx * (100 + StopLoss) / 100;
+            // 实际价格涨跌幅
+            float realAmplitude = StopLoss / Lever;
+            CustomProgressBarMin = (float)pos.AvgPx * (1 - realAmplitude / 100);
+            CustomProgressBarMax = (float)pos.AvgPx * (1 + realAmplitude / 100);
             CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
             if (pos.SideType == PositionType.Long)
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
                 CustomProgressBarMarkers = new[] {
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = "止损" },
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = "止盈" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = $"止损{StopLoss}%" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = $"止盈{StopLoss}%" },
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" }
                         };
             }
@@ -519,8 +521,8 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
                 CustomProgressBarMarkers = new[] {
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = "止盈" },
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = "止损" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F4"), BottomLabel = $"止盈{StopLoss}%" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F4"), BottomLabel = $"止损{StopLoss}%" },
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F4"), BottomLabel = "开仓" }
                         };
             }
