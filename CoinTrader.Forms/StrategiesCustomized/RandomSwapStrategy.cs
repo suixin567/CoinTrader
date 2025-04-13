@@ -6,19 +6,15 @@
 */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using CoinTrader.Common.Classes;
 using CoinTrader.OKXCore.Entity;
 using CoinTrader.OKXCore.Enum;
 using CoinTrader.Common;
 using CoinTrader.Strategies;
 using CoinTrader.Common.Database;
-using System.Security.Cryptography;
-using System.Threading;
 using CoinTrader.Strategies.Runtime;
 using static CoinTrader.Forms.Control.CustomProgressBar;
 using CoinTrader.Forms.Control;
-using System.Net;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -250,7 +246,8 @@ namespace CoinTrader.Forms.Strategies.Customer
                         {
                             WorkflowId = workflow.Id,
                             Side = pos.SideType == PositionType.Long ? (byte)PositionType.Short : (byte)PositionType.Long,
-                            Status = 1
+                            Status = 1,
+                            Des = "准备平仓",
                         };
                         operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     }
