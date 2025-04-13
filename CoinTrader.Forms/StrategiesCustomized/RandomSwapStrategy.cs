@@ -245,7 +245,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                         Operation newOperation = new Operation()
                         {
                             WorkflowId = workflow.Id,
-                            Side = pos.SideType == PositionType.Long ? (byte)PositionType.Short : (byte)PositionType.Long,
                             Status = 1,
                             Des = "准备平仓",
                         };
@@ -487,7 +486,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                             Operation newOperation = new Operation()
                             {
                                 WorkflowId = workflow.Id,
-                                Side = (byte)pos.SideType,
                                 Des = (pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈",
                                 Status = 1
                             };
