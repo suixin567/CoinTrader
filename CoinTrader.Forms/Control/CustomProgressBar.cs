@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoinTrader.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -42,11 +43,8 @@ namespace CoinTrader.Forms.Control
             get => _value;
             set
             {
-                if (Math.Abs(_value - value) > 0.0001f)
-                {
-                    _value = Math.Min(Math.Max(value, Minimum), Maximum);
-                    Invalidate();
-                }
+                _value = Math.Min(Math.Max(value, Minimum), Maximum);
+                Invalidate();
             }
         }
 
