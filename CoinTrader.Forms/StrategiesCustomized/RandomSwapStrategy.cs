@@ -365,7 +365,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                     if (Retracement == 0) // 初始化移动止盈时的容忍回撤幅度
                     {
-                        Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
+                        Retracement = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
                     }
                     else if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
                     {
@@ -377,7 +377,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newHigh;// 刷新最高价
                                     Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
-                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
+                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
                                 }
                                 break;
                             case PositionType.Short: //空头持仓的情况
@@ -386,7 +386,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newLow;// 刷新最低价
                                     Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
-                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新容忍回撤幅度
+                                    Retracement = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
                                 }
                                 break;
                         }
@@ -540,7 +540,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             return false;
         }
 
-        // 动态计算移动止盈时容忍的盈利回撤幅度
+        // 计算移动止盈时 动态容忍回撤幅度
         float updateRetracement(float profit, float StopSurplus)
         {
             var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.2f;
