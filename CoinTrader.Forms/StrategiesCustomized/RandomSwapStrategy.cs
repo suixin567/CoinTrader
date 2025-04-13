@@ -393,7 +393,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     }
                     // 进度条-移动止盈
                     // 止盈实际涨跌幅%
-                    float realStopSurplusAmplitude_B = StopSurplus / Lever;
+                    float realStopSurplusAmplitude_B = StopSurplus / pos.Lever;
 
                     if (pos.SideType == PositionType.Long)
                     {
@@ -509,9 +509,9 @@ namespace CoinTrader.Forms.Strategies.Customer
             // 进度条-在常规盈利/亏损范围内
             CustomProgressBarValue = (float)pos.MarkPx;
             // 止损实际涨跌幅%
-            float realStopLossAmplitude = StopLoss / Lever;
+            float realStopLossAmplitude = StopLoss / pos.Lever;
             // 止盈实际涨跌幅%
-            float realStopSurplusAmplitude = StopSurplus / Lever;
+            float realStopSurplusAmplitude = StopSurplus / pos.Lever;
 
             if (pos.SideType == PositionType.Long)
             {
