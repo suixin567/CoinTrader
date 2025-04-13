@@ -504,14 +504,17 @@ namespace CoinTrader.Forms.Strategies.Customer
                 }
             }
             // 进度条-在常规盈利/亏损范围内
-            // 实际价格涨跌幅
-            float realAmplitude = StopLoss / Lever;
-            CustomProgressBarMin = (float)pos.AvgPx * (1 - realAmplitude / 100);
-            CustomProgressBarMax = (float)pos.AvgPx * (1 + realAmplitude / 100);
             CustomProgressBarValue = (float)pos.MarkPx;
             if (pos.SideType == PositionType.Long)
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
+                // 实际止损涨跌幅%
+                float realStopLossAmplitude = StopLoss / Lever;
+                // 实际止盈涨跌幅%
+                float realStopSurplusAmplitude = StopSurplus / Lever;
+                CustomProgressBarMin = (float)(pos.AvgPx * (1 - ToPercent(realStopLossAmplitude)));
+                CustomProgressBarMax = (float)(pos.AvgPx * (1 + ToPercent(realStopSurplusAmplitude)));
+
                 CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F5"), BottomLabel = $"止损{StopLoss}%" },
                         new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F5"), BottomLabel = $"止盈{StopLoss}%" },
@@ -521,6 +524,13 @@ namespace CoinTrader.Forms.Strategies.Customer
             else
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
+                // 实际止损涨跌幅%
+                float realStopLossAmplitude = StopLoss / Lever;
+                // 实际止盈涨跌幅%
+                float realStopSurplusAmplitude = StopSurplus / Lever;
+                CustomProgressBarMin = (float)(pos.AvgPx * (1 - ToPercent(realStopSurplusAmplitude)));
+                CustomProgressBarMax = (float)(pos.AvgPx * (1 + ToPercent(realStopLossAmplitude)));
+
                 CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F5"), BottomLabel = $"止盈{StopLoss}%" },
                         new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F5"), BottomLabel = $"止损{StopLoss}%" },
@@ -627,6 +637,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         {
             return Convert.ToDecimal(val) * 0.01m;
         }
+        // 10% -> 0.1
         private decimal ToPercent(decimal val)
         {
             return val * 0.01m;
