@@ -392,6 +392,9 @@ namespace CoinTrader.Forms.Strategies.Customer
                         }
                     }
                     // 进度条-移动止盈
+                    // 止盈实际涨跌幅%
+                    float realStopSurplusAmplitude_B = StopSurplus / Lever;
+
                     if (pos.SideType == PositionType.Long)
                     {
                         CustomProgressBarDirection = ProgressDirection.LeftToRight;
@@ -400,7 +403,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarValue = (float)pos.MarkPx;
 
                         var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
-                        var longStopSurplusPrice = pos.AvgPx * (1 + ToPercent(StopSurplus));// 多头常规止盈价
+                        var longStopSurplusPrice = pos.AvgPx * (1 + ToPercent(realStopSurplusAmplitude_B));// 多头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)longStopSurplusPrice, TopLabel = longStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
@@ -416,7 +419,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarValue = (float)pos.MarkPx;
 
                         var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
-                        var shortStopSurplusPrice = pos.AvgPx * (1 - ToPercent(StopSurplus));// 空头常规止盈价
+                        var shortStopSurplusPrice = pos.AvgPx * (1 - ToPercent(realStopSurplusAmplitude_B));// 空头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)shortStopSurplusPrice, TopLabel = shortStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
@@ -505,13 +508,14 @@ namespace CoinTrader.Forms.Strategies.Customer
             }
             // 进度条-在常规盈利/亏损范围内
             CustomProgressBarValue = (float)pos.MarkPx;
+            // 止损实际涨跌幅%
+            float realStopLossAmplitude = StopLoss / Lever;
+            // 止盈实际涨跌幅%
+            float realStopSurplusAmplitude = StopSurplus / Lever;
+
             if (pos.SideType == PositionType.Long)
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
-                // 实际止损涨跌幅%
-                float realStopLossAmplitude = StopLoss / Lever;
-                // 实际止盈涨跌幅%
-                float realStopSurplusAmplitude = StopSurplus / Lever;
                 CustomProgressBarMin = (float)(pos.AvgPx * (1 - ToPercent(realStopLossAmplitude)));
                 CustomProgressBarMax = (float)(pos.AvgPx * (1 + ToPercent(realStopSurplusAmplitude)));
 
@@ -524,10 +528,6 @@ namespace CoinTrader.Forms.Strategies.Customer
             else
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
-                // 实际止损涨跌幅%
-                float realStopLossAmplitude = StopLoss / Lever;
-                // 实际止盈涨跌幅%
-                float realStopSurplusAmplitude = StopSurplus / Lever;
                 CustomProgressBarMin = (float)(pos.AvgPx * (1 - ToPercent(realStopSurplusAmplitude)));
                 CustomProgressBarMax = (float)(pos.AvgPx * (1 + ToPercent(realStopLossAmplitude)));
 
