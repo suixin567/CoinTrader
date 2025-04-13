@@ -397,7 +397,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarDirection = ProgressDirection.LeftToRight;
                         CustomProgressBarMin = (float)pos.AvgPx;
                         CustomProgressBarMax = (float)lastTrigerPrice;
-                        CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+                        CustomProgressBarValue = (float)pos.MarkPx;
 
                         var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
                         CustomProgressBarMarkers = new[] {
@@ -412,7 +412,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarDirection = ProgressDirection.RightToLeft;
                         CustomProgressBarMin = (float)lastTrigerPrice;
                         CustomProgressBarMax = (float)(pos.AvgPx);
-                        CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+                        CustomProgressBarValue = (float)pos.MarkPx;
 
                         var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
                         CustomProgressBarMarkers = new[] {
@@ -507,7 +507,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             float realAmplitude = StopLoss / Lever;
             CustomProgressBarMin = (float)pos.AvgPx * (1 - realAmplitude / 100);
             CustomProgressBarMax = (float)pos.AvgPx * (1 + realAmplitude / 100);
-            CustomProgressBarValue = (float)GetClosePrice(pos.SideType, ask, bid);
+            CustomProgressBarValue = (float)pos.MarkPx;
             if (pos.SideType == PositionType.Long)
             {
                 CustomProgressBarDirection = ProgressDirection.LeftToRight;
