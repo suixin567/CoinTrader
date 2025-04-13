@@ -496,8 +496,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 if (profit <= -(decimal)StopLoss)//到达止损亏损幅度
                 {
-                    var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                    operationDes = $"止损:{profit.ToString("F2")}% 基准{StopLoss}% 仓位:{pos.Margin} 开仓均价{pos.AvgPx} 平仓价:{closePrice}";
+                    operationDes = $"止损:{profit.ToString("F2")}% 基准{StopLoss}% 仓位:{pos.Margin} 开仓均价{pos.AvgPx} 可平仓市价:{GetClosePrice(pos.SideType, ask, bid)} 平仓标记价:{pos.MarkPx} 最新成交价:{pos.Last} 亏损额:{pos.Margin * profit / 100}";
                     operationProfit = pos.Margin * profit / 100;
                     return true;
                 }
