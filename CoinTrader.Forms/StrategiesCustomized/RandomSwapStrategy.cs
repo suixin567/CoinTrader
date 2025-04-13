@@ -18,6 +18,7 @@ using System.Threading;
 using CoinTrader.Strategies.Runtime;
 using static CoinTrader.Forms.Control.CustomProgressBar;
 using CoinTrader.Forms.Control;
+using System.Net;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -205,15 +206,17 @@ namespace CoinTrader.Forms.Strategies.Customer
                     Operation newOperation = new Operation()
                     {
                         WorkflowId = workflow.Id,
-                        Side = (byte)side
+                        Side = (byte)side,
+                        Des = "准备开仓 side:" + side.ToString(),
                     };
                     var operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
                     {
+                        string des2 = des + $"{Lever}x 市价:{GetClosePrice(side, Ask, Bid)}";
                         // 标记为操作成功
                         db.Updateable<Operation>()
                        .SetColumns(it => it.Position == coinAmount)
-                       .SetColumns(it => it.Des == des + $"{Lever}x 市价:{GetClosePrice(side, Ask, Bid)}")
+                       .SetColumns(it => it.Des == des2)
                        .SetColumns(it => it.Status == 1)
                        .Where(it => it.Id == operationId)
                        .ExecuteCommand();
