@@ -465,7 +465,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
                                 {
                                     longRetracemented = true;
-                                    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{RetracementPercent}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最低价:{lastTrigerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
+                                    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最低价:{lastTrigerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
