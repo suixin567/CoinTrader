@@ -437,7 +437,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头回撤:{RetracementPercent}%后止盈 盈利:{profit.ToString("F2")}%  开仓均价:{pos.AvgPx.ToString("F2")} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")} 平仓价:{closePrice.ToString("F2")}";
+                                    operationDes = $"多头回撤:{RetracementPercent}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 开仓均价:{pos.AvgPx.ToString("F2")} 最高价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")} 平仓价:{closePrice.ToString("F2")}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
@@ -455,7 +455,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头回撤:{RetracementPercent}%后止盈 盈利:{profit.ToString("F2")}% 开仓均价:{pos.AvgPx.ToString("F2")} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")} 平仓价:{closePrice.ToString("F2")}";
+                                    operationDes = $"空头回撤:{RetracementPercent}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 开仓均价:{pos.AvgPx.ToString("F2")} 最低价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")} 平仓价:{closePrice.ToString("F2")}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
