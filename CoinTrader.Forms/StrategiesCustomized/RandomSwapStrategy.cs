@@ -566,7 +566,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             // 随机决定开多还是开空
             Random _random = new Random();
             finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
-            des = finalSide == PositionType.Long ? "随机开多" : "随机开空";
+            des = finalSide == PositionType.Long ? $"随机开多 {Lever}x" : $"随机开空 {Lever}x";
             return true;
         }
 
