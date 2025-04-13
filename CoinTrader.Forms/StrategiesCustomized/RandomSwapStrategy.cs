@@ -208,7 +208,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     var operationId = db.Insertable(newOperation).ExecuteReturnIdentity();
                     if (CreatePosition(side, coinAmount, Mode) > 0)//判断是否下单成功
                     {
-                        string des2 = des + $"{Lever}x 市价:{GetClosePrice(side, Ask, Bid)}";
+                        string des2 = des + $" {Lever}x 市价:{GetClosePrice(side, Ask, Bid)}";
                         // 标记为操作成功
                         db.Updateable<Operation>()
                        .SetColumns(it => it.Des == des2)
@@ -560,7 +560,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             // 随机决定开多还是开空
             Random _random = new Random();
             finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
-            des = finalSide == PositionType.Long ? $"随机开多" : $"随机开空";
+            des = finalSide == PositionType.Long ? $"随机开多 ↗↗↗" : $"随机开空 ↘↘↘";
             return true;
         }
 
