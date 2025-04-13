@@ -14,7 +14,7 @@ namespace CoinTrader.Strategies
         protected InstrumentSwap instrument;
         protected override StrategyType StrategyType => StrategyType.Swap;
 
-        private SwapStrategyEmulatorRuntime swapRuntime;
+        private SwapStrategyRuntime swapRuntime;
 
         /// <summary>
         /// 获取最大杠杆倍数
@@ -35,7 +35,7 @@ namespace CoinTrader.Strategies
 
             instrument = instrumentBase as InstrumentSwap;
 
-            swapRuntime = runtime as SwapStrategyEmulatorRuntime;
+            swapRuntime = runtime as SwapStrategyRuntime;
 
             if (instrument == null)
             {
