@@ -365,7 +365,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
                     if (RetracementPercent == 0) // 初始化移动止盈时的容忍回撤幅度
                     {
-                        RetracementPercent = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
+                        RetracementPercent = updateRetracement((float)profit); //刷新动态容忍回撤幅度
                     }
                     else if (profit >= (decimal)StopSurplus) //达到盈利目标，开始记录移动止盈的最高（最低）价格
                     {
@@ -377,7 +377,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newHigh;// 刷新最高价
                                     Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
-                                    RetracementPercent = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
+                                    RetracementPercent = updateRetracement((float)profit); //刷新动态容忍回撤幅度
                                 }
                                 break;
                             case PositionType.Short: //空头持仓的情况
@@ -386,7 +386,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 {
                                     lastTrigerPrice = newLow;// 刷新最低价
                                     Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
-                                    RetracementPercent = updateRetracement((float)profit, StopSurplus); //刷新动态容忍回撤幅度
+                                    RetracementPercent = updateRetracement((float)profit); //刷新动态容忍回撤幅度
                                 }
                                 break;
                         }
@@ -407,7 +407,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)longStopSurplusPrice, TopLabel = longStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
-                        new CustomProgressBar.Marker { Position = (float)longStopPrice , TopLabel = longStopPrice.ToString("F5"), BottomLabel = "回撤" },
+                        new CustomProgressBar.Marker { Position = (float)longStopPrice , TopLabel = longStopPrice.ToString("F5"), BottomLabel = $"回撤{RetracementPercent.ToString("F2")}%" },
                         new CustomProgressBar.Marker { Position = (float)lastTrigerPrice, TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" }
                         };
                     }
@@ -423,7 +423,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)shortStopSurplusPrice, TopLabel = shortStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
-                        new CustomProgressBar.Marker { Position = (float)shortStopPrice , TopLabel = shortStopPrice.ToString("F5"), BottomLabel = "回撤" },
+                        new CustomProgressBar.Marker { Position = (float)shortStopPrice , TopLabel = shortStopPrice.ToString("F5"), BottomLabel = $"回撤{RetracementPercent.ToString("F2")}%" },
                         new CustomProgressBar.Marker { Position = (float)(lastTrigerPrice), TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" },
                         };
                     }
@@ -541,13 +541,9 @@ namespace CoinTrader.Forms.Strategies.Customer
         }
 
         // 计算移动止盈时 动态容忍回撤幅度
-        float updateRetracement(float profit, float StopSurplus)
+        float updateRetracement(float profit)
         {
-            var retracement =((profit - StopSurplus) <= 1 ? 1 : (profit - StopSurplus)) * StopSurplus * 0.2f;
-            if (retracement <= 0)
-            {
-                retracement = StopSurplus * 0.1f;
-            }
+            var retracement = (profit - StopSurplus) / 2;
             // 回撤幅度不能低于1%,否则再算上杠杆后，过于灵敏
             if (retracement < 2) {
                 retracement = 2;
