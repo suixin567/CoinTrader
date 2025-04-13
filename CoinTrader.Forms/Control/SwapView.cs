@@ -287,38 +287,5 @@ namespace CoinTrader.Forms.Control
             info += $"资金费率:{Math.Round(fundingRateMonitor.FundingRate.Rate * 100, 3)}%\n";
             MessageBox.Show(info);
         }
-
-        // 回测
-        private void buttonEmulator_Click(object sender, EventArgs e)
-        {
-            //var stategyGroups = StrategyManager.Instance.GetStrategyGroups(StrategyType.Swap);
-            //var group = stategyGroups.First(x => x.name == "合约交易策略(随机方向)");
-
-            //var window = new WinEmulatorGuid();
-            //window.SetStrategyGroup(group);
-            //window.Show();
-            var floatProgressBar = new CustomProgressBar
-            {
-                Anchor = AnchorStyles.Bottom,
-                Location = new Point(40, 265),
-                //Dock = DockStyle.Bottom,
-                Width = 250,
-                Height = 60,
-                Direction = CustomProgressBar.ProgressDirection.RightToLeft
-            };
-            floatProgressBar.Minimum = 1f;
-            floatProgressBar.Maximum = 2.8f;
-            floatProgressBar.Value = 1.2f;
-
-            floatProgressBar.SetMarkers(new[]
-            {
-                new CustomProgressBar.Marker { Position = 1f, TopLabel = "1", BottomLabel = "极限" },
-                new CustomProgressBar.Marker { Position = 1.6f, TopLabel = "1.6", BottomLabel = "10%" },
-                new CustomProgressBar.Marker { Position = 2.0f, TopLabel = "2.0", BottomLabel = "回撤" },
-                new CustomProgressBar.Marker { Position = 2.8f, TopLabel = "2.8", BottomLabel = "开仓" }
-            });
-
-            this.Controls.Add(floatProgressBar);
-        }
     }
 }
