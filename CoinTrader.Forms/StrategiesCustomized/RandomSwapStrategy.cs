@@ -402,7 +402,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarMax = (float)lastTrigerPrice;
                         CustomProgressBarValue = (float)pos.MarkPx;
 
-                        var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent) / Lever);//多头回撤价
+                        var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent));//多头回撤价
                         var longStopSurplusPrice = pos.AvgPx * (1 + ToPercent(realStopSurplusAmplitude_B));// 多头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
@@ -418,7 +418,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarMax = (float)(pos.AvgPx);
                         CustomProgressBarValue = (float)pos.MarkPx;
 
-                        var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent) / Lever);//空头回撤价
+                        var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent));//空头回撤价
                         var shortStopSurplusPrice = pos.AvgPx * (1 - ToPercent(realStopSurplusAmplitude_B));// 空头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
@@ -432,7 +432,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         switch (pos.SideType)
                         {
                             case PositionType.Long: //多头持仓的情况                                
-                                var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent) / Lever);//多头回撤价
+                                var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent));//多头回撤价
                                 var longRetracemented = closePrice <= longStopPrice;// 多头回撤
                                 debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")}";
                                 if (longRetracemented)
@@ -450,7 +450,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                                 }
                                 return longRetracemented;
                             case PositionType.Short: //空头持仓的情况
-                                var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent) / Lever);//空头回撤价
+                                var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent));//空头回撤价
                                 var shortRetracemented = closePrice >= shortStopPrice;// 空头回撤
                                 debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")}";
                                 if (shortRetracemented)
