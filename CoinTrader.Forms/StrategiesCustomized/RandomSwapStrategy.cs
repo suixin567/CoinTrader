@@ -211,7 +211,6 @@ namespace CoinTrader.Forms.Strategies.Customer
                         string des2 = des + $"{Lever}x 市价:{GetClosePrice(side, Ask, Bid)}";
                         // 标记为操作成功
                         db.Updateable<Operation>()
-                       .SetColumns(it => it.Position == coinAmount)
                        .SetColumns(it => it.Des == des2)
                        .SetColumns(it => it.Status == 1)
                        .Where(it => it.Id == operationId)
@@ -260,6 +259,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                            .SetColumns(it => it.Des == des)
                            .SetColumns(it => it.Profit == profit)
                            .SetColumns(it => it.Status == 1)
+                           .SetColumns(it => it.Position == pos.Margin)
                            .SetColumns(it => it.Fee == GetTradeFee(pos)) // 记录平仓交易费用
                            .Where(it => it.Id == operationId)
                            .ExecuteCommand();
