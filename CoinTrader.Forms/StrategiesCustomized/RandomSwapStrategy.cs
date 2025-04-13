@@ -400,9 +400,10 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarValue = (float)pos.MarkPx;
 
                         var longStopPrice = lastTrigerPrice * (1 - ToPercent(Retracement) / Lever);//多头回撤价
+                        var longStopSurplusPrice = pos.AvgPx * (1 + ToPercent(StopSurplus));// 多头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
-                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx * (1 + StopSurplus / 100f), TopLabel = ((float)pos.AvgPx * (1 + StopSurplus / 100f)).ToString("F5"), BottomLabel = $"{StopSurplus}%" },
+                        new CustomProgressBar.Marker { Position = (float)longStopSurplusPrice, TopLabel = longStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = (float)longStopPrice , TopLabel = longStopPrice.ToString("F5"), BottomLabel = "回撤" },
                         new CustomProgressBar.Marker { Position = (float)lastTrigerPrice, TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" }
                         };
@@ -415,9 +416,10 @@ namespace CoinTrader.Forms.Strategies.Customer
                         CustomProgressBarValue = (float)pos.MarkPx;
 
                         var shortStopPrice = lastTrigerPrice * (1 + ToPercent(Retracement) / Lever);//空头回撤价
+                        var shortStopSurplusPrice = pos.AvgPx * (1 - ToPercent(StopSurplus));// 空头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
-                        new CustomProgressBar.Marker { Position = (float)pos.AvgPx * (1 + StopSurplus / 100f), TopLabel = ((float)pos.AvgPx * (1 + StopSurplus / 100f)).ToString("F5"), BottomLabel = $"{StopSurplus}%" },
+                        new CustomProgressBar.Marker { Position = (float)shortStopSurplusPrice, TopLabel = shortStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = (float)shortStopPrice , TopLabel = shortStopPrice.ToString("F5"), BottomLabel = "回撤" },
                         new CustomProgressBar.Marker { Position = (float)(lastTrigerPrice), TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" },
                         };
