@@ -120,7 +120,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <summary>
         /// 触发移动止盈的最后最高（最低）价格记录
         /// </summary>
-        public decimal lastTrigerPrice = 0;
+        public decimal lastTriggerPrice = 0;
         public DateTime bannedTime;
         public string debugText;
         /// <summary>
@@ -190,7 +190,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 {
                     this.Executing = true;
                     MoveProfit = false; //新仓位禁止移动止盈
-                    lastTrigerPrice = 0;//清零移动止盈标记价格
+                    lastTriggerPrice = 0;//清零移动止盈标记价格
                     if (resetLever) //重置杠杆倍数
                     {
                         SetLever(side, Mode, lever);
@@ -286,7 +286,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                         PlusAppendTimes(pos.PosId);
                         Wait(delay);
                     }
-                    lastTrigerPrice = 0;//清零移动止盈标记价格
+                    lastTriggerPrice = 0;//清零移动止盈标记价格
                 }
             }
         }
@@ -371,20 +371,20 @@ namespace CoinTrader.Forms.Strategies.Customer
                         switch (pos.SideType)
                         {
                             case PositionType.Long: //多头持仓的情况
-                                var newHigh = lastTrigerPrice == 0 ? closePrice : Math.Max(lastTrigerPrice, closePrice);
-                                if (newHigh > lastTrigerPrice)
+                                var newHigh = lastTriggerPrice == 0 ? closePrice : Math.Max(lastTriggerPrice, closePrice);
+                                if (newHigh > lastTriggerPrice)
                                 {
-                                    lastTrigerPrice = newHigh;// 刷新最高价
-                                    Logger.Instance.LogInfo("多头刷新最高价:" + lastTrigerPrice);
+                                    lastTriggerPrice = newHigh;// 刷新最高价
+                                    Logger.Instance.LogInfo("多头刷新最高价:" + lastTriggerPrice);
                                     RetracementPercent = updateRetracement((float)profit); //刷新动态容忍回撤幅度
                                 }
                                 break;
                             case PositionType.Short: //空头持仓的情况
-                                var newLow = lastTrigerPrice == 0 ? closePrice : Math.Min(lastTrigerPrice, closePrice);
-                                if (newLow < lastTrigerPrice)
+                                var newLow = lastTriggerPrice == 0 ? closePrice : Math.Min(lastTriggerPrice, closePrice);
+                                if (newLow < lastTriggerPrice)
                                 {
-                                    lastTrigerPrice = newLow;// 刷新最低价
-                                    Logger.Instance.LogInfo("空头刷新最底价:" + lastTrigerPrice);
+                                    lastTriggerPrice = newLow;// 刷新最低价
+                                    Logger.Instance.LogInfo("空头刷新最底价:" + lastTriggerPrice);
                                     RetracementPercent = updateRetracement((float)profit); //刷新动态容忍回撤幅度
                                 }
                                 break;
@@ -398,73 +398,73 @@ namespace CoinTrader.Forms.Strategies.Customer
                     {
                         CustomProgressBarDirection = ProgressDirection.LeftToRight;
                         CustomProgressBarMin = (float)pos.AvgPx;
-                        CustomProgressBarMax = (float)lastTrigerPrice;
+                        CustomProgressBarMax = (float)lastTriggerPrice;
                         CustomProgressBarValue = (float)pos.MarkPx;
 
-                        var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent / pos.Lever));//多头回撤价
+                        var longStopPrice = lastTriggerPrice * (1 - ToPercent(RetracementPercent / pos.Lever));//多头回撤价
                         var longStopSurplusPrice = pos.AvgPx * (1 + ToPercent(realStopSurplusAmplitude_B));// 多头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)longStopSurplusPrice, TopLabel = longStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = (float)longStopPrice , TopLabel = longStopPrice.ToString("F5"), BottomLabel = $"回撤{RetracementPercent.ToString("F2")}%" },
-                        new CustomProgressBar.Marker { Position = (float)lastTrigerPrice, TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" }
+                        new CustomProgressBar.Marker { Position = (float)lastTriggerPrice, TopLabel = lastTriggerPrice.ToString("F5"), BottomLabel = "极限" }
                         };
                     }
                     else
                     {
                         CustomProgressBarDirection = ProgressDirection.RightToLeft;
-                        CustomProgressBarMin = (float)lastTrigerPrice;
+                        CustomProgressBarMin = (float)lastTriggerPrice;
                         CustomProgressBarMax = (float)(pos.AvgPx);
                         CustomProgressBarValue = (float)pos.MarkPx;
 
-                        var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent / pos.Lever));//空头回撤价
+                        var shortStopPrice = lastTriggerPrice * (1 + ToPercent(RetracementPercent / pos.Lever));//空头回撤价
                         var shortStopSurplusPrice = pos.AvgPx * (1 - ToPercent(realStopSurplusAmplitude_B));// 空头常规止盈价
                         CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" },
                         new CustomProgressBar.Marker { Position = (float)shortStopSurplusPrice, TopLabel = shortStopSurplusPrice.ToString("F5"), BottomLabel = $"{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = (float)shortStopPrice , TopLabel = shortStopPrice.ToString("F5"), BottomLabel = $"回撤{RetracementPercent.ToString("F2")}%" },
-                        new CustomProgressBar.Marker { Position = (float)(lastTrigerPrice), TopLabel = lastTrigerPrice.ToString("F5"), BottomLabel = "极限" },
+                        new CustomProgressBar.Marker { Position = (float)(lastTriggerPrice), TopLabel = lastTriggerPrice.ToString("F5"), BottomLabel = "极限" },
                         };
                     }
-                    if (lastTrigerPrice > 0) //判断是否触发移动止盈
+                    if (lastTriggerPrice > 0) //判断是否触发移动止盈
                     {
                         switch (pos.SideType)
                         {
                             case PositionType.Long: //多头持仓的情况                                
-                                var longStopPrice = lastTrigerPrice * (1 - ToPercent(RetracementPercent / pos.Lever));//多头回撤价
+                                var longStopPrice = lastTriggerPrice * (1 - ToPercent(RetracementPercent / pos.Lever));//多头回撤价
                                 var longRetracemented = closePrice <= longStopPrice;// 多头回撤
-                                debugText = $"多头-极限价:{lastTrigerPrice} 回撤价:{longStopPrice.ToString("F2")}";
+                                debugText = $"多头-极限价:{lastTriggerPrice} 回撤价:{longStopPrice.ToString("F2")}";
                                 if (longRetracemented)
                                 {
-                                    operationDes = $"多头回撤:{RetracementPercent.ToString("F2")}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 开仓均价:{pos.AvgPx.ToString("F5")} 回撤价:{longStopPrice.ToString("F5")} 最高价:{lastTrigerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
+                                    operationDes = $"多头回撤:{RetracementPercent.ToString("F2")}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 开仓均价:{pos.AvgPx.ToString("F5")} 回撤价:{longStopPrice.ToString("F5")} 最高价:{lastTriggerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
-                                else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
-                                {
-                                    longRetracemented = true;
-                                    operationDes = $"多头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最高价:{lastTrigerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
-                                    operationProfit = pos.Margin * profit / 100;
-                                    Logger.Instance.LogInfo(operationDes);
-                                }
+                                //else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
+                                //{
+                                //    longRetracemented = true;
+                                //    operationDes = $"多头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最高价:{lastTriggerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
+                                //    operationProfit = pos.Margin * profit / 100;
+                                //    Logger.Instance.LogInfo(operationDes);
+                                //}
                                 return longRetracemented;
                             case PositionType.Short: //空头持仓的情况
-                                var shortStopPrice = lastTrigerPrice * (1 + ToPercent(RetracementPercent / pos.Lever));//空头回撤价
+                                var shortStopPrice = lastTriggerPrice * (1 + ToPercent(RetracementPercent / pos.Lever));//空头回撤价
                                 var shortRetracemented = closePrice >= shortStopPrice;// 空头回撤
-                                debugText = $"空头-极限价:{lastTrigerPrice} 回撤价:{shortStopPrice.ToString("F2")}";
+                                debugText = $"空头-极限价:{lastTriggerPrice} 回撤价:{shortStopPrice.ToString("F2")}";
                                 if (shortRetracemented)
                                 {
-                                    operationDes = $"空头回撤:{RetracementPercent.ToString("F2")}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 最低价:{lastTrigerPrice.ToString("F5")} 回撤价:{shortStopPrice.ToString("F5")} 开仓均价:{pos.AvgPx.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
+                                    operationDes = $"空头回撤:{RetracementPercent.ToString("F2")}%后止盈 剩余盈利:{profit.ToString("F2")}% 标准盈利:{StopSurplus}% 最低价:{lastTriggerPrice.ToString("F5")} 回撤价:{shortStopPrice.ToString("F5")} 开仓均价:{pos.AvgPx.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
                                     operationProfit = pos.Margin * profit / 100;
                                     Logger.Instance.LogInfo(operationDes);
                                 }
-                                else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
-                                {
-                                    shortRetracemented = true;
-                                    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最低价:{lastTrigerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
-                                    operationProfit = pos.Margin * profit / 100;
-                                    Logger.Instance.LogInfo(operationDes);
-                                }
+                                //else if (profit < (decimal)StopSurplus) // 不吃亏，既有利润不能被侵犯
+                                //{
+                                //    shortRetracemented = true;
+                                //    operationDes = $"空头放弃更多利润的尝试，立即平仓，剩余收益:{profit.ToString("F2")}% (理论收益:{StopSurplus}%)  开仓均价:{pos.AvgPx.ToString("F5")} 最低价:{lastTriggerPrice.ToString("F5")} 平仓价:{closePrice.ToString("F5")}";
+                                //    operationProfit = pos.Margin * profit / 100;
+                                //    Logger.Instance.LogInfo(operationDes);
+                                //}
                                 return shortRetracemented;
                         }
                     }
@@ -474,7 +474,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                     if (profit >= (decimal)StopSurplus) //达到盈利目标，转换为移动止盈
                     {
                         var closePrice = GetClosePrice(pos.SideType, ask, bid); //根据方向得到最近的可平仓市价
-                        lastTrigerPrice = closePrice; // 设置回撤极值
+                        lastTriggerPrice = closePrice; // 设置回撤极值
                         MoveProfit = true;
                         RetracementPercent = 0;// 重置容忍回撤幅度
                         Logger.Instance.LogInfo((pos.SideType == PositionType.Long ? "多头" : "空头") + "转换为移动止盈");
@@ -519,7 +519,7 @@ namespace CoinTrader.Forms.Strategies.Customer
 
                 CustomProgressBarMarkers = new[] {
                         new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F5"), BottomLabel = $"止损{StopLoss}%" },
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F5"), BottomLabel = $"止盈{StopLoss}%" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F5"), BottomLabel = $"止盈{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" }
                         };
             }
@@ -530,7 +530,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 CustomProgressBarMax = (float)(pos.AvgPx * (1 + ToPercent(realStopLossAmplitude)));
 
                 CustomProgressBarMarkers = new[] {
-                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F5"), BottomLabel = $"止盈{StopLoss}%" },
+                        new CustomProgressBar.Marker { Position = CustomProgressBarMin, TopLabel = CustomProgressBarMin.ToString("F5"), BottomLabel = $"止盈{StopSurplus}%" },
                         new CustomProgressBar.Marker { Position = CustomProgressBarMax, TopLabel = CustomProgressBarMax.ToString("F5"), BottomLabel = $"止损{StopLoss}%" },
                         new CustomProgressBar.Marker { Position = (float)pos.AvgPx, TopLabel = pos.AvgPx.ToString("F5"), BottomLabel = "开仓" }
                         };
