@@ -22,8 +22,6 @@ public class SendMessageInput
     public string ApiKey { get; set; }
     public string Model { get; set; }
     public float Temperature { get; set; }
-    public string ProxyUrl { get; set; }
-    public string Prompt { get; set; }
 }
 
 public class Message
@@ -45,14 +43,14 @@ public class NovitaApiService
 {
     private static readonly HttpClient client = new HttpClient();
 
-    private string GetFullUrl(string proxyUrl)
+    private string GetFullUrl()
     {
         return "https://api.novita.ai/v3/openai/chat/completions";
     }
     public async Task<SendMessageResult> SendMessageFromNovitaAsync(List<Message> messagesHistory, SendMessageInput inputs)
     {
         var result = new SendMessageResult { Text = string.Empty };
-        var url = GetFullUrl(inputs.ProxyUrl);
+        var url = GetFullUrl();
 
         var requestData = new
         {
@@ -80,9 +78,9 @@ public class NovitaApiService
 
         try
         {
-            Logger.Instance.LogDebug("Chatgpt 准备post");
+            Logger.Instance.LogDebug("Chatgpt 准备提问");
             var response = await client.PostAsync(url, content);
-            Logger.Instance.LogDebug("Chatgpt post完成");
+            Logger.Instance.LogDebug("Chatgpt 收到答案");
 
             var stream = await response.Content.ReadAsStreamAsync();
             using (var reader = new StreamReader(stream))

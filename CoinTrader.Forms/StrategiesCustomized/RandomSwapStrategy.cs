@@ -615,9 +615,8 @@ namespace CoinTrader.Forms.Strategies.Customer
             {
                 ApiKey = "156e4fc6-6c7b-48c6-985f-ef60d579c70a",
                 Model = "deepseek/deepseek-r1",
-                OnProgress = (text) => Console.WriteLine($"Progress: {text}"),
+                //OnProgress = (text) => Logger.Instance.LogDebug($"Progress: {text}"),
                 Temperature = 0.8f,
-                ProxyUrl = "https://api.novita.ai/v3/openai"
             };
 
             try
