@@ -623,12 +623,12 @@ namespace CoinTrader.Forms.Strategies.Customer
             try
             {
                 var result = await novitaApiService.SendMessageFromNovitaAsync(messagesHistory, inputs);
-                Console.WriteLine($"Result: {result.Text}");
+                Logger.Instance.LogDebug($"Result: {result.Text}");
                 return result.Text;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Logger.Instance.LogError($"Chatgpt Error: {ex.Message}");
                 return null;
             }
         }
