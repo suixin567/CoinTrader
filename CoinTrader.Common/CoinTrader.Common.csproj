@@ -140,6 +140,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chatgpt\ChatgptHelper.cs" />
     <Compile Include="Classes\Candle.cs" />
     <Compile Include="Classes\CountDown.cs" />
     <Compile Include="Classes\DepthInfo.cs" />

@@ -287,5 +287,19 @@ namespace CoinTrader.Forms.Control
             info += $"资金费率:{Math.Round(fundingRateMonitor.FundingRate.Rate * 100, 3)}%\n";
             MessageBox.Show(info);
         }
+
+        // 测试按钮被点击
+        private void buttonTest_Click(object sender, EventArgs e)
+        {
+            var list = StrategyRunner.Instance.GetStrategiesByInstId(InstId);
+            if (list.Count == 1)
+            {
+                var strategy2 = list[0] as RandomSwapStrategy;
+                if (strategy2 != null)
+                {
+                    strategy2.Test();
+                }
+            }
+        }
     }
 }

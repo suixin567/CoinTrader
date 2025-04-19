@@ -17,6 +17,8 @@ using static CoinTrader.Forms.Control.CustomProgressBar;
 using CoinTrader.Forms.Control;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Threading.Tasks;
+using MySqlX.XDevAPI.Common;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -592,6 +594,43 @@ namespace CoinTrader.Forms.Strategies.Customer
                 }
             }
             return false;
+        }
+
+        public void Test()
+        {
+            chat();
+        }
+
+        async Task<string> chat()
+        {
+            var novitaApiService = new NovitaApiService();
+
+            var messagesHistory = new List<Message>
+        {
+            new Message { Role = "user", Content = "Hello, how are you?" },
+            //new Message { Role = "assistant", Content = "I'm good, thank you! How can I assist you?" }
+        };
+
+            var inputs = new SendMessageInput
+            {
+                ApiKey = "156e4fc6-6c7b-48c6-985f-ef60d579c70a",
+                Model = "deepseek/deepseek-r1",
+                OnProgress = (text) => Console.WriteLine($"Progress: {text}"),
+                Temperature = 0.8f,
+                ProxyUrl = "https://api.novita.ai/v3/openai"
+            };
+
+            try
+            {
+                var result = await novitaApiService.SendMessageFromNovitaAsync(messagesHistory, inputs);
+                Console.WriteLine($"Result: {result.Text}");
+                return result.Text;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
         }
 
         // 工具方法
