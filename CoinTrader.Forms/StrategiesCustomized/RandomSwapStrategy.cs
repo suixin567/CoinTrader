@@ -15,6 +15,8 @@ using CoinTrader.Common.Database;
 using CoinTrader.Strategies.Runtime;
 using static CoinTrader.Forms.Control.CustomProgressBar;
 using CoinTrader.Forms.Control;
+using Newtonsoft.Json;
+using System.Linq;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -549,6 +551,13 @@ namespace CoinTrader.Forms.Strategies.Customer
             return retracement;
         }
 
+        public class MarketTrendProbability
+        {
+            public double BullishProbability { get; set; }
+            public double BearishProbability { get; set; }
+            public double SidewaysProbability { get; set; }
+        }
+
         /// <summary>
         /// 判断是否可以开仓
         /// </summary>
@@ -557,6 +566,7 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <returns></returns>
         private bool CanOpen(decimal ask, decimal bid, out PositionType finalSide, out string des)
         {
+            string m15KLinesJson = getKLinesJson(CandleGranularity.M15, 50);
             // 随机决定开多还是开空
             Random _random = new Random();
             finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
@@ -645,6 +655,41 @@ namespace CoinTrader.Forms.Strategies.Customer
                 Logger.Instance.LogInfo($"{InstId} is Banned. Remaining time: {remainingTime:F2} minutes.");
             }
             return banned;
+        }
+
+        // k线json
+        private string getKLinesJson(CandleGranularity candleGranularity, int count) {
+            List<Candle> m15 = GetCandleList(candleGranularity, count);
+            var m15DataList = m15.Select(c => new
+            {
+                Time = c.Time.ToString("yyyy-MM-dd HH:mm"),
+                Open = c.Open,
+                High = c.High,
+                Low = c.Low,
+                Close = c.Close,
+                Volume = c.Volume
+            }).ToList();
+            string json = JsonConvert.SerializeObject(m15DataList, Formatting.Indented);
+            // 可输出查看
+            Logger.Instance.LogDebug(json);
+            return json;
+        }
+
+        // 辅助方法获取K线列表
+        private List<Candle> GetCandleList(CandleGranularity granularity, int count)
+        {
+            var list = new List<Candle>();
+            var provider = GetCandleProvider(granularity);
+            if (provider != null)
+            {
+                provider.EachCandle(c =>
+                {
+                    list.Add(c);
+                    return list.Count >= count;
+                });
+            }
+            list.Reverse();
+            return list;
         }
     }
 }
