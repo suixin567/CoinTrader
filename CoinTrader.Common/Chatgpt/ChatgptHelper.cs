@@ -55,7 +55,7 @@ public class NovitaApiService
         var requestData = new
         {
             stream = true,
-            temperature = 0.7,
+            temperature = inputs.Temperature,
             top_p = 0.6,
             min_p = 0.7,
             top_k = 60,

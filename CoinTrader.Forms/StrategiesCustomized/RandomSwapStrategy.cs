@@ -19,6 +19,8 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using MySqlX.XDevAPI.Common;
+using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace CoinTrader.Forms.Strategies.Customer
 {
@@ -555,11 +557,21 @@ namespace CoinTrader.Forms.Strategies.Customer
 
         public class MarketTrendProbability
         {
-            public double BullishProbability { get; set; }
-            public double BearishProbability { get; set; }
-            public double SidewaysProbability { get; set; }
+            public float BullishProbability { get; set; }
+            public float BearishProbability { get; set; }
+            public float SidewaysProbability { get; set; }
         }
 
+        //public class MarketTrendProbabilityB
+        //{
+        //    public float BullishProbability { get; set; }
+        //    public float BearishProbability { get; set; }
+        //    public float SidewaysProbability { get; set; }
+        //    public bool ChatWaitting { get; set; }
+        //}
+
+        Dictionary<CandleGranularity, MarketTrendProbability> MarketTrendProbabilities = new Dictionary<CandleGranularity, MarketTrendProbability>();
+        bool chatWaittingM15 = false;
         /// <summary>
         /// 判断是否可以开仓
         /// </summary>
@@ -568,11 +580,39 @@ namespace CoinTrader.Forms.Strategies.Customer
         /// <returns></returns>
         private bool CanOpen(decimal ask, decimal bid, out PositionType finalSide, out string des)
         {
-            string m15KLinesJson = getKLinesJson(CandleGranularity.M15, 50);
-            // 随机决定开多还是开空
-            Random _random = new Random();
-            finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
-            des = finalSide == PositionType.Long ? $"随机开多 ↗↗↗" : $"随机开空 ↘↘↘";
+            if (!MarketTrendProbabilities.ContainsKey(CandleGranularity.M15))
+            {
+                chatM15();
+            }
+            if (!MarketTrendProbabilities.ContainsKey(CandleGranularity.M15))
+            {
+                finalSide = PositionType.Long;
+                des = string.Empty;
+                Logger.Instance.LogDebug("等待ai返回15分钟K线概率...");
+                return false;
+            }
+            float totalBullishProbability = MarketTrendProbabilities[CandleGranularity.M15].BullishProbability;
+            float totalBearishProbability = MarketTrendProbabilities[CandleGranularity.M15].BearishProbability;
+            float totalSidewaysProbability = MarketTrendProbabilities[CandleGranularity.M15].SidewaysProbability;
+
+            // 横盘概率最大，随机决定方向
+            if (totalSidewaysProbability >= totalBullishProbability && totalSidewaysProbability >= totalBearishProbability)
+            {
+                Random _random = new Random();
+                finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
+                des = $"横盘随机方向 → {(finalSide == PositionType.Long ? "开多 ↗↗↗" : "开空 ↘↘↘")}";
+            }
+            else if (totalBullishProbability >= totalBearishProbability)
+            {
+                finalSide = PositionType.Long;
+                des = $"多头趋势明显 ↗↗↗ (多头概率: {totalBullishProbability:P1})";
+            }
+            else
+            {
+                finalSide = PositionType.Short;
+                des = $"空头趋势明显 ↘↘↘ (空头概率: {totalBearishProbability:P1})";
+            }
+
             return true;
         }
 
@@ -598,18 +638,64 @@ namespace CoinTrader.Forms.Strategies.Customer
 
         public void Test()
         {
-            chat();
+            chat("你好啊");
         }
 
-        async Task<string> chat()
+        async void chatM15()
+        {
+            if (chatWaittingM15)
+            {
+                return;
+            }
+            string m15KLinesJson = getKLinesJson(CandleGranularity.M15, 50);
+            if (m15KLinesJson == "[]")
+            {
+                Logger.Instance.LogDebug("15分钟K线等待中...");
+                return;
+            }
+            chatWaittingM15 = true;
+            string prompt = "这是DOGE/USDT 最近50根15分钟K线数据，预测接下来的短期走势。响应结果要用JSON的格式，具体结果定义是  public class MarketTrendProbability\r\n  public double BullishProbability { get; set; }\r\n   public double BearishProbability { get; set; }\r\n  public double SidewaysProbability { get; set; }\r\n  } \r\nK线数据是:\r\n" + m15KLinesJson;
+            string chatgptResult = await chat(prompt);
+            Logger.Instance.LogDebug($"Chatgpt Result: {chatgptResult}");
+            if (string.IsNullOrEmpty(chatgptResult))
+            {
+                Logger.Instance.LogError("gpt未返回有效的趋势概率JSON！");
+                chatWaittingM15 = false;
+                return;
+            }
+            // 从result.Text中提取包含Json的部分 提取 JSON 字符串（只匹配包含三个字段的 JSON 块）
+            var match = Regex.Match(chatgptResult, @"\{[^{}]*""BullishProbability""[^{}]*""BearishProbability""[^{}]*""SidewaysProbability""[^{}]*\}");
+
+            if (!match.Success)
+            {
+                Logger.Instance.LogError("未找到有效的趋势概率JSON！");
+                chatWaittingM15 = false;
+                return;
+            }
+            string jsonText = match.Value;
+            MarketTrendProbability marketTrendProbability;
+            try
+            {
+                marketTrendProbability = JsonConvert.DeserializeObject<MarketTrendProbability>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogDebug($"趋势概率JSON解析失败：{ex.Message}");
+                return;
+            }
+            MarketTrendProbabilities[CandleGranularity.M15] = marketTrendProbability;
+            chatWaittingM15 = false;
+        }
+
+        async Task<string> chat(string prompt)
         {
             var novitaApiService = new NovitaApiService();
 
             var messagesHistory = new List<Message>
-        {
-            new Message { Role = "user", Content = "Hello, how are you?" },
-            //new Message { Role = "assistant", Content = "I'm good, thank you! How can I assist you?" }
-        };
+            {
+                new Message { Role = "user", Content = prompt },
+                //new Message { Role = "assistant", Content = "I'm good, thank you! How can I assist you?" }
+            };
 
             var inputs = new SendMessageInput
             {
@@ -622,7 +708,6 @@ namespace CoinTrader.Forms.Strategies.Customer
             try
             {
                 var result = await novitaApiService.SendMessageFromNovitaAsync(messagesHistory, inputs);
-                Logger.Instance.LogDebug($"Result: {result.Text}");
                 return result.Text;
             }
             catch (Exception ex)
@@ -646,18 +731,6 @@ namespace CoinTrader.Forms.Strategies.Customer
         private decimal GetClosePrice(PositionType orderSide, decimal ask, decimal bid)
         {
             return orderSide == PositionType.Short ? ask : bid;
-        }
-
-        /// <summary>
-        /// 根据盘口报价选择开仓价格
-        /// </summary>
-        /// <param name="orderSide"></param>
-        /// <param name="ask"></param>
-        /// <param name="bid"></param>
-        /// <returns></returns>
-        private decimal GetOpenPrice(PositionType orderSide, decimal ask, decimal bid)
-        {
-            return orderSide == PositionType.Short ? bid : ask;
         }
 
         /// <summary>
@@ -709,7 +782,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             }).ToList();
             string json = JsonConvert.SerializeObject(m15DataList, Formatting.Indented);
             // 可输出查看
-            Logger.Instance.LogDebug(json);
+            //Logger.Instance.LogDebug(json);
             return json;
         }
 
