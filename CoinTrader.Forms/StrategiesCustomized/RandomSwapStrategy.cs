@@ -595,12 +595,15 @@ namespace CoinTrader.Forms.Strategies.Customer
             float totalBearishProbability = MarketTrendProbabilities[CandleGranularity.M15].BearishProbability;
             float totalSidewaysProbability = MarketTrendProbabilities[CandleGranularity.M15].SidewaysProbability;
 
-            // 横盘概率最大，随机决定方向
             if (totalSidewaysProbability >= totalBullishProbability && totalSidewaysProbability >= totalBearishProbability)
             {
                 Random _random = new Random();
-                finalSide = _random.Next(2) == 0 ? PositionType.Long : PositionType.Short;
-                des = $"横盘随机方向 → {(finalSide == PositionType.Long ? "开多 ↗↗↗" : "开空 ↘↘↘")}";
+                // 横盘时，随机方向考虑概率倾向
+                float bullWeight = totalBullishProbability / (totalBullishProbability + totalBearishProbability);
+                float roll = (float)_random.NextDouble(); // 0 - 1
+
+                finalSide = roll < bullWeight ? PositionType.Long : PositionType.Short;
+                des = $"横盘主导，随机方向 {(finalSide == PositionType.Long ? "多 ↗↗↗" : "空 ↘↘↘")} 概率偏向 → (多: {totalBullishProbability:P1}, 空: {totalBearishProbability:P1})";
             }
             else if (totalBullishProbability >= totalBearishProbability)
             {
