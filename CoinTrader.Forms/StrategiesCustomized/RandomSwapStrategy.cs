@@ -638,7 +638,8 @@ namespace CoinTrader.Forms.Strategies.Customer
 
         public void Test()
         {
-            chat("你好啊");
+            string m15KLinesJson = getKLinesJson(CandleGranularity.M15, 50);
+            Logger.Instance.LogDebug(m15KLinesJson);
         }
 
         async void chatM15()
@@ -773,7 +774,7 @@ namespace CoinTrader.Forms.Strategies.Customer
             List<Candle> m15 = GetCandleList(candleGranularity, count);
             var m15DataList = m15.Select(c => new
             {
-                Time = c.Time.ToString("yyyy-MM-dd HH:mm"),
+                Time = c.Time.AddHours(8).ToString("yyyy-MM-dd HH:mm"),
                 Open = c.Open,
                 High = c.High,
                 Low = c.Low,
