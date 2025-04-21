@@ -658,7 +658,7 @@ namespace CoinTrader.Forms.Strategies.Customer
                 return;
             }
             chatWaittingM15 = true;
-            string prompt = "这是DOGE/USDT 近期15分钟K线数据，预测接下来的短期走势。响应结果要用JSON的格式，具体结果定义是  public class MarketTrendProbability\r\n  public double BullishProbability { get; set; }\r\n   public double BearishProbability { get; set; }\r\n  public double SidewaysProbability { get; set; }\r\n  } \r\nK线数据是:\r\n" + m15KLinesJson;
+            string prompt = "这是DOGE/USDT近期100根15分钟K线数据，预测未来4小时的短期多、空、横盘走势概率(概率在0-1之间)，可以使用一些你熟悉的技术指标，例如布林带、能量图、均线等。响应结果要用JSON的格式，具体结果定义是  public class MarketTrendProbability\r\n  public double BullishProbability { get; set; }\r\n   public double BearishProbability { get; set; }\r\n  public double SidewaysProbability { get; set; }\r\n  } \r\nK线数据是:\r\n" + m15KLinesJson;
             string chatgptResult = await chat(prompt);
             Logger.Instance.LogDebug($"Chatgpt Result: {chatgptResult}");
             if (string.IsNullOrEmpty(chatgptResult))
